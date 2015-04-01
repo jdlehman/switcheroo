@@ -56,9 +56,9 @@ export default class Switcher extends Component {
   }
 
   getHandler(path) {
-    return this.props.children.reduce((child) => {
-      return child.props.path === path && child.props.handler;
-    });
+    return this.props.children.reduce((prev, curr) => {
+      return (curr.props.path === path && curr.props.handler) || prev;
+    }, false);
   }
 
   handleRouteChange(e) {
