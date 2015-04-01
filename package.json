@@ -1,0 +1,33 @@
+{
+  "name": "switcheroo",
+  "version": "0.1.0",
+  "description": "React component that switches between components based on route",
+  "main": "dist/switcheroo.min.js",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack",
+    "lint": "./node_modules/.bin/eslint ./modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jdlehman/switcheroo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jdlehman/switcheroo/issues"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "routing",
+    "javascript"
+  ],
+  "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-loader": "^4.3.0",
+    "eslint": "^0.18.0",
+    "webpack": "^1.7.3"
+  },
+  "peerDependencies": {
+    "react": ">=0.12.0 <0.14.0"
+  }
+}
