@@ -69,7 +69,7 @@ export default class Switcher extends Component {
   }
 
   render() {
-    return React.createElement(this.state.visibleComponent);
+    return React.createElement(this.state.visibleComponent, null);
   }
 }
 
