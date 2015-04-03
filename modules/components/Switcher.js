@@ -9,11 +9,12 @@ export default class Switcher extends Component {
     this.getHashLocation = this.getHashLocation.bind(this);
     this.getHistoryLocation = this.getHistoryLocation.bind(this);
     this.handleRouteChange = this.handleRouteChange.bind(this);
-    this.getHandler = this.getHandler.bind(this);
+    this.getSwitch = this.getSwitch.bind(this);
 
+    this.defaultComponent = React.createElement(NullComponent, null);
     // set initial state
     this.state = {
-      visibleComponent: NullComponent
+      visibleComponent: null
     };
   }
 
@@ -55,26 +56,28 @@ export default class Switcher extends Component {
     return decodeURI(window.location.pathname + window.location.search);
   }
 
-  getHandler(path) {
-    return this.props.children.reduce((prev, curr) => {
-      return (curr.props.path === path && curr.props.handler) || prev;
-    }, false);
+  getSwitch(path) {
+    return this.props.children.filter((child) => {
+      return child.props.path === path;
+    })[0];
   }
 
   handleRouteChange(e) {
     var newRoute = this.getLocation();
     this.setState({
-      visibleComponent: this.getHandler(newRoute) || NullComponent
+      visibleComponent: this.getSwitch(newRoute)
     });
   }
 
   render() {
-    return React.createElement(this.state.visibleComponent, null);
+    return this.state.visibleComponent || this.defaultComponent;
   }
 }
 
+Switcher.displayName = 'Switcher';
+
 Switcher.propTypes = {
-  children: React.PropTypes.arrayOf(React.PropTypes.element),
+  children: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
   pushState: React.PropTypes.bool
 };
 
