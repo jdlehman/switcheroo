@@ -12,6 +12,16 @@ module.exports = {
     libraryTarget: 'umd',
     library: 'switcheroo'
   },
+  externals: [
+    {
+      "react": {
+        root: "React",
+        commonjs2: "react",
+        commonjs: "react",
+        amd: "react"
+      }
+    }
+  ],
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
