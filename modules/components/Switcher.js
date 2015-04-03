@@ -11,7 +11,7 @@ export default class Switcher extends Component {
     this.handleRouteChange = this.handleRouteChange.bind(this);
     this.getSwitch = this.getSwitch.bind(this);
 
-    this.defaultComponent = React.createElement(NullComponent, null);
+    this.defaultComponent = React.createElement(this.props.defaultHandler || NullComponent, this.props.defaultHandlerProps);
     // set initial state
     this.state = {
       visibleComponent: null
@@ -78,7 +78,9 @@ Switcher.displayName = 'Switcher';
 
 Switcher.propTypes = {
   children: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
-  pushState: React.PropTypes.bool
+  pushState: React.PropTypes.bool,
+  defaultHandler: React.PropTypes.func,
+  defaultHandlerProps: React.PropTypes.object
 };
 
 Switcher.defaultProps = {
