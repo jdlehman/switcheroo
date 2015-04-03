@@ -23,7 +23,7 @@
   "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-loader": "^4.3.0",
+    "babel-loader": "^5.0.0",
     "eslint": "^0.18.0",
     "webpack": "^1.7.3"
   },
