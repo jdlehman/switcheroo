@@ -66,13 +66,13 @@ export default class Switcher extends Component {
   handleRouteChange(e) {
     var newRoute = this.getLocation(),
         switchElement = this.getSwitch(newRoute);
-    this.setState({
-      visibleComponent: switchElement
-    });
-
     if(typeof this.props.onChange === 'function') {
       this.props.onChange(!!switchElement, newRoute);
     }
+
+    this.setState({
+      visibleComponent: switchElement
+    });
   }
 
   render() {
