@@ -57,7 +57,8 @@ export default class Switcher extends Component {
   }
 
   getSwitch(path) {
-    return this.props.children.filter((child) => {
+    var children = [].concat(this.props.children);
+    return children.filter((child) => {
       return child.props.path === path;
     })[0];
   }
@@ -82,7 +83,10 @@ export default class Switcher extends Component {
 Switcher.displayName = 'Switcher';
 
 Switcher.propTypes = {
-  children: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
+  children: React.PropTypes.oneOfType([
+    React.PropTypes.arrayOf(React.PropTypes.element),
+    React.PropTypes.element
+  ]).isRequired,
   pushState: React.PropTypes.bool,
   defaultHandler: React.PropTypes.func,
   defaultHandlerProps: React.PropTypes.object,
