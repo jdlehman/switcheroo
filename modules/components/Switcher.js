@@ -63,10 +63,15 @@ export default class Switcher extends Component {
   }
 
   handleRouteChange(e) {
-    var newRoute = this.getLocation();
+    var newRoute = this.getLocation(),
+        switchElement = this.getSwitch(newRoute);
     this.setState({
-      visibleComponent: this.getSwitch(newRoute)
+      visibleComponent: switchElement
     });
+
+    if(typeof this.props.onChange === 'function') {
+      this.props.onChange(!!switchElement, newRoute);
+    }
   }
 
   render() {
@@ -80,7 +85,8 @@ Switcher.propTypes = {
   children: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
   pushState: React.PropTypes.bool,
   defaultHandler: React.PropTypes.func,
-  defaultHandlerProps: React.PropTypes.object
+  defaultHandlerProps: React.PropTypes.object,
+  onChange: React.PropTypes.func
 };
 
 Switcher.defaultProps = {
