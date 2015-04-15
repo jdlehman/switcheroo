@@ -49,11 +49,11 @@ export default class Switcher extends Component {
   }
 
   getHashLocation() {
-    return decodeURI(window.location.href.split('#')[1] || '');
+    return decodeURI(window.location.hash.slice(1).split('?')[0]);
   }
 
   getHistoryLocation() {
-    return decodeURI(window.location.pathname + window.location.search);
+    return decodeURI(window.location.pathname);
   }
 
   getSwitch(path) {
