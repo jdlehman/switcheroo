@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 (2014-04-15)
+
+Changed:
+
+- `Switch` path now ignores query params. This means a `Switch` with a path `/abc` renders for `/abc` and `/abc?a=1&b=2`. [575bfb0](../../commit/575bfb0)
+
 ## 0.3.0 (2014-04-03)
 
 Added:
