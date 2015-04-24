@@ -1,8 +1,13 @@
-import React from 'react/addons';
+import React, {Component} from 'react/addons';
 import {assert} from 'chai';
 import sinon from 'sinon';
 import Switch from 'components/Switch';
-import NullComponent from 'components/NullComponent';
+
+class NullComponent extends Component {
+  render() {
+    return false;
+  }
+}
 
 describe('Switch', function() {
 

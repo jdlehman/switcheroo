@@ -41,3 +41,7 @@ The `defaultHandler` is the handler that is used when there are no `Switch` elem
 ```js
 onChange(match, pathname) { ... }
 ```
+
+### wrapper
+
+If the `wrapper` prop is defined, the rendered `Switch` will be wrapped in the specified React component. Any additional props passed to the `Switcher` will also be properties of this component.

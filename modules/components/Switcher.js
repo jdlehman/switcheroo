@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import NullComponent from './NullComponent';
 
 export default class Switcher extends Component {
   constructor(props) {
@@ -11,10 +10,10 @@ export default class Switcher extends Component {
     this.handleRouteChange = this.handleRouteChange.bind(this);
     this.getSwitch = this.getSwitch.bind(this);
 
-    this.defaultComponent = React.createElement(this.props.defaultHandler || NullComponent, this.props.defaultHandlerProps);
+    this.defaultSwitch = this.props.defaultHandler ? React.createElement(this.props.defaultHandler, this.props.defaultHandlerProps) : null;
     // set initial state
     this.state = {
-      visibleComponent: null
+      visibleSwitch: null
     };
   }
 
@@ -71,12 +70,21 @@ export default class Switcher extends Component {
     }
 
     this.setState({
-      visibleComponent: switchElement
+      visibleSwitch: switchElement
     });
   }
 
   render() {
-    return this.state.visibleComponent || this.defaultComponent;
+    if(this.props.wrapper) {
+      return React.createElement(
+        this.props.wrapper,
+        this.props,
+        this.state.visibleSwitch || this.defaultSwitch
+      );
+    }
+    else {
+      return this.state.visibleSwitch || this.defaultSwitch;
+    }
   }
 }
 
@@ -90,7 +98,8 @@ Switcher.propTypes = {
   pushState: React.PropTypes.bool,
   defaultHandler: React.PropTypes.func,
   defaultHandlerProps: React.PropTypes.object,
-  onChange: React.PropTypes.func
+  onChange: React.PropTypes.func,
+  wrapper: React.PropTypes.any
 };
 
 Switcher.defaultProps = {
