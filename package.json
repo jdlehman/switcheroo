@@ -5,7 +5,8 @@
   "main": "dist/switcheroo.min.js",
   "scripts": {
     "build": "./node_modules/.bin/webpack",
-    "lint": "./node_modules/.bin/eslint ./modules"
+    "lint": "./node_modules/.bin/eslint ./modules",
+    "test": "./node_modules/.bin/karma start --single-run"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,21 @@
   "license": "MIT",
   "devDependencies": {
     "babel-loader": "^5.0.0",
+    "chai": "^2.2.0",
     "eslint": "^0.18.0",
+    "istanbul": "^0.3.13",
+    "istanbul-instrumenter-loader": "^0.1.2",
+    "karma": "^0.12.31",
+    "karma-chai": "^0.1.0",
+    "karma-coverage": "^0.2.7",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon": "^1.0.4",
+    "karma-sourcemap-loader": "^0.3.4",
+    "karma-webpack": "^1.5.0",
+    "mocha": "^2.2.4",
+    "phantomjs": "^1.9.16",
+    "sinon": "git://github.com/cjohansen/Sinon.JS#b672042043517b9f84e14ed0fb8265126168778a",
     "webpack": "^1.7.3"
   },
   "peerDependencies": {
