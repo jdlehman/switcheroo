@@ -1,12 +1,20 @@
 # Switcher
 
-The `Switcher` is a container component that holds `Switch` components. It is the brains of switcheroo, and controls the handler that is rendered based on the path in the URL. The default path comparison uses `window.location.hash`, but can also use `window.location.pathname` if the optional `pushState` prop is set to true (see below).
+The `Switcher` is a container component that holds a list of React components. It is the brains of switcheroo, and controls the handler that is rendered based on the path in the URL. switcheroo provides a [`Switch`](./Switch.md) component that you may use for the items in the `Switcher`, but you may also use any React component you want as long as it has a `path` property. The default path comparison uses `window.location.hash`, but can also use `window.location.pathname` if the optional `pushState` prop is set to true (see below).
 
 ```js
+// using Switch components
 <Switcher>
   <Switch path="/" handler={ComponentOne} />
   <Switch path="/about" handler={ComponentTwo} />
   <Switch path="/another" handler={ComponentThree} />
+</Switcher>
+
+// using any React component
+<Switcher>
+  <div path="/">Hello World</div>
+  <AboutComponent path="/about" />
+  <AnotherComponent path="/another" anotherProp={myProp} />
 </Switcher>
 ```
 
@@ -15,7 +23,7 @@ The `Switcher` is a container component that holds `Switch` components. It is th
 
 ### children
 
-To actually render anything, the `Switcher` must have any number of `Switch` children elements. The `Switch` with the matching path (if there is one) will be rendered.
+To actually render anything, the `Switcher` must have any number of children elements. These children must be [`Switch`](./Switch.md) components or have a `path` prop. The component with the matching path (if there is one) will be rendered.
 
 
 ## Optional Props
