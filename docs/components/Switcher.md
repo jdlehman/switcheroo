@@ -28,11 +28,21 @@ To actually render anything, the `Switcher` must have any number of children ele
 
 ## Optional Props
 
-### pushState
+### pushState (default: false)
 
-By default `window.location.hash` is used to match paths. If the `pushState` prop is set to true, then `window.location.pathname` is used.
+When true, `Switcher` listens to the `popstate` event and looks for path changes on this event.
 
-When the hash is used, `Switcher` listens for path changes with the `hashchange` event, and when `pushState` is used, it listens to the `popstate` event.
+### hashChange  (default: true)
+
+When true, `Switcher` listens to the `hashchange` event and looks for path changes on this event.
+
+### load  (default: true)
+
+When true, `Switcher` listens to the `load` event and looks for path changes on this event.
+
+### location (default: 'hash')
+
+By default `window.location.hash` is used to match paths. If `location` is set to 'pathname', then `window.location.pathname` is used instead.
 
 ### defaultHandler
 

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import window from 'window';
 
 export default class Switcher extends Component {
   constructor(props) {
@@ -18,27 +19,31 @@ export default class Switcher extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('load', this.handleRouteChange);
+    if(this.props.load) {
+      window.addEventListener('load', this.handleRouteChange);
+    }
     if(this.props.pushState) {
       window.addEventListener('popstate', this.handleRouteChange);
     }
-    else {
+    if(this.props.hashChange) {
       window.addEventListener('hashchange', this.handleRouteChange);
     }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('load', this.handleRouteChange);
+    if(this.props.load) {
+      window.removeEventListener('load', this.handleRouteChange);
+    }
     if(this.props.pushState) {
       window.removeEventListener('popstate', this.handleRouteChange);
     }
-    else {
+    if(this.props.hashChange) {
       window.removeEventListener('hashchange', this.handleRouteChange);
     }
   }
 
   getLocation() {
-    var location = this.props.pushState ? this.getHistoryLocation() : this.getHashLocation();
+    var location = this.props.location === 'pathname' ? this.getHistoryLocation() : this.getHashLocation();
     if(location.charAt(0) !== '/') {
       return `/${location}`;
     }
@@ -96,12 +101,18 @@ Switcher.propTypes = {
     React.PropTypes.element
   ]).isRequired,
   pushState: React.PropTypes.bool,
+  hashChange: React.PropTypes.bool,
+  load: React.PropTypes.bool,
   defaultHandler: React.PropTypes.func,
   defaultHandlerProps: React.PropTypes.object,
   onChange: React.PropTypes.func,
-  wrapper: React.PropTypes.any
+  wrapper: React.PropTypes.any,
+  location: React.PropTypes.string
 };
 
 Switcher.defaultProps = {
-  pushState: false
+  pushState: false,
+  hashChange: true,
+  load: true,
+  location: 'hash'
 };
