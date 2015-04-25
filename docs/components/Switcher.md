@@ -42,7 +42,7 @@ When true, `Switcher` listens to the `load` event and looks for path changes on 
 
 ### location (default: 'hash')
 
-By default `window.location.hash` is used to match paths. If `location` is set to 'pathname', then `window.location.pathname` is used instead.
+By default `window.location.hash` is used to match paths. If `location` is set to 'pathname', then `window.location.pathname` is used instead. Under the hood, it is using `window.location[this.props.location]`, so you can use `search` or any other valid property on `window.location`.
 
 ### defaultHandler
 

@@ -6,8 +6,6 @@ export default class Switcher extends Component {
     super(props);
     // bind methods
     this.getLocation = this.getLocation.bind(this);
-    this.getHashLocation = this.getHashLocation.bind(this);
-    this.getHistoryLocation = this.getHistoryLocation.bind(this);
     this.handleRouteChange = this.handleRouteChange.bind(this);
     this.getSwitch = this.getSwitch.bind(this);
 
@@ -43,21 +41,13 @@ export default class Switcher extends Component {
   }
 
   getLocation() {
-    var location = this.props.location === 'pathname' ? this.getHistoryLocation() : this.getHashLocation();
+    var location = decodeURI(window.location[this.props.location].slice(1).split('?')[0]);
     if(location.charAt(0) !== '/') {
       return `/${location}`;
     }
     else {
       return location;
     }
-  }
-
-  getHashLocation() {
-    return decodeURI(window.location.hash.slice(1).split('?')[0]);
-  }
-
-  getHistoryLocation() {
-    return decodeURI(window.location.pathname);
   }
 
   getSwitch(path) {
