@@ -53,7 +53,7 @@ export default class Switcher extends Component {
   getSwitch(path) {
     var children = [].concat(this.props.children);
     return children.filter((child) => {
-      return child.props.path === path;
+      return `${this.props.basePath}${child.props.path}` === path;
     })[0];
   }
 
@@ -97,12 +97,14 @@ Switcher.propTypes = {
   defaultHandlerProps: React.PropTypes.object,
   onChange: React.PropTypes.func,
   wrapper: React.PropTypes.any,
-  location: React.PropTypes.string
+  location: React.PropTypes.string,
+  baseURL: React.PropTypes.string
 };
 
 Switcher.defaultProps = {
   pushState: false,
   hashChange: true,
   load: true,
-  location: 'hash'
+  location: 'hash',
+  basePath: ''
 };

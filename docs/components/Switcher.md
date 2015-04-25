@@ -63,3 +63,7 @@ onChange(match, pathname) { ... }
 ### wrapper
 
 If the `wrapper` prop is defined, the rendered `Switch` will be wrapped in the specified React component. Any additional props passed to the `Switcher` will also be properties of this component.
+
+### basePath (default: '')
+
+`basePath` is prepended to all path properties in the components inside `Switcher`. If `basePath` is set to `/base/path` then a component with path, `/home` will match the path `/base/path/home`.
