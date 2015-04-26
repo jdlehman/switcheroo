@@ -1,4 +1,4 @@
-import React, {Component} from 'react/addons';
+import React, {Component} from 'react';
 import {assert} from 'chai';
 import sinon from 'sinon';
 import Switch from 'components/Switch';

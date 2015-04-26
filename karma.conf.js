@@ -58,6 +58,11 @@ module.exports = function(config) {
           }
         ]
       },
+      externals: [
+        {
+          "window": "window"
+        }
+      ],
       plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.DefinePlugin({
