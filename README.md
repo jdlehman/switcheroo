@@ -32,4 +32,14 @@ class MyComponent extends Component {
 }
 ```
 
-You can use `pushState` by setting the `pushState` property on `Switcher` like `<Switcher pushState={true}>...`
+You can also use any React component in a `Switcher` as long as it has a `path` property specified.
+
+```js
+<Switcher>
+  <HomeComponent path="/" />
+  <AboutComponent path="/about" extraProp="thisOne" />
+  <StoreComponent path="/store" handler={StoreHeader}>
+    <ItemComponent />
+  </StoreComponent>
+</Switcher>
+```
