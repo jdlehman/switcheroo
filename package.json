@@ -24,6 +24,7 @@
   "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^5.1.13",
     "babel-loader": "^5.0.0",
     "chai": "^2.2.0",
     "eslint": "^0.18.0",
