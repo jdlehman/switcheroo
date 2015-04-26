@@ -1,3 +1,7 @@
+[![npm version](https://badge.fury.io/js/switcheroo.svg)](http://badge.fury.io/js/switcheroo)
+[![Build Status](https://secure.travis-ci.org/jdlehman/switcheroo.svg?branch=master)](http://travis-ci.org/jdlehman/switcheroo)
+[![Dependency Status](https://david-dm.org/jdlehman/switcheroo.svg)](https://david-dm.org/jdlehman/switcheroo)
+
 # Switcheroo
 
 Switcheroo allows you to specify a React component that renders a specific component based on the URL. Looks at hash location by default (`window.location.hash`), but also supports [`pushState`](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history), which uses `window.location.pathname` for comparison.
