@@ -44,5 +44,8 @@
     "react": ">=0.12.0 <0.14.0",
     "sinon": "git://github.com/cjohansen/Sinon.JS#b672042043517b9f84e14ed0fb8265126168778a",
     "webpack": "^1.8.9"
+  },
+  "peerDependencies": {
+    "react": ">=0.12.0 <0.14.0"
   }
 }
