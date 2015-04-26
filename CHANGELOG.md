@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 (2014-04-25)
+
+Added:
+
+- `Switcher` accepts optional `wrapper` prop. This specifies a component to wrap the rendered component with. [10dd2de](../../commit/10dd2de)
+- `Switcher` now accepts `load` and `hashChange`. These both default to true and control the event listeners that `Switcher` checks for path changes on. These work in conjunction with the existing `pushState` prop. [1003c14](../../commit/1003c14)
+- `Switcher` accepts `location` prop, that defaults to `hash`. This is used for path comparison (`window.location[this.props.location]`). [a91e604](../../commit/a91e604)
+- `Switcher` accepts `basePath` prop that defaults to ''. This is prepended to all component path props in `Switcher`. [862f5fd](../../commit/862f5fd)
+
 ## 0.4.0 (2014-04-15)
 
 Changed:
