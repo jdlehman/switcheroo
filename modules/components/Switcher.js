@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Recognizer from 'route-recognizer';
 import window from 'window';
 
 export default class Switcher extends Component {
@@ -10,6 +11,15 @@ export default class Switcher extends Component {
     this.getSwitch = this.getSwitch.bind(this);
 
     this.defaultSwitch = this.props.defaultHandler ? React.createElement(this.props.defaultHandler, this.props.defaultHandlerProps) : null;
+    this.recognizer = new Recognizer();
+    var children = [].concat(this.props.children);
+    children.forEach((child) => {
+      this.recognizer.add([{
+        path: `${this.props.basePath}${child.props.path}`,
+        handler: child.props.handler || child
+      }]);
+    });
+
     // set initial state
     this.state = {
       visibleSwitch: null
@@ -51,17 +61,16 @@ export default class Switcher extends Component {
   }
 
   getSwitch(path) {
-    var children = [].concat(this.props.children);
-    return children.filter((child) => {
-      return `${this.props.basePath}${child.props.path}` === path;
-    })[0];
+    var handlers = this.recognizer.recognize(path);
+    return handlers && handlers[0] && handlers[0].handler;
   }
 
   handleRouteChange(e) {
-    var newRoute = this.getLocation(),
-        switchElement = this.getSwitch(newRoute);
+    var currentPath = this.getLocation(),
+        switchElement = this.getSwitch(currentPath);
+
     if(typeof this.props.onChange === 'function') {
-      this.props.onChange(!!switchElement, newRoute);
+      this.props.onChange(!!switchElement, currentPath);
     }
 
     this.setState({

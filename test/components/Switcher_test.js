@@ -83,35 +83,58 @@ describe('Switcher', function() {
   });
 
   describe('#getSwitch', function() {
-    beforeEach(function() {
-      this.switcher = React.render(
-        <Switcher>
-          <div path="/">Home</div>
-          <div path="/another">Another</div>
-          <div path="/duplicate">Dup 1</div>
-          <div path="/duplicate">Dup 2</div>
-        </Switcher>,
-        document.body
-      );
-    });
+    describe('default', function() {
+      beforeEach(function() {
+        this.switcher = React.render(
+          <Switcher>
+            <div path="/">Home</div>
+            <div path="/another">Another</div>
+            <div path="/wildCardPath/*anything">Wild</div>
+            <div path="/path/:dynamic/more">Dynamic</div>
+            <div path="/duplicate">Dup 1</div>
+            <div path="/duplicate">Dup 2</div>
+          </Switcher>,
+          document.body
+        );
+      });
 
-    afterEach(function() {
-      React.unmountComponentAtNode(document.body);
-    });
+      afterEach(function() {
+        React.unmountComponentAtNode(document.body);
+      });
 
-    it('gets component with matching path', function() {
-      var swtch = this.switcher.getSwitch('/another');
-      assert.equal(swtch.props.children, 'Another');
-    });
+      it('gets component with matching path', function() {
+        var swtch = this.switcher.getSwitch('/another');
+        assert.equal(swtch.props.children, 'Another');
+      });
 
-    it('returns undefined if there is no matching switch', function() {
-      var swtch = this.switcher.getSwitch('/notHere');
-      assert.isUndefined(swtch);
-    });
+      it('handles trailing /', function() {
+        var swtch = this.switcher.getSwitch('/another/');
+        assert.equal(swtch.props.children, 'Another');
+      });
 
-    it('gets first match if duplicate paths', function() {
-      var swtch = this.switcher.getSwitch('/duplicate');
-      assert.equal(swtch.props.children, 'Dup 1');
+      it('returns undefined if there is no matching switch', function() {
+        var swtch = this.switcher.getSwitch('/notHere');
+        assert.isUndefined(swtch);
+      });
+
+      it('gets last match if duplicate paths', function() {
+        var swtch = this.switcher.getSwitch('/duplicate');
+        assert.equal(swtch.props.children, 'Dup 2');
+      });
+
+      it('handles paths with wild cards', function() {
+        var swtch = this.switcher.getSwitch('/wildCardPath/something'),
+            swtch2 = this.switcher.getSwitch('/wildCardPath/something/more');
+        assert.equal(swtch.props.children, 'Wild');
+        assert.equal(swtch2.props.children, 'Wild');
+      });
+
+      it('handles paths with dynamic segments', function() {
+        var swtch = this.switcher.getSwitch('/path/abc123/more'),
+            swtch2 = this.switcher.getSwitch('/path/somethingelse/more');
+        assert.equal(swtch.props.children, 'Dynamic');
+        assert.equal(swtch2.props.children, 'Dynamic');
+      });
     });
 
     describe('with basepath set', function() {
