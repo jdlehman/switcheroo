@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.5.0 (2014-04-25)
+## 0.5.1 (2015-04-29)
+
+Added:
+
+- [`route-recognizer`](https://github.com/tildeio/route-recognizer) dependency added to handle matching paths. This allows for dynamic segments and star segments which are covered in the docs. [3d5da48](../../commit/3d5da48)
+
+## 0.5.0 (2015-04-25)
 
 Added:
 
@@ -9,13 +15,19 @@ Added:
 - `Switcher` accepts `location` prop, that defaults to `hash`. This is used for path comparison (`window.location[this.props.location]`). [a91e604](../../commit/a91e604)
 - `Switcher` accepts `basePath` prop that defaults to ''. This is prepended to all component path props in `Switcher`. [862f5fd](../../commit/862f5fd)
 
-## 0.4.0 (2014-04-15)
+## 0.4.0 (2015-04-15)
 
 Changed:
 
 - `Switch` path now ignores query params. This means a `Switch` with a path `/abc` renders for `/abc` and `/abc?a=1&b=2`. [575bfb0](../../commit/575bfb0)
 
-## 0.3.0 (2014-04-03)
+## 0.3.1 (2015-04-03)
+
+Changed:
+
+- `onChange` method is called right before `Switcher` renders new component. [0bbf93b](../../commit/0bbf93b)
+
+## 0.3.0 (2015-04-03)
 
 Added:
 
