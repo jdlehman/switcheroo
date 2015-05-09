@@ -2,11 +2,20 @@
 [![Build Status](https://secure.travis-ci.org/jdlehman/switcheroo.svg?branch=master)](http://travis-ci.org/jdlehman/switcheroo)
 [![Dependency Status](https://david-dm.org/jdlehman/switcheroo.svg)](https://david-dm.org/jdlehman/switcheroo)
 
-# Switcheroo
+# switcheroo
 
-Switcheroo allows you to specify a React component that renders a specific component based on the URL. Looks at hash location by default (`window.location.hash`), but also supports [`pushState`](https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history), which uses `window.location.pathname` for comparison.
+switcheroo allows you to specify a React container component that renders a single child component based on a property of `window.location` (`hash`, `pathname`, etc.), using `window.location.hash` by default.
 
-The [`Switcher`](docs/components/Switcher.md) and [`Switch`](docs/components/Switch.md) components provided to you by switcheroo give you everything you need. Read the component docs for more information on configuring these components as well as the additional features/configuration hooks provided via optional props.
+The `Switcher` container component provided by switcheroo can accept any React elements, as long as they have a `path` property. switcheroo is very configurable, and you can read about the properties the [`Switcher`](docs/components/Switcher.md) and child ["Switch"](docs/components/Switch.md) elements take in the [docs](docs/components).
+
+## Features
+
+- Router agnostic. You can use any router, even [react-router](https://github.com/rackt/react-router) in conjunction with switcheroo
+- Supports hashChange and pushState
+- Provides callbacks including when a specific component [hides](docs/components/Switch.md#onhide) or [shows](docs/components/Switch.md#onshow) as well as when the path [changes](docs/components/Switcher.md#onchange)
+- Supports [React animations](https://facebook.github.io/react/docs/animation.html) via [`wrapper`](docs/components/Switcher.md#wrapper) prop
+- Highly configurable via props
+- Lightweight ~4k gzipped
 
 ## Example
 
@@ -43,3 +52,9 @@ You can also use any React component in a `Switcher` as long as it has a `path` 
   </StoreComponent>
 </Switcher>
 ```
+
+## Rationale
+
+The purpose of switcheroo is to enable switching what React component is rendered based on the configured part of the URL without forcing any routing opinions on you, you can use whatever router you wish. This helps keep switcheroo small and flexible.
+
+If you are looking for a more robust and opinionated routing solution, I highly recommend taking a look at [react-router](https://github.com/rackt/react-router). This project actually spawned from an attempt to do something [similar](https://gist.github.com/jdlehman/b662cac8b8607abf51a6) with react-router.
