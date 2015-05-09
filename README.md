@@ -10,7 +10,7 @@ The `Switcher` container component provided by switcheroo can accept any React e
 
 ## Features
 
-- Router agnostic. You can use any router, even [react-router](https://github.com/rackt/react-router) in conjunction with switcheroo
+- Router agnostic. You can use any router, even [react-router](https://github.com/rackt/react-router), in conjunction with switcheroo
 - Any React component can be used as a ["Switch"](docs/components/Switch.md) without any modification, other than defining a `path` property on it.
 - Supports hashChange and pushState
 - Provides callbacks including when a specific component [hides](docs/components/Switch.md#onhide) or [shows](docs/components/Switch.md#onshow) as well as when the path [changes](docs/components/Switcher.md#onchange)
