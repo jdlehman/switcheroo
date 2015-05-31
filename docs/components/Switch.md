@@ -20,18 +20,3 @@ The `path` prop is a string that if matches the path, the corresponding handler 
 // star segements
 "/post/*everything" matches "/post/one", "post/one/two", and "/post/one/two/three", but not "/post"
 ```
-
-### handler
-
-The `handler` prop is the React component to be rendered on a matching path.
-
-
-## Optional Props
-
-### onShow
-
-`onShow` is a function that gets called whenever a particular "Switch" is used (meaning its path prop matched the path). This function does not receive any arguments.
-
-### onHide
-
-`onHide` is a function that gets called whenever a matching "Switch" is no longer matching anymore, and therefore no longer rendered. This function does not receive any arguments.
