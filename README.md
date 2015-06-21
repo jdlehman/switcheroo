@@ -30,6 +30,42 @@ The `Switcher` container component provided by switcheroo can accept any React e
 </Switcher>
 ```
 
+## React Transitions
+
+You can also use React's [CSSTransitionGroup](https://facebook.github.io/react/docs/animation.html) addon to add transition animations to your `Switcher`.
+
+```js
+var CSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+<Switcher wrapper={CSSTransitionGroup} transitionName="SlideDown" component="div">
+  <HomeComponent path="/" />
+  <AboutComponent path="/about" someAboutComponentProp="thisOne" />
+</Switcher>
+```
+
+Don't forget to define the CSS properties.
+
+```css
+.SlideDown-enter {
+  transform: translateY(-100%);
+}
+
+.SlideDown-enter.SlideDown-enter-active {
+  transition: transform 300ms ease-out;
+  transform: translateY(0);
+}
+
+.SlideDown-leave {
+  transform: translateY(0);
+}
+
+.SlideDown-leave.SlideDown-leave-active {
+  transform: translateY(-100%);
+  transition: transform 300ms ease-in;
+}
+
+```
+
 ## Rationale
 
 The purpose of switcheroo is to enable switching what React component is rendered based on the configured part of the URL without forcing any routing opinions on you, you can use whatever router you wish. This helps keep switcheroo small and flexible.
