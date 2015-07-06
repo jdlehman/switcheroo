@@ -1,0 +1,36 @@
+{
+  "name": "basic-switcheroo",
+  "version": "0.0.0",
+  "description": "Basic switcheroo example",
+  "main": "server.js",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack",
+    "serve": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jdlehman/switcheroo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jdlehman/switcheroo/issues"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "routing",
+    "javascript"
+  ],
+  "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^5.6.15",
+    "babel-loader": "^5.2.2",
+    "react-hot-loader": "^1.2.7",
+    "webpack": "^1.10.0",
+    "webpack-dev-server": "^1.10.1"
+  },
+  "dependencies": {
+    "react": "^0.13.3",
+    "switcheroo": "^0.5.1"
+  }
+}
