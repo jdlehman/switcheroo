@@ -11,7 +11,6 @@ class Handler extends Component {
 }
 
 describe('Switcher', function() {
-
   describe('#getLocation', function() {
     describe('using location.hash', function() {
       beforeEach(function() {
@@ -301,5 +300,4 @@ describe('Switcher', function() {
       });
     });
   });
-
 });

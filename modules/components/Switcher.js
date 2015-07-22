@@ -9,21 +9,16 @@ export default class Switcher extends Component {
     this.getLocation = this.getLocation.bind(this);
     this.handleRouteChange = this.handleRouteChange.bind(this);
     this.getSwitch = this.getSwitch.bind(this);
+    this.initializeRecognizer = this.initializeRecognizer.bind(this);
 
-    this.defaultSwitch = this.props.defaultHandler ? React.createElement(this.props.defaultHandler, this.props.defaultHandlerProps) : null;
-    this.recognizer = new Recognizer();
-    var children = [].concat(this.props.children);
-    children.forEach((child) => {
-      this.recognizer.add([{
-        path: `${this.props.basePath}${child.props.path}`,
-        handler: child.props.handler || child
-      }]);
-    });
+    this.defaultSwitch = props.defaultHandler ? React.createElement(props.defaultHandler, props.defaultHandlerProps) : null;
 
     // set initial state
     this.state = {
       visibleSwitch: null
     };
+
+    this.initializeRecognizer(props);
   }
 
   componentDidMount() {
@@ -50,6 +45,27 @@ export default class Switcher extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.initializeRecognizer(nextProps);
+  }
+
+  initializeRecognizer(props) {
+    this.recognizer = new Recognizer();
+    var children = [].concat(props.children);
+    children.forEach((child) => {
+      this.recognizer.add([{
+        path: `${props.basePath}${child.props.path}`,
+        handler: child.props.handler || child
+      }]);
+    });
+    var currentPath = this.getLocation();
+    var switchElement = this.getSwitch(currentPath);
+
+    this.setState({
+      visibleSwitch: switchElement
+    });
+  }
+
   getLocation() {
     var location = decodeURI(window.location[this.props.location].slice(1).split('?')[0]);
     if(location.charAt(0) !== '/') {
@@ -66,8 +82,8 @@ export default class Switcher extends Component {
   }
 
   handleRouteChange(e) {
-    var currentPath = this.getLocation(),
-        switchElement = this.getSwitch(currentPath);
+    var currentPath = this.getLocation();
+    var switchElement = this.getSwitch(currentPath);
 
     if(typeof this.props.onChange === 'function') {
       this.props.onChange(!!switchElement, currentPath);
