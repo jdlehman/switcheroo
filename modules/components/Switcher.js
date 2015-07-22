@@ -12,13 +12,14 @@ export default class Switcher extends Component {
     this.initializeRecognizer = this.initializeRecognizer.bind(this);
 
     this.defaultSwitch = props.defaultHandler ? React.createElement(props.defaultHandler, props.defaultHandlerProps) : null;
+    this.initializeRecognizer(props);
 
     // set initial state
+    var currentPath = this.getLocation();
+    var switchElement = this.getSwitch(currentPath);
     this.state = {
-      visibleSwitch: null
+      visibleSwitch: switchElement
     };
-
-    this.initializeRecognizer(props);
   }
 
   componentDidMount() {
@@ -47,6 +48,13 @@ export default class Switcher extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.initializeRecognizer(nextProps);
+
+    var currentPath = this.getLocation();
+    var switchElement = this.getSwitch(currentPath);
+
+    this.setState({
+      visibleSwitch: switchElement
+    });
   }
 
   initializeRecognizer(props) {
@@ -57,12 +65,6 @@ export default class Switcher extends Component {
         path: `${props.basePath}${child.props.path}`,
         handler: child.props.handler || child
       }]);
-    });
-    var currentPath = this.getLocation();
-    var switchElement = this.getSwitch(currentPath);
-
-    this.setState({
-      visibleSwitch: switchElement
     });
   }
 
@@ -78,7 +80,7 @@ export default class Switcher extends Component {
 
   getSwitch(path) {
     var handlers = this.recognizer.recognize(path);
-    return handlers && handlers[0] && handlers[0].handler;
+    return (handlers && handlers[0] && handlers[0].handler) || null;
   }
 
   handleRouteChange(e) {

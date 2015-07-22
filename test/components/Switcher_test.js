@@ -111,9 +111,9 @@ describe('Switcher', function() {
         assert.equal(swtch.props.children, 'Another');
       });
 
-      it('returns undefined if there is no matching switch', function() {
+      it('returns null if there is no matching switch', function() {
         var swtch = this.switcher.getSwitch('/notHere');
-        assert.isUndefined(swtch);
+        assert.isNull(swtch);
       });
 
       it('gets last match if duplicate paths', function() {
