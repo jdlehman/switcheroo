@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 (2015-07-22)
+
+Fixed:
+
+- When a `Switch`'s `props` change ensure that the component is rendered with the correct data. This was previously using stale `props` from initialization as the `Switch`es are set to the handlers for `route-recognizer` route matches, so these references need to be updated on the React lifecycle, `componentWillReceiveProps`. [2f8316a](../../commit/2f8316a)
+
 ## 0.5.1 (2015-04-29)
 
 Added:
