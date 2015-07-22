@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0 (2015-07-22)
+
+Fixed:
+
+- Remove `setState` being called before component was mounted (removes warnings) [20c60de](../../commit/20c60de)
+
 ## 0.6.0 (2015-07-22)
 
 Fixed:
