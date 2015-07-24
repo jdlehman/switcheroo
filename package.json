@@ -25,9 +25,12 @@
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^5.2.17",
+    "babel-eslint": "^3.1.26",
     "babel-loader": "^5.0.0",
     "chai": "^2.3.0",
     "eslint": "^0.20.0",
+    "eslint-config-airbnb": "0.0.6",
+    "eslint-plugin-react": "^3.0.0",
     "istanbul": "^0.3.13",
     "istanbul-instrumenter-loader": "^0.1.2",
     "karma": "^0.12.31",
