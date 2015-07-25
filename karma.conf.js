@@ -40,7 +40,7 @@ module.exports = function(config) {
       cache: true,
       resolve: {
         extensions: ['', '.js'],
-        modulesDirectories: ['node_modules', 'modules'],
+        modulesDirectories: ['node_modules', 'src'],
         fallback: __dirname
       },
       module: {
