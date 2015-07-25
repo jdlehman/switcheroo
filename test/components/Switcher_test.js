@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {assert} from 'chai';
 import sinon from 'sinon';
 import window from 'window';
@@ -9,6 +9,11 @@ class Handler extends Component {
     return <div>{this.props.text}</div>;
   }
 }
+
+Handler.displayName = 'Handler';
+Handler.propTypes = {
+  text: PropTypes.string
+};
 
 describe('Switcher', function() {
   describe('#getLocation', function() {
