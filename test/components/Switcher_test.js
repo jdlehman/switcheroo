@@ -5,15 +5,15 @@ import window from 'window';
 import Switcher from 'components/Switcher';
 
 class Handler extends Component {
+  static displayName = 'Handler';
+  static propTypes = {
+    text: PropTypes.string
+  };
+
   render() {
     return <div>{this.props.text}</div>;
   }
 }
-
-Handler.displayName = 'Handler';
-Handler.propTypes = {
-  text: PropTypes.string
-};
 
 describe('Switcher', function() {
   describe('#getLocation', function() {
