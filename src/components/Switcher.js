@@ -42,26 +42,14 @@ export default class Switcher extends Component {
   }
 
   componentDidMount() {
-    if(this.props.load) {
+    if (this.props.load) {
       window.addEventListener('load', this.handleRouteChange);
     }
-    if(this.props.pushState) {
+    if (this.props.pushState) {
       window.addEventListener('popstate', this.handleRouteChange);
     }
-    if(this.props.hashChange) {
+    if (this.props.hashChange) {
       window.addEventListener('hashchange', this.handleRouteChange);
-    }
-  }
-
-  componentWillUnmount() {
-    if(this.props.load) {
-      window.removeEventListener('load', this.handleRouteChange);
-    }
-    if(this.props.pushState) {
-      window.removeEventListener('popstate', this.handleRouteChange);
-    }
-    if(this.props.hashChange) {
-      window.removeEventListener('hashchange', this.handleRouteChange);
     }
   }
 
@@ -76,6 +64,32 @@ export default class Switcher extends Component {
     });
   }
 
+  componentWillUnmount() {
+    if (this.props.load) {
+      window.removeEventListener('load', this.handleRouteChange);
+    }
+    if (this.props.pushState) {
+      window.removeEventListener('popstate', this.handleRouteChange);
+    }
+    if (this.props.hashChange) {
+      window.removeEventListener('hashchange', this.handleRouteChange);
+    }
+  }
+
+  getLocation = () => {
+    var location = decodeURI(window.location[this.props.location].slice(1).split('?')[0]);
+    if (location.charAt(0) !== '/') {
+      return `/${location}`;
+    } else {
+      return location;
+    }
+  }
+
+  getSwitch = (path) => {
+    var handlers = this.recognizer.recognize(path);
+    return (handlers && handlers[0] && handlers[0].handler) || null;
+  }
+
   initializeRecognizer = (props) => {
     this.recognizer = new Recognizer();
     var children = [].concat(props.children);
@@ -87,26 +101,12 @@ export default class Switcher extends Component {
     });
   }
 
-  getLocation = () => {
-    var location = decodeURI(window.location[this.props.location].slice(1).split('?')[0]);
-    if(location.charAt(0) !== '/') {
-      return `/${location}`;
-    }
-    else {
-      return location;
-    }
-  }
 
-  getSwitch = (path) => {
-    var handlers = this.recognizer.recognize(path);
-    return (handlers && handlers[0] && handlers[0].handler) || null;
-  }
-
-  handleRouteChange = (e) => {
+  handleRouteChange = (ev) => {
     var currentPath = this.getLocation();
     var switchElement = this.getSwitch(currentPath);
 
-    if(typeof this.props.onChange === 'function') {
+    if (typeof this.props.onChange === 'function') {
       this.props.onChange(!!switchElement, currentPath);
     }
 
@@ -116,14 +116,13 @@ export default class Switcher extends Component {
   }
 
   render() {
-    if(this.props.wrapper) {
+    if (this.props.wrapper) {
       return React.createElement(
         this.props.wrapper,
         this.props,
         this.state.visibleSwitch || this.defaultSwitch
       );
-    }
-    else {
+    } else {
       return this.state.visibleSwitch || this.defaultSwitch;
     }
   }

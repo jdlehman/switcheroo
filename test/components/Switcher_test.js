@@ -127,15 +127,15 @@ describe('Switcher', function() {
       });
 
       it('handles paths with wild cards', function() {
-        var swtch = this.switcher.getSwitch('/wildCardPath/something'),
-            swtch2 = this.switcher.getSwitch('/wildCardPath/something/more');
+        var swtch = this.switcher.getSwitch('/wildCardPath/something');
+        var swtch2 = this.switcher.getSwitch('/wildCardPath/something/more');
         assert.equal(swtch.props.children, 'Wild');
         assert.equal(swtch2.props.children, 'Wild');
       });
 
       it('handles paths with dynamic segments', function() {
-        var swtch = this.switcher.getSwitch('/path/abc123/more'),
-            swtch2 = this.switcher.getSwitch('/path/somethingelse/more');
+        var swtch = this.switcher.getSwitch('/path/abc123/more');
+        var swtch2 = this.switcher.getSwitch('/path/somethingelse/more');
         assert.equal(swtch.props.children, 'Dynamic');
         assert.equal(swtch2.props.children, 'Dynamic');
       });
@@ -298,8 +298,8 @@ describe('Switcher', function() {
       it('renders matched component in wrapper', function() {
         window.location.hash = '/';
         this.switcher.handleRouteChange();
-        var wrapper = React.findDOMNode(this.switcher),
-            component = wrapper.children[0];
+        var wrapper = React.findDOMNode(this.switcher);
+        var component = wrapper.children[0];
         assert.equal(wrapper.tagName, 'SPAN');
         assert.equal(component.innerHTML, 'Home');
       });

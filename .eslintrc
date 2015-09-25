@@ -33,10 +33,11 @@
     "no-else-return": 0,
     "new-cap": 0,
     "quotes": [2, "single", "avoid-escape"],
+    "comma-dangle": 0,
+    "jsx-quotes": 1,
 
     "react/display-name": 1,
     "react/jsx-boolean-value": 1,
-    "react/jsx-quotes": 1,
     "react/jsx-no-undef": 1,
     "react/jsx-uses-react": 1,
     "react/jsx-uses-vars": 1,

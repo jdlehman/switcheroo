@@ -9,7 +9,6 @@
 // https://github.com/facebook/react/issues/945
 
 (function() {
-
   var Ap = Array.prototype;
   var slice = Ap.slice;
   var Fp = Function.prototype;
@@ -41,5 +40,4 @@
       return bound;
     };
   }
-
 })();
