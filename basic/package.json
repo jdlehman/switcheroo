@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "react": "^0.13.3",
-    "switcheroo": "^0.5.1"
+    "switcheroo": "^0.8.0"
   }
 }
