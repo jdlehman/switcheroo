@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 (2015-09-25)
+
+Breaking Changes:
+
+- Removed `route-recognizer` dependency. `path` prop now expects regular expression strings. eg: `<Component path="/myPath/valueA|valueB/.+" />. This means that paths with `route-recognizer` specific features like dynamic segments (`/path/:dynamic/more`) or star segments (`/path/*theRest`) will no longer work and should be updated. Most other paths should work without changes.
+
 ## 0.7.0 (2015-07-22)
 
 Fixed:
