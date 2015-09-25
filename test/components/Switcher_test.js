@@ -93,8 +93,8 @@ describe('Switcher', function() {
           <Switcher>
             <div path="/">Home</div>
             <div path="/another">Another</div>
-            <div path="/wildCardPath/*anything">Wild</div>
-            <div path="/path/:dynamic/more">Dynamic</div>
+            <div path="/wildCardPath/.*">Wild</div>
+            <div path="/path/.+/more">Dynamic</div>
             <div path="/duplicate">Dup 1</div>
             <div path="/duplicate">Dup 2</div>
           </Switcher>,
@@ -121,9 +121,9 @@ describe('Switcher', function() {
         assert.isNull(swtch);
       });
 
-      it('gets last match if duplicate paths', function() {
+      it('gets first match if duplicate paths', function() {
         var swtch = this.switcher.getSwitch('/duplicate');
-        assert.equal(swtch.props.children, 'Dup 2');
+        assert.equal(swtch.props.children, 'Dup 1');
       });
 
       it('handles paths with wild cards', function() {

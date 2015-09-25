@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Recognizer from 'route-recognizer';
+import {ensureTrailingSlash} from 'helpers';
 import window from 'window';
 
 export default class Switcher extends Component {
@@ -18,7 +18,7 @@ export default class Switcher extends Component {
     onChange: React.PropTypes.func,
     wrapper: React.PropTypes.any,
     location: React.PropTypes.string,
-    baseURL: React.PropTypes.string
+    basePath: React.PropTypes.string
   };
 
   static defaultProps = {
@@ -32,7 +32,6 @@ export default class Switcher extends Component {
   constructor(props) {
     super(props);
     this.defaultSwitch = props.defaultHandler ? React.createElement(props.defaultHandler, props.defaultHandlerProps) : null;
-    this.initializeRecognizer(props);
 
     var currentPath = this.getLocation();
     var switchElement = this.getSwitch(currentPath);
@@ -54,8 +53,6 @@ export default class Switcher extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.initializeRecognizer(nextProps);
-
     var currentPath = this.getLocation();
     var switchElement = this.getSwitch(currentPath);
 
@@ -86,21 +83,14 @@ export default class Switcher extends Component {
   }
 
   getSwitch = (path) => {
-    var handlers = this.recognizer.recognize(path);
-    return (handlers && handlers[0] && handlers[0].handler) || null;
+    var children = [].concat(this.props.children);
+    var consistentPath = ensureTrailingSlash(path);
+    return children.filter(child => {
+      var fullChildPath = ensureTrailingSlash(this.props.basePath + child.props.path);
+      var regex = new RegExp(`^${fullChildPath}$`);
+      return consistentPath.match(regex);
+    })[0] || null;
   }
-
-  initializeRecognizer = (props) => {
-    this.recognizer = new Recognizer();
-    var children = [].concat(props.children);
-    children.forEach((child) => {
-      this.recognizer.add([{
-        path: `${props.basePath}${child.props.path}`,
-        handler: child.props.handler || child
-      }]);
-    });
-  }
-
 
   handleRouteChange = (ev) => {
     var currentPath = this.getLocation();

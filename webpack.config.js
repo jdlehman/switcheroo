@@ -4,13 +4,18 @@ module.exports = {
   entry: './src/index',
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ }
+      { test: /\.js$/, loader: 'babel', exclude: /node_modules/ }
     ]
   },
   output: {
     filename: 'dist/switcheroo.min.js',
     libraryTarget: 'umd',
     library: 'switcheroo'
+  },
+  resolve: {
+    extensions: ['', '.js'],
+    modulesDirectories: ['node_modules', 'src'],
+    fallback: __dirname
   },
   externals: [
     {
