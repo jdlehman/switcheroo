@@ -8,6 +8,10 @@ switcheroo allows you to specify a React container component that renders a sing
 
 The `Switcher` container component provided by switcheroo can accept any React elements, as long as they have a `path` property. switcheroo is very configurable, and you can read about the properties the [`Switcher`](docs/components/Switcher.md) and children elements (that we will refer to as ["Switches"](docs/components/Switch.md)) take in the [docs](docs/components).
 
+## Installation
+
+- `npm install switcheroo`
+
 ## Features
 
 - Router agnostic. You can use any router, even [react-router](https://github.com/rackt/react-router), in conjunction with switcheroo
@@ -18,7 +22,7 @@ The `Switcher` container component provided by switcheroo can accept any React e
 - Highly configurable via props
 - Lightweight ~4k gzipped
 
-## Example
+## Example Usage
 
 ```js
 <Switcher>
