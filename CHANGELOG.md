@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.9.0 (2015-10-04)
+
+Added:
+
+- Allow `Switch` `path` property to take a string representing a regular expression or an array of them. [a55a73e](../../commit/a55a73e)
+
 ## 0.8.0 (2015-09-25)
 
 Breaking Changes:
 
-- Removed `route-recognizer` dependency. `path` prop now expects regular expression strings. eg: `<Component path="/myPath/valueA|valueB/.+" />. This means that paths with `route-recognizer` specific features like dynamic segments (`/path/:dynamic/more`) or star segments (`/path/*theRest`) will no longer work and should be updated. Most other paths should work without changes.
+- Removed `route-recognizer` dependency. `path` prop now expects regular expression strings. eg: `<Component path="/myPath/valueA|valueB/.+" />. This means that paths with `route-recognizer` specific features like dynamic segments (`/path/:dynamic/more`) or star segments (`/path/*theRest`) will no longer work and should be updated. Most other paths should work without changes. [76df023](../../commit/76df023)
 
 ## 0.7.0 (2015-07-22)
 
