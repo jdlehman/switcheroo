@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.1 (2015-10-04)
+
+Changed:
+
+- Reduced build size with Google Closure Compiler. [b72049b](../../commit/b72049b)
+
 ## 0.9.0 (2015-10-04)
 
 Added:
