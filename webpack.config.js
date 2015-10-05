@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-var ClosureCompilerPlugin = require('webpack-closure-compiler');
 
 module.exports = {
   entry: './src/index',
@@ -37,7 +36,6 @@ module.exports = {
       }
     }),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
-    new ClosureCompilerPlugin()
+    new webpack.optimize.UglifyJsPlugin()
   ]
 };
