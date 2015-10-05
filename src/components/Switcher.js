@@ -86,8 +86,10 @@ export default class Switcher extends Component {
     var children = [].concat(this.props.children);
     var consistentPath = ensureTrailingSlash(path);
     return children.filter(child => {
-      var fullChildPath = ensureTrailingSlash(this.props.basePath + child.props.path);
-      var regex = new RegExp(`^${fullChildPath}$`);
+      var childPaths = [].concat(child.props.path).map(childPath => {
+        return ensureTrailingSlash(this.props.basePath + childPath);
+      });
+      var regex = new RegExp(`^${childPaths.join('|')}$`);
       return consistentPath.match(regex);
     })[0] || null;
   }

@@ -97,6 +97,7 @@ describe('Switcher', function() {
             <div path="/path/.+/more">Dynamic</div>
             <div path="/duplicate">Dup 1</div>
             <div path="/duplicate">Dup 2</div>
+            <div path={['/arr1', '/arr2', '/arr2/more']}>Array</div>
           </Switcher>,
           document.body
         );
@@ -138,6 +139,13 @@ describe('Switcher', function() {
         var swtch2 = this.switcher.getSwitch('/path/somethingelse/more');
         assert.equal(swtch.props.children, 'Dynamic');
         assert.equal(swtch2.props.children, 'Dynamic');
+      });
+
+      it('handles array of paths', function() {
+        var swtch = this.switcher.getSwitch('/arr1');
+        var swtch2 = this.switcher.getSwitch('/arr2/more');
+        assert.equal(swtch.props.children, 'Array');
+        assert.equal(swtch2.props.children, 'Array');
       });
     });
 

@@ -11,4 +11,4 @@ A "Switch" component is always used inside of the context of a `Switcher` compon
 
 ### path
 
-The `path` prop is a string representing a regular expression. If the regular expression matches the path, the corresponding handler component will be rendered. If you define multiple `Switch`es with the same path, the first one will be used.
+The `path` prop is a string or array of strings where each string represents a regular expression. If any of the regular expressions matches the path, the corresponding handler component will be rendered. If you define multiple `Switch`es with the same path, the first one will be used.
