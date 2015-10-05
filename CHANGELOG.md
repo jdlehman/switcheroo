@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0 (2015-10-04)
+
+Fixed:
+
+- Google Closure Compiler seems to break some things and gives this error when Switcheroo is used with webpack: `Super expression must either be null or a function, not undefined`. [52a3b4d](../../commit/52a3b4d)
+
 ## 0.9.1 (2015-10-04)
 
 Changed:
