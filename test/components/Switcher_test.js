@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import ReactDOM from 'react-dom';
 import {assert} from 'chai';
 import sinon from 'sinon';
 import window from 'window';
@@ -19,7 +20,7 @@ describe('Switcher', function() {
   describe('#getLocation', function() {
     describe('using location.hash', function() {
       beforeEach(function() {
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher>
             <div path="/">Home</div>
             <div path="/another">Another</div>
@@ -53,7 +54,7 @@ describe('Switcher', function() {
 
     describe('using location.pathname', function() {
       beforeEach(function() {
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher location="pathname">
             <div path="/">Home</div>
             <div path="/another">Another</div>
@@ -89,7 +90,7 @@ describe('Switcher', function() {
   describe('#getSwitch', function() {
     describe('default', function() {
       beforeEach(function() {
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher>
             <div path="/">Home</div>
             <div path="/another">Another</div>
@@ -151,7 +152,7 @@ describe('Switcher', function() {
 
     describe('with basepath set', function() {
       beforeEach(function() {
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher basePath="/base">
             <div path="/">Home</div>
             <div path="/another">Another</div>
@@ -176,7 +177,7 @@ describe('Switcher', function() {
   describe('#handleRouteChange', function() {
     describe('default', function() {
       beforeEach(function() {
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher>
             <div path="/">Home</div>
           </Switcher>,
@@ -200,7 +201,7 @@ describe('Switcher', function() {
     describe('with onChange function defined', function() {
       beforeEach(function() {
         this.handleChange = sinon.spy();
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher onChange={this.handleChange}>
             <div path="/">Home</div>
           </Switcher>,
@@ -222,7 +223,7 @@ describe('Switcher', function() {
   describe('#render', function() {
     describe('default', function() {
       beforeEach(function() {
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher>
             <div path="/">Home</div>
           </Switcher>,
@@ -237,14 +238,14 @@ describe('Switcher', function() {
       it('renders nothing if no match', function() {
         window.location.hash = '/nomatch';
         this.switcher.handleRouteChange();
-        var node = React.findDOMNode(this.switcher);
+        var node = ReactDOM.findDOMNode(this.switcher);
         assert.isNull(node);
       });
 
       it('renders matching component', function() {
         window.location.hash = '/';
         this.switcher.handleRouteChange();
-        var node = React.findDOMNode(this.switcher);
+        var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Home');
       });
     });
@@ -252,7 +253,7 @@ describe('Switcher', function() {
     describe('with default handler', function() {
       beforeEach(function() {
         var props = {text: 'Hello'};
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher
               defaultHandler={Handler}
               defaultHandlerProps={props}>
@@ -269,21 +270,21 @@ describe('Switcher', function() {
       it('renders default handler when no match', function() {
         window.location.hash = '/nomatch';
         this.switcher.handleRouteChange();
-        var node = React.findDOMNode(this.switcher);
+        var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Hello');
       });
 
       it('renders matching component', function() {
         window.location.hash = '/';
         this.switcher.handleRouteChange();
-        var node = React.findDOMNode(this.switcher);
+        var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Home');
       });
     });
 
     describe('with wrapper', function() {
       beforeEach(function() {
-        this.switcher = React.render(
+        this.switcher = ReactDOM.render(
           <Switcher wrapper="span">
             <div path="/">Home</div>
           </Switcher>,
@@ -298,7 +299,7 @@ describe('Switcher', function() {
       it('renders just wrapper when no match', function() {
         window.location.hash = '/nomatch';
         this.switcher.handleRouteChange();
-        var wrapper = React.findDOMNode(this.switcher);
+        var wrapper = ReactDOM.findDOMNode(this.switcher);
         assert.equal(wrapper.innerHTML, '');
         assert.equal(wrapper.tagName, 'SPAN');
       });
@@ -306,7 +307,7 @@ describe('Switcher', function() {
       it('renders matched component in wrapper', function() {
         window.location.hash = '/';
         this.switcher.handleRouteChange();
-        var wrapper = React.findDOMNode(this.switcher);
+        var wrapper = ReactDOM.findDOMNode(this.switcher);
         var component = wrapper.children[0];
         assert.equal(wrapper.tagName, 'SPAN');
         assert.equal(component.innerHTML, 'Home');
