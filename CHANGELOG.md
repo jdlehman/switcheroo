@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.0 (2015-10-08)
+
+Changed:
+
+- Upgraded to React 0.14.0. [81b5603](../../commit/81b5603)
+
 ## 0.10.0 (2015-10-04)
 
 Fixed:
