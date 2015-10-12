@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {ensureTrailingSlash} from 'helpers';
-import window from 'window';
 
 export default class Switcher extends Component {
   static displayName = 'Switcher';
