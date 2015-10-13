@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.0 (2015-10-18)
+
+Changed:
+
+- Removed external `window` from webpack build configuration. This requires less configuration from end users and the external was not providing any meaningful value. [fe53f76](../../commit/fe53f76)
+
 ## 0.11.0 (2015-10-08)
 
 Changed:
