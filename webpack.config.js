@@ -24,8 +24,7 @@ module.exports = {
         commonjs2: "react",
         commonjs: "react",
         amd: "react"
-      },
-      "window": "window"
+      }
     }
   ],
   plugins: [
