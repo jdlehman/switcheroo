@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.13.0 (2015-10-20)
+
+Changed:
+
+- Removed optional `defaultHandler` and `defaultHandlerProps` properties. These are no longer necessary since regular expressions are now used for the `path` prop, meaning that the default component can be the last `Switch` with a `path` regular expression that matches everything. [38e843e](../../commit/38e843e)
+
+Since this is a breaking change see how to migrate existing code that uses these props below:
+
+```js
+<Switcher defaultHandler={MyComponent} defaultHandlerProps={myComponentProps}>
+  <Component1 path="/path1" />
+  <Component2 path="/path2" />
+</Switcher>
+```
+
+becomes
+
+```js
+<Switcher>
+  <Component1 path="/path1" />
+  <Component2 path="/path2" />
+  <MyComponent path="/.*" {...myComponentProps} />
+</Switcher>
+```
+
 ## 0.12.0 (2015-10-18)
 
 Changed:
