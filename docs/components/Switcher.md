@@ -9,6 +9,7 @@ The `Switcher` is a container component that holds a list of React components. I
   <div path="/">Hello World</div>
   <AboutComponent path="/about" />
   <AnotherComponent path="/another" anotherProp={myProp} />
+  <DefaultComponent path="/.*" />
 </Switcher>
 ```
 
@@ -37,14 +38,6 @@ When true, `Switcher` listens to the `load` event and looks for path changes on 
 ### location (default: 'hash')
 
 By default `window.location.hash` is used to match paths. If `location` is set to 'pathname', then `window.location.pathname` is used instead. Under the hood, it is using `window.location[this.props.location]`, so you can use `search` or any other valid property on `window.location`.
-
-### defaultHandler
-
-The `defaultHandler` is the handler that is used when there are no child elements with matching paths. If a default handler is not provided by the user, the component will render nothing when there isn't a match.
-
-### defaultHandlerProps
-
-`defaultHandlerProps` is passed directly as props to the `defaultHandler`.
 
 ### onChange
 

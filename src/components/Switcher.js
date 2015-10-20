@@ -12,8 +12,6 @@ export default class Switcher extends Component {
     pushState: React.PropTypes.bool,
     hashChange: React.PropTypes.bool,
     load: React.PropTypes.bool,
-    defaultHandler: React.PropTypes.func,
-    defaultHandlerProps: React.PropTypes.object,
     onChange: React.PropTypes.func,
     wrapper: React.PropTypes.any,
     location: React.PropTypes.string,
@@ -30,7 +28,6 @@ export default class Switcher extends Component {
 
   constructor(props) {
     super(props);
-    this.defaultSwitch = props.defaultHandler ? React.createElement(props.defaultHandler, props.defaultHandlerProps) : null;
 
     var currentPath = this.getLocation();
     var switchElement = this.getSwitch(currentPath);
@@ -111,10 +108,10 @@ export default class Switcher extends Component {
       return React.createElement(
         this.props.wrapper,
         this.props,
-        this.state.visibleSwitch || this.defaultSwitch
+        this.state.visibleSwitch
       );
     } else {
-      return this.state.visibleSwitch || this.defaultSwitch;
+      return this.state.visibleSwitch;
     }
   }
 }

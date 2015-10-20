@@ -1,20 +1,9 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import {assert} from 'chai';
 import sinon from 'sinon';
 import window from 'window';
 import Switcher from 'components/Switcher';
-
-class Handler extends Component {
-  static displayName = 'Handler';
-  static propTypes = {
-    text: PropTypes.string
-  };
-
-  render() {
-    return <div>{this.props.text}</div>;
-  }
-}
 
 describe('Switcher', function() {
   describe('#getLocation', function() {
@@ -252,12 +241,10 @@ describe('Switcher', function() {
 
     describe('with default handler', function() {
       beforeEach(function() {
-        var props = {text: 'Hello'};
         this.switcher = ReactDOM.render(
-          <Switcher
-              defaultHandler={Handler}
-              defaultHandlerProps={props}>
-            <div path="/">Home</div>
+          <Switcher>
+            <div path="/home">Home</div>
+            <div path="/.*">Default Handler</div>
           </Switcher>,
           document.body
         );
@@ -271,11 +258,11 @@ describe('Switcher', function() {
         window.location.hash = '/nomatch';
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
-        assert.equal(node.innerHTML, 'Hello');
+        assert.equal(node.innerHTML, 'Default Handler');
       });
 
       it('renders matching component', function() {
-        window.location.hash = '/';
+        window.location.hash = '/home';
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Home');
