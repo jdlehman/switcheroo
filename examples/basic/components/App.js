@@ -1,22 +1,19 @@
 import React, {Component} from 'react';
-import window from 'window';
-import Content from './Content';
+import Navbar from './Navbar';
+import LeftContent from './LeftContent';
+import RightContent from './RightContent';
+import Overlay from './Overlay';
 
 export default class App extends Component {
-  changeRoute1(e) {
-    window.location.hash = "/route1";
-  }
-
-  changeRoute2(e) {
-    window.location.hash = "/route2";
-  }
-
   render() {
     return (
-      <div>
-        <button onClick={this.changeRoute1}>Route1</button>
-        <button onClick={this.changeRoute2}>Route2</button>
-        <Content />
+      <div className="app">
+        <Navbar />
+        <div className="content">
+          <LeftContent />
+          <RightContent />
+          <Overlay />
+        </div>
       </div>
     );
   }
