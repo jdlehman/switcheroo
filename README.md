@@ -34,41 +34,13 @@ The `Switcher` container component provided by switcheroo can accept any React e
 </Switcher>
 ```
 
-## React Transitions
+## Transitions and Animations
 
-You can also use React's [CSSTransitionGroup](https://facebook.github.io/react/docs/animation.html) addon to add transition animations to your `Switcher`.
+You can use the `wrapper` property with transition group elements like React's [CSSTransitionGroup](https://facebook.github.io/react/docs/animation.html) addon or Twitter Fabric's [velocity-react](https://github.com/twitter-fabric/velocity-react) to make `Switch` elements animate as they enter and leave.
 
-```js
-var CSSTransitionGroup = React.addons.CSSTransitionGroup;
-
-<Switcher wrapper={CSSTransitionGroup} transitionName="SlideDown" component="div">
-  <HomeComponent path="/" />
-  <AboutComponent path="/about" someAboutComponentProp="thisOne" />
-</Switcher>
-```
-
-Don't forget to define the CSS properties.
-
-```css
-.SlideDown-enter {
-  transform: translateY(-100%);
-}
-
-.SlideDown-enter.SlideDown-enter-active {
-  transition: transform 300ms ease-out;
-  transform: translateY(0);
-}
-
-.SlideDown-leave {
-  transform: translateY(0);
-}
-
-.SlideDown-leave.SlideDown-leave-active {
-  transform: translateY(-100%);
-  transition: transform 300ms ease-in;
-}
-
-```
+See the [animation example](examples/animation) to see animations in action.
+- `velocity-react` [usage](examples/animation/components/Overlay.js#L35)
+- `CSSTransitionGroup` [usage](examples/animation/components/LeftContent.js#L18)
 
 ## Rationale
 
