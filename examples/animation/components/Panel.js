@@ -4,7 +4,7 @@ export default class Panel extends Component {
   renderPanelItems() {
     return this.props.items.map(function(item) {
       return (
-        <div className="panel-item">{item.content}</div>
+        <div key={item.content} className="panel-item">{item.content}</div>
       );
     });
   }
