@@ -25,6 +25,9 @@
     "routing",
     "javascript"
   ],
+  "files": [
+    "dist"
+  ],
   "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
   "license": "MIT",
   "devDependencies": {
