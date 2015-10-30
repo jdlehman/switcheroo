@@ -261,6 +261,13 @@ describe('Switcher', function() {
         assert.equal(node.innerHTML, 'Default Handler');
       });
 
+      it('default handle can match /', function() {
+        window.location.hash = '/';
+        this.switcher.handleRouteChange();
+        var node = ReactDOM.findDOMNode(this.switcher);
+        assert.equal(node.innerHTML, 'Default Handler');
+      });
+
       it('renders matching component', function() {
         window.location.hash = '/home';
         this.switcher.handleRouteChange();

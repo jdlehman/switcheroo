@@ -1,17 +1,23 @@
 import {assert} from 'chai';
-import {ensureTrailingSlash} from 'helpers';
+import {removeTrailingSlash} from 'helpers';
 
 describe('helpers', function() {
-  describe('ensureTrailingSlash', function() {
-    it('adds trailing slash to path without it', function() {
+  describe('removeTrailingSlash', function() {
+    it('removes trailing slash to path with it', function() {
       var path = '/test/something/more';
-      var newPath = ensureTrailingSlash(path);
-      assert.equal(newPath, `${path}/`);
+      var newPath = removeTrailingSlash(`${path}/`);
+      assert.equal(newPath, path);
     });
 
-    it('returns unmodified path if it already has trailing slash', function() {
-      var path = '/test/something/more/';
-      var newPath = ensureTrailingSlash(path);
+    it('returns unmodified path if it does not have a trailing slash', function() {
+      var path = '/test/something/more';
+      var newPath = removeTrailingSlash(path);
+      assert.equal(newPath, path);
+    });
+
+    it('returns unmodified path if path is /', function() {
+      var path = '/';
+      var newPath = removeTrailingSlash(path);
       assert.equal(newPath, path);
     });
   });

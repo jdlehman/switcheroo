@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ensureTrailingSlash} from 'helpers';
+import {removeTrailingSlash} from 'helpers';
 
 export default class Switcher extends Component {
   static displayName = 'Switcher';
@@ -80,13 +80,13 @@ export default class Switcher extends Component {
 
   getSwitch = (path) => {
     var children = [].concat(this.props.children);
-    var consistentPath = ensureTrailingSlash(path);
+    var consistentPath = removeTrailingSlash(path);
     return children.filter(child => {
       var childPaths = [].concat(child.props.path).map(childPath => {
-        return ensureTrailingSlash(this.props.basePath + childPath);
+        return `${removeTrailingSlash(this.props.basePath + childPath)}/?`;
       });
       var regex = new RegExp(`^${childPaths.join('|')}$`);
-      return consistentPath.match(regex);
+      return regex.test(consistentPath);
     })[0] || null;
   }
 
