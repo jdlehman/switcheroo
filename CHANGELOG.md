@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.1 (2015-10-30)
+
+Fixed:
+
+- Fixed bug that prevented the `Switch` path, `/.*`, from matching `/`. [0b2448e](../../commit/0b2448e)
+
 ## 0.13.0 (2015-10-20)
 
 Changed:
