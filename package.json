@@ -10,7 +10,9 @@
     "lint": "npm run lint-src && npm run lint-test",
     "test": "./node_modules/.bin/karma start --single-run",
     "clean": "rm -rf dist",
-    "prepublish": "npm run clean && npm run build"
+    "build-examples": "babel-node ./examples/buildAll.js",
+    "prepublish": "npm run clean && npm run build",
+    "postpublish": "sh ./scripts/build-site.sh"
   },
   "repository": {
     "type": "git",

@@ -4,7 +4,9 @@
   "description": "Basic switcheroo example",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/webpack",
+    "clean": "rm -rf dist",
+    "webpack": "./node_modules/.bin/webpack",
+    "build": "npm run clean && npm run webpack",
     "serve": "./node_modules/.bin/webpack-dev-server --no-info --hot --inline --port 8000",
     "start": "npm run serve"
   },
