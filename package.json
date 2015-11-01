@@ -11,8 +11,8 @@
     "test": "./node_modules/.bin/karma start --single-run",
     "clean": "rm -rf dist",
     "build-examples": "babel-node ./examples/buildAll.js",
-    "prepublish": "npm run clean && npm run build",
-    "postpublish": "sh ./scripts/build-site.sh"
+    "prepublish": "npm run clean && npm run build && npm run build-examples",
+    "postpublish": "git subtree push --prefix examples origin gh-pages"
   },
   "repository": {
     "type": "git",
