@@ -33,6 +33,12 @@ Or the wrapper can be another React component. This allows us to easily get anim
 
 ## Running locally
 
+### Without server
+
+- `open index.html`
+
+### With server (to reflect any edits to code)
+
 - `npm install`
 - `npm start`
 - navigate to `http://localhost:8000`
