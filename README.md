@@ -10,7 +10,19 @@ The `Switcher` container component provided by `switcheroo` can accept any React
 
 ## Installation
 
-- `npm install --save switcheroo`
+### npm
+
+```sh
+npm install --save switcheroo
+```
+
+### cdn
+
+While the `npm` package is recommended for production usage, if you just want to drop a `<script>` tag on your page you can also use the UMD/global build hosted on [`npmcdn`](https://npmcdn.com/switcheroo@0.13.1/dist/switcheroo.min.js).
+
+```html
+<script src="https://npmcdn.com/switcheroo@0.13.1/dist/switcheroo.min.js"></script>
+```
 
 ## Features
 
@@ -25,6 +37,8 @@ The `Switcher` container component provided by `switcheroo` can accept any React
 ## Example Usage
 
 ```js
+import {Switcher} from 'switcheroo';
+
 <Switcher>
   <HomeComponent path="/" />
   <AboutComponent path="/about" someAboutComponentProp="thisOne" />
