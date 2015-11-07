@@ -24,6 +24,10 @@ While the `npm` package is recommended for production usage, if you just want to
 <script src="https://npmcdn.com/switcheroo@0.13.1/dist/switcheroo.min.js"></script>
 ```
 
+## Try it out
+
+You can try out `switcheroo` now on [jsbin](https://jsbin.com/bekuhixoba/1/edit?js,output).
+
 ## Features
 
 - Router agnostic. You can use any router, even [react-router](https://github.com/rackt/react-router), in conjunction with `switcheroo`
