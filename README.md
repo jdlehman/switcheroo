@@ -26,7 +26,7 @@ While the `npm` package is recommended for production usage, if you just want to
 
 ## Try it out
 
-You can try out `switcheroo` now on [jsbin](https://jsbin.com/bekuhixoba/1/edit?js,output).
+You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/1/edit?js,output).
 
 ## Features
 
