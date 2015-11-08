@@ -18,10 +18,10 @@ npm install --save switcheroo
 
 ### cdn
 
-While the `npm` package is recommended for production usage, if you just want to drop a `<script>` tag on your page you can also use the UMD/global build hosted on [`npmcdn`](https://npmcdn.com/switcheroo@0.13.1/dist/switcheroo.min.js).
+While the `npm` package is recommended for production usage, if you just want to drop a `<script>` tag on your page you can also use the UMD/global build hosted on [`npmcdn`](https://npmcdn.com/switcheroo).
 
 ```html
-<script src="https://npmcdn.com/switcheroo@0.13.1/dist/switcheroo.min.js"></script>
+<script src="https://npmcdn.com/switcheroo@0.13.1"></script>
 ```
 
 ## Try it out
