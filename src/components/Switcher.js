@@ -1,21 +1,21 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {removeTrailingSlash} from 'helpers';
 
 export default class Switcher extends Component {
   static displayName = 'Switcher';
 
   static propTypes = {
-    children: React.PropTypes.oneOfType([
-      React.PropTypes.arrayOf(React.PropTypes.element),
-      React.PropTypes.element
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.element),
+      PropTypes.element
     ]).isRequired,
-    pushState: React.PropTypes.bool,
-    hashChange: React.PropTypes.bool,
-    load: React.PropTypes.bool,
-    onChange: React.PropTypes.func,
-    wrapper: React.PropTypes.node,
-    location: React.PropTypes.string,
-    basePath: React.PropTypes.string
+    pushState: PropTypes.bool,
+    hashChange: PropTypes.bool,
+    load: PropTypes.bool,
+    onChange: PropTypes.func,
+    wrapper: PropTypes.node,
+    location: PropTypes.string,
+    basePath: PropTypes.string
   };
 
   static defaultProps = {
