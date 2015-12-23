@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.0 (2015-12-23)
+
+Changed:
+
+- Made `Switcher` the default export instead of a named export from the library. [9d97f19](../../commit/9d97f19) Wherever using `Switcher` change as follows:
+
+```js
+// old
+import {Switcher} from 'switcheroo';
+```
+
+```js
+// new
+import Switcher from 'switcheroo';
+```
+
 ## 0.13.1 (2015-10-30)
 
 Fixed:
