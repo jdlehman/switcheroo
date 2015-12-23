@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {assert} from 'chai';
 import sinon from 'sinon';
-import window from 'window';
 import Switcher from 'components/Switcher';
 
 describe('Switcher', function() {
@@ -14,12 +13,12 @@ describe('Switcher', function() {
             <div path="/">Home</div>
             <div path="/another">Another</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('gets hash by default', function() {
@@ -48,12 +47,12 @@ describe('Switcher', function() {
             <div path="/">Home</div>
             <div path="/another">Another</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('gets hash by default', function() {
@@ -89,12 +88,12 @@ describe('Switcher', function() {
             <div path="/duplicate">Dup 2</div>
             <div path={['/arr1', '/arr2', '/arr2/more']}>Array</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('gets component with matching path', function() {
@@ -148,12 +147,12 @@ describe('Switcher', function() {
             <div path="/duplicate">Dup 1</div>
             <div path="/duplicate">Dup 2</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('gets component with matching path', function() {
@@ -170,12 +169,12 @@ describe('Switcher', function() {
           <Switcher>
             <div path="/">Home</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('sets visibleSwitch state', function() {
@@ -194,12 +193,12 @@ describe('Switcher', function() {
           <Switcher onChange={this.handleChange}>
             <div path="/">Home</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('calls onChange after path change', function() {
@@ -216,12 +215,12 @@ describe('Switcher', function() {
           <Switcher>
             <div path="/">Home</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('renders nothing if no match', function() {
@@ -246,12 +245,12 @@ describe('Switcher', function() {
             <div path="/home">Home</div>
             <div path="/.*">Default Handler</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('renders default handler when no match', function() {
@@ -282,12 +281,12 @@ describe('Switcher', function() {
           <Switcher wrapper="span">
             <div path="/">Home</div>
           </Switcher>,
-          document.body
+          document.getElementById('app')
         );
       });
 
       afterEach(function() {
-        React.unmountComponentAtNode(document.body);
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
       });
 
       it('renders just wrapper when no match', function() {
