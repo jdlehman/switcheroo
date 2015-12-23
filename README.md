@@ -6,7 +6,7 @@
 
 `switcheroo` allows you to specify a React container component that renders a single child component based on a property of `window.location` (`hash`, `pathname`, etc.), using `window.location.hash` by default.
 
-The `Switcher` container component provided by `switcheroo` can accept any React elements, as long as they have a `path` property. `switcheroo` is very configurable, and you can read about the properties the [`Switcher`](docs/components/Switcher.md) and children elements (that we will refer to as ["Switches"](docs/components/Switch.md)) take in the [docs](docs/components).
+The `Switcher` container component provided by `switcheroo` can accept any React elements, as long as they have a `path` property. `switcheroo` is very configurable, and you can read about the properties the [`Switcher`](docs/Switcher.md) and children elements (that we will refer to as ["Switches"](docs/Switch.md)) take in the [docs](docs/).
 
 ## Installation
 
@@ -31,17 +31,17 @@ You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/1/edit?js,
 ## Features
 
 - Router agnostic. You can use any router, even [react-router](https://github.com/rackt/react-router), in conjunction with `switcheroo`
-- Any React component can be used as a ["Switch"](docs/components/Switch.md) without any modification, other than defining a `path` property on it.
+- Any React component can be used as a ["Switch"](docs/Switch.md) without any modification, other than defining a `path` property on it.
 - Supports hashChange and pushState
-- Provides callbacks including when the path [changes](docs/components/Switcher.md#onchange)
-- Supports [React animations](https://facebook.github.io/react/docs/animation.html) via [`wrapper`](docs/components/Switcher.md#wrapper) prop
+- Provides callbacks including when the path [changes](docs/Switcher.md#onchange)
+- Supports [React animations](https://facebook.github.io/react/docs/animation.html) via [`wrapper`](docs/Switcher.md#wrapper) prop
 - Highly configurable via props
 - Lightweight ~4k gzipped
 
 ## Example Usage
 
 ```js
-import {Switcher} from 'switcheroo';
+import Switcher from 'switcheroo';
 
 <Switcher>
   <HomeComponent path="/" />

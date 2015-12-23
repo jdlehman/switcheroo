@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {assert} from 'chai';
 import sinon from 'sinon';
-import Switcher from 'components/Switcher';
+import Switcher from 'index';
 
 describe('Switcher', function() {
   describe('#getLocation', function() {
