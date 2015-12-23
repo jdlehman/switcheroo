@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Switcher} from 'switcheroo';
+import Switcher from 'switcheroo';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Panel from './Panel';
 

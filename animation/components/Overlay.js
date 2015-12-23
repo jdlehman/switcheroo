@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {VelocityTransitionGroup} from 'velocity-react';
-import {Switcher} from 'switcheroo';
+import Switcher from 'switcheroo';
 
 export default class Overlay extends Component {
   closeOverlay(e) {

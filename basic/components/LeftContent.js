@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Switcher} from 'switcheroo';
+import Switcher from 'switcheroo';
 import Panel from './Panel';
 
 export default class LeftContent extends Component {
