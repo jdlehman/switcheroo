@@ -36,7 +36,7 @@ You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/1/edit?js,
 - Provides callbacks including when the path [changes](docs/Switcher.md#onchange)
 - Supports [React animations](https://facebook.github.io/react/docs/animation.html) via [`wrapper`](docs/Switcher.md#wrapper) prop
 - Highly configurable via props
-- Lightweight ~4k gzipped
+- Lightweight ~2k gzipped
 
 ## Example Usage
 
