@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 (2015-12-26)
+
+Fixed:
+
+- Fix accidentally commented out build config so the build is minified and optimized for production again. [cd445b0](../../commit/cd445b0)
+
 ## 1.0.0 (2015-12-23)
 
 Changed:
