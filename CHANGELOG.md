@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 (2015-12-29)
+
+Fixed:
+
+- Loosen `wrapper` PropType constraints on `Switcher` component. Allow nodes, React elements, and strings representing DOM nodes as well. [612e6c0](../../commit/612e6c0)
+
 ## 1.0.1 (2015-12-26)
 
 Fixed:
