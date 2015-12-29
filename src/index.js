@@ -13,7 +13,7 @@ export default class Switcher extends Component {
     hashChange: PropTypes.bool,
     load: PropTypes.bool,
     onChange: PropTypes.func,
-    wrapper: PropTypes.node,
+    wrapper: PropTypes.any,
     location: PropTypes.string,
     basePath: PropTypes.string
   };
