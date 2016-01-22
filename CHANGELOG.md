@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 (2015-1-22)
+
+Fixed:
+
+- `Switch` now correctly receives new props passed in. Previously rendering would be stale in certain situations. [dc94afc](../../commit/dc94afc)
+
 ## 1.0.2 (2015-12-29)
 
 Fixed:
