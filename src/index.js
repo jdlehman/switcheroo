@@ -30,7 +30,7 @@ export default class Switcher extends Component {
     super(props);
 
     var currentPath = this.getLocation();
-    var switchElement = this.getSwitch(currentPath);
+    var switchElement = this.getSwitch(currentPath, props);
     this.state = {
       visibleSwitch: switchElement
     };
@@ -50,8 +50,7 @@ export default class Switcher extends Component {
 
   componentWillReceiveProps(nextProps) {
     var currentPath = this.getLocation();
-    var switchElement = this.getSwitch(currentPath);
-
+    var switchElement = this.getSwitch(currentPath, nextProps);
     this.setState({
       visibleSwitch: switchElement
     });
@@ -78,21 +77,21 @@ export default class Switcher extends Component {
     }
   };
 
-  getSwitch = (path) => {
-    var children = [].concat(this.props.children);
+  getSwitch(path, props) {
+    var children = [].concat(props.children);
     var consistentPath = removeTrailingSlash(path);
     return children.filter(child => {
       var childPaths = [].concat(child.props.path).map(childPath => {
-        return `${removeTrailingSlash(this.props.basePath + childPath)}/?`;
+        return `${removeTrailingSlash(props.basePath + childPath)}/?`;
       });
       var regex = new RegExp(`^${childPaths.join('|')}$`);
       return regex.test(consistentPath);
     })[0] || null;
-  };
+  }
 
   handleRouteChange = (ev) => {
     var currentPath = this.getLocation();
-    var switchElement = this.getSwitch(currentPath);
+    var switchElement = this.getSwitch(currentPath, this.props);
 
     if (typeof this.props.onChange === 'function') {
       this.props.onChange(!!switchElement, currentPath);
