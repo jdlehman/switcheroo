@@ -97,42 +97,42 @@ describe('Switcher', function() {
       });
 
       it('gets component with matching path', function() {
-        var swtch = this.switcher.getSwitch('/another');
+        var swtch = this.switcher.getSwitch('/another', this.switcher.props);
         assert.equal(swtch.props.children, 'Another');
       });
 
       it('handles trailing /', function() {
-        var swtch = this.switcher.getSwitch('/another/');
+        var swtch = this.switcher.getSwitch('/another/', this.switcher.props);
         assert.equal(swtch.props.children, 'Another');
       });
 
       it('returns null if there is no matching switch', function() {
-        var swtch = this.switcher.getSwitch('/notHere');
+        var swtch = this.switcher.getSwitch('/notHere', this.switcher.props);
         assert.isNull(swtch);
       });
 
       it('gets first match if duplicate paths', function() {
-        var swtch = this.switcher.getSwitch('/duplicate');
+        var swtch = this.switcher.getSwitch('/duplicate', this.switcher.props);
         assert.equal(swtch.props.children, 'Dup 1');
       });
 
       it('handles paths with wild cards', function() {
-        var swtch = this.switcher.getSwitch('/wildCardPath/something');
-        var swtch2 = this.switcher.getSwitch('/wildCardPath/something/more');
+        var swtch = this.switcher.getSwitch('/wildCardPath/something', this.switcher.props);
+        var swtch2 = this.switcher.getSwitch('/wildCardPath/something/more', this.switcher.props);
         assert.equal(swtch.props.children, 'Wild');
         assert.equal(swtch2.props.children, 'Wild');
       });
 
       it('handles paths with dynamic segments', function() {
-        var swtch = this.switcher.getSwitch('/path/abc123/more');
-        var swtch2 = this.switcher.getSwitch('/path/somethingelse/more');
+        var swtch = this.switcher.getSwitch('/path/abc123/more', this.switcher.props);
+        var swtch2 = this.switcher.getSwitch('/path/somethingelse/more', this.switcher.props);
         assert.equal(swtch.props.children, 'Dynamic');
         assert.equal(swtch2.props.children, 'Dynamic');
       });
 
       it('handles array of paths', function() {
-        var swtch = this.switcher.getSwitch('/arr1');
-        var swtch2 = this.switcher.getSwitch('/arr2/more');
+        var swtch = this.switcher.getSwitch('/arr1', this.switcher.props);
+        var swtch2 = this.switcher.getSwitch('/arr2/more', this.switcher.props);
         assert.equal(swtch.props.children, 'Array');
         assert.equal(swtch2.props.children, 'Array');
       });
@@ -156,7 +156,7 @@ describe('Switcher', function() {
       });
 
       it('gets component with matching path', function() {
-        var swtch = this.switcher.getSwitch('/base/another');
+        var swtch = this.switcher.getSwitch('/base/another', this.switcher.props);
         assert.equal(swtch.props.children, 'Another');
       });
     });
