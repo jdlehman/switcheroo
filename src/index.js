@@ -76,7 +76,7 @@ export default class Switcher extends Component {
     } else {
       return location;
     }
-  }
+  };
 
   getSwitch = (path) => {
     var children = [].concat(this.props.children);
@@ -88,7 +88,7 @@ export default class Switcher extends Component {
       var regex = new RegExp(`^${childPaths.join('|')}$`);
       return regex.test(consistentPath);
     })[0] || null;
-  }
+  };
 
   handleRouteChange = (ev) => {
     var currentPath = this.getLocation();
@@ -101,7 +101,7 @@ export default class Switcher extends Component {
     this.setState({
       visibleSwitch: switchElement
     });
-  }
+  };
 
   render() {
     if (this.props.wrapper) {
