@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 (2015-3-15)
+
+Added:
+
+- Added `preventUpdate` optional function prop to `Switcher`. When the function returns true, it prevents rendering changes. [562fa59](../../commit/562fa59)
+
 ## 1.0.3 (2015-1-22)
 
 Fixed:
