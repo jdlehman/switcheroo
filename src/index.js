@@ -15,7 +15,8 @@ export default class Switcher extends Component {
     onChange: PropTypes.func,
     wrapper: PropTypes.any,
     location: PropTypes.string,
-    basePath: PropTypes.string
+    basePath: PropTypes.string,
+    preventUpdate: PropTypes.func
   };
 
   static defaultProps = {
@@ -23,7 +24,8 @@ export default class Switcher extends Component {
     hashChange: true,
     load: true,
     location: 'hash',
-    basePath: ''
+    basePath: '',
+    preventUpdate: () => false
   };
 
   constructor(props) {
@@ -54,6 +56,10 @@ export default class Switcher extends Component {
     this.setState({
       visibleSwitch: switchElement
     });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return !nextProps.preventUpdate();
   }
 
   componentWillUnmount() {

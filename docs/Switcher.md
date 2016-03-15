@@ -54,3 +54,7 @@ If the `wrapper` prop is defined, the rendered child component will be wrapped i
 ### basePath (default: '')
 
 `basePath` is prepended to all path properties in the components inside `Switcher`. If `basePath` is set to `/base/path` then a component with path, `/home` will match the path `/base/path/home`.
+
+### preventUpdate (default: a function returning false)
+
+`preventUpdate` is an optional function. When `preventUpdate` returns true, subsequent renders will not occur despite props changing or route changes. This can be useful when animating or doing something in which the presentation of the component is desired to remain static.
