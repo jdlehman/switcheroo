@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 (2015-3-16)
+
+Fixed:
+
+- Allow `Switcher` to render a null child. [2b51da2](../../commit/2b51da2)
+
 ## 1.1.0 (2015-3-15)
 
 Added:
