@@ -6,9 +6,9 @@ export default class Switcher extends Component {
 
   static propTypes = {
     children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.element),
-      PropTypes.element
-    ]).isRequired,
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ]),
     pushState: PropTypes.bool,
     hashChange: PropTypes.bool,
     load: PropTypes.bool,
@@ -84,7 +84,7 @@ export default class Switcher extends Component {
   };
 
   getSwitch(path, props) {
-    var children = [].concat(props.children);
+    var children = [].concat(props.children || []);
     var consistentPath = removeTrailingSlash(path);
     return children.filter(child => {
       var childPaths = [].concat(child.props.path).map(childPath => {

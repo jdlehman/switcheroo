@@ -160,6 +160,23 @@ describe('Switcher', function() {
         assert.equal(swtch.props.children, 'Another');
       });
     });
+    describe('with no children', function() {
+      beforeEach(function() {
+        this.switcher = ReactDOM.render(
+          <Switcher basePath="/base">
+            {null}
+          </Switcher>,
+          document.getElementById('app')
+        );
+      });
+
+      afterEach(function() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+      });
+      it('renders nothing', function() {
+        assert.equal(document.getElementById('app').textContent, '');
+      });
+    });
   });
 
   describe('#handleRouteChange', function() {
