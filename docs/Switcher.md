@@ -1,6 +1,6 @@
 # Switcher
 
-The `Switcher` is a container component that holds a list of React components. It is the brains of switcheroo, and controls the handler that is rendered based on the path in the URL. `Switcher` allows any React component you want to be used as a ["Switch"](./Switch.md) as long as it has a `path` property. The default path comparison uses `window.location.hash`, but can also use `window.location.pathname` by configuring the `location` prop.
+The `Switcher` is a container component that holds a list of React components. It is the brains of `switcheroo`, and controls the handler that is rendered based on the path in the URL. `Switcher` allows any React component you want to be used as a ["Switch"](./Switch.md) as long as it has a `path` property. A path can have [dynamic segments](./dynamic_segments.md). The default path comparison uses `window.location.hash`, but can also use `window.location.pathname` by configuring the `location` prop.
 
 ```js
 // using Switch components
@@ -18,7 +18,7 @@ The `Switcher` is a container component that holds a list of React components. I
 
 ### children
 
-To actually render anything, the `Switcher` must have any number of children elements. These children components must each have a `path` prop. The component with the matching path (if there is one) will be rendered.
+To actually render anything, the `Switcher` must have any number of children elements. These children components must each have a `path` prop. The component with the matching path (if there is one) will be rendered. A path can have [dynamic segments](./dynamic_segments.md).
 
 
 ## Optional Props
@@ -41,10 +41,10 @@ By default `window.location.hash` is used to match paths. If `location` is set t
 
 ### onChange
 
-`onChange` enables a hook to call the provided function whenever the path changes. The function is provided 2 arguments, the first being a boolean of whether the path had a match, and the second being the path as a string.
+`onChange` enables a hook to call the provided function whenever the path changes. The function is provided 3 arguments, the first being a boolean of whether the path had a match, the second being the path as a string, and the third being the values of the matched [dynamic segments](./dynamic_segments) (`/:id`, etc).
 
 ```js
-onChange(match, pathname) { ... }
+onChange(match, pathname, dynamicSegments) { ... }
 ```
 
 ### wrapper
@@ -53,7 +53,7 @@ If the `wrapper` prop is defined, the rendered child component will be wrapped i
 
 ### basePath (default: '')
 
-`basePath` is prepended to all path properties in the components inside `Switcher`. If `basePath` is set to `/base/path` then a component with path, `/home` will match the path `/base/path/home`.
+`basePath` is prepended to all path properties in the components inside `Switcher`. If `basePath` is set to `/base/path` then a component with path, `/home` will match the path `/base/path/home`. The base path may also have [dynamic segments](./dynamic_segments.md). If `basePath` is set to `/base/:id/`, `/home` will match something like `/base/someIdCouldBeAnything/home`.
 
 ### preventUpdate (default: a function returning false)
 

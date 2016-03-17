@@ -5,7 +5,10 @@ import {
   currentPath,
   createRegexFromPaths,
   formatPathRegex,
-  getSwitch
+  getSwitch,
+  replaceDynamicSegments,
+  getDynamicSegmentNames,
+  getDynamicSegments
 } from 'helpers';
 
 describe('helpers', function() {
@@ -182,6 +185,86 @@ describe('helpers', function() {
     it('handles path with trailing slash', function() {
       var formattedPath = formatPathRegex('/base', '/path/test/');
       assert.equal(formattedPath, '/base/path/test/?');
+    });
+
+    it('replaces dynamic segments', function() {
+      var formattedPath = formatPathRegex('/base', '/path/:dyn1/test/:dyn2');
+      assert.equal(formattedPath, '/base/path/([^/]+)/test/([^/]+)/?');
+    });
+  });
+
+  describe('replaceDynamicSegments', function() {
+    it('replaces dynamic expressions with regex string', function() {
+      var path = '/:test/more/:another/:last/urlStuffs';
+      var newPath = replaceDynamicSegments(path);
+      assert.deepEqual(newPath, '/([^/]+)/more/([^/]+)/([^/]+)/urlStuffs');
+    });
+
+    it('does nothing if no dynamic segments', function() {
+      var path = '/test/more/another/last/urlStuffs';
+      var newPath = replaceDynamicSegments(path);
+      assert.deepEqual(newPath, path);
+    });
+  });
+
+  describe('getDynamicSegmentNames', function() {
+    it('returns an array with string names of dynamic segments', function() {
+      var path = '/:test/more/:another/:last/urlStuffs';
+      var dynamicSegments = getDynamicSegmentNames(path);
+      assert.deepEqual(dynamicSegments, ['test', 'another', 'last']);
+    });
+
+    it('returns an empty array if no dynamic segments', function() {
+      var path = '/test/more/another/last/urlStuffs';
+      var dynamicSegments = getDynamicSegmentNames(path);
+      assert.deepEqual(dynamicSegments, []);
+    });
+  });
+
+  describe('getDynamicSegments', function() {
+    it('returns an empty object if no dynamic segments', function() {
+      var path = '/base/helloWorld/more/something-123/data/urlStuffs';
+      var basePath = '/base';
+      var swtch = <span path='/base/helloWorld/more/something-123/data/urlStuffs' />;
+      var dynamicValues = getDynamicSegments(path, basePath, swtch);
+      assert.deepEqual(dynamicValues, {});
+    });
+
+    it('returns an object of dynamic segments {name: value, ...}', function() {
+      var path = '/base/helloWorld/more/something-123/data/urlStuffs';
+      var basePath = '/base';
+      var swtch = <span path="/:test/more/:another/:last/urlStuffs" />;
+      var dynamicValues = getDynamicSegments(path, basePath, swtch);
+      assert.deepEqual(dynamicValues, {
+        test: 'helloWorld',
+        another: 'something-123',
+        last: 'data'
+      });
+    });
+
+    it('handles dynamic segments in the base path', function() {
+      var path = '/stuff/helloWorld/more/';
+      var basePath = '/:base';
+      var swtch = <span path="/helloWorld/:data" />;
+      var dynamicValues = getDynamicSegments(path, basePath, swtch);
+      assert.deepEqual(dynamicValues, {
+        base: 'stuff',
+        data: 'more'
+      });
+    });
+
+    it('handles switches with an array of paths', function() {
+      var path = '/base/helloWorld/more/something-123/data/urlStuffs';
+      var basePath = '/base';
+      var swtch = (
+        <span path={['/:test/more', '/:test/more/:another/:last/urlStuffs', '/another']} />
+      );
+      var dynamicValues = getDynamicSegments(path, basePath, swtch);
+      assert.deepEqual(dynamicValues, {
+        test: 'helloWorld',
+        another: 'something-123',
+        last: 'data'
+      });
     });
   });
 });

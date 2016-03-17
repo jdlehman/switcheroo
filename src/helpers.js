@@ -15,8 +15,17 @@ export function removeTrailingSlash(path) {
   }
 }
 
+export function replaceDynamicSegments(path) {
+  return path.replace(/\/:[^\/]+/g, '/([^/]+)');
+}
+
+export function getDynamicSegmentNames(path) {
+  var dynamicSegementNames = path.match(/:[^\/]+/g) || [];
+  return dynamicSegementNames.map(name => name.substr(1));
+}
+
 export function formatPathRegex(basePath, path) {
-  return `${removeTrailingSlash(basePath + path)}/?`;
+  return replaceDynamicSegments(`${removeTrailingSlash(basePath + path)}/?`);
 }
 
 export function createRegexFromPaths(paths) {
@@ -31,4 +40,23 @@ export function getSwitch(path, {children, basePath}) {
     var regex = createRegexFromPaths(childPaths);
     return regex.test(consistentPath);
   })[0] || null;
+}
+
+export function getDynamicSegments(path, basePath, swtch) {
+  var dynamicValues = {};
+  var consistentPath = removeTrailingSlash(path);
+  if (swtch) {
+    [].concat(swtch.props.path).forEach(childPath => {
+      var dynamicSegments = getDynamicSegmentNames(basePath + childPath);
+      var regexStr = formatPathRegex(basePath, childPath);
+      var matches = consistentPath.match(new RegExp(`^${regexStr}$`));
+      if (matches) {
+        matches.shift();
+        dynamicSegments.forEach((segment, index) => {
+          dynamicValues[segment] = matches[index];
+        });
+      }
+    });
+  }
+  return dynamicValues;
 }

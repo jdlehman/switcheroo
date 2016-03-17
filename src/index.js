@@ -1,7 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {
   getSwitch,
-  currentPath
+  currentPath,
+  getDynamicSegments
 } from './helpers';
 
 export default class Switcher extends Component {
@@ -37,7 +38,8 @@ export default class Switcher extends Component {
     var currPath = currentPath(props.location);
     var switchElement = getSwitch(currPath, props);
     this.state = {
-      visibleSwitch: switchElement
+      visibleSwitch: switchElement,
+      dynamicValues: {}
     };
   }
 
@@ -75,15 +77,14 @@ export default class Switcher extends Component {
 
   handleSwitchChange = (props) => {
     var currPath = currentPath(props.location);
-    var switchElement = getSwitch(currPath, props);
+    var visibleSwitch = getSwitch(currPath, props);
+    var dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
 
     if (typeof props.onChange === 'function') {
-      props.onChange(!!switchElement, currPath);
+      props.onChange(!!visibleSwitch, currPath, dynamicValues);
     }
 
-    this.setState({
-      visibleSwitch: switchElement
-    });
+    this.setState({visibleSwitch, dynamicValues});
   };
 
   handleRouteChange = (ev) => {

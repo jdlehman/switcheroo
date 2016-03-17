@@ -35,6 +35,7 @@ describe('Switcher', function() {
         this.switcher = ReactDOM.render(
           <Switcher onChange={this.handleChange}>
             <div path="/">Home</div>
+            <div path="/:dynamic/more/:data">Dynamic</div>
           </Switcher>,
           document.getElementById('app')
         );
@@ -46,7 +47,20 @@ describe('Switcher', function() {
 
       it('calls onChange after path change', function() {
         this.switcher.handleRouteChange();
-        assert(this.handleChange.called);
+        sinon.assert.called(this.handleChange);
+      });
+
+      it('onChange handles paths with dynamic segments', function() {
+        window.location.hash = '/hello/more/123a-b';
+        this.switcher.handleRouteChange();
+        sinon.assert.calledWith(this.handleChange,
+          true,
+          '/hello/more/123a-b',
+          {
+            dynamic: 'hello',
+            data: '123a-b'
+          }
+        );
       });
     });
   });
