@@ -1,5 +1,12 @@
 import {assert} from 'chai';
-import {removeTrailingSlash} from 'helpers';
+import React from 'react';
+import {
+  removeTrailingSlash,
+  currentPath,
+  createRegexFromPaths,
+  formatPathRegex,
+  getSwitch
+} from 'helpers';
 
 describe('helpers', function() {
   describe('removeTrailingSlash', function() {
@@ -19,6 +26,162 @@ describe('helpers', function() {
       var path = '/';
       var newPath = removeTrailingSlash(path);
       assert.equal(newPath, path);
+    });
+  });
+
+  describe('currentPath', function() {
+    describe('using location.hash', function() {
+      it('gets hash by default', function() {
+        window.location.hash = '/path';
+        var path = currentPath('hash');
+        assert.equal(path, '/path');
+      });
+
+      it('ensures that path is prepended with a slash', function() {
+        window.location.hash = 'path';
+        var path = currentPath('hash');
+        assert.equal(path, '/path');
+      });
+
+      it('does not include query parameters', function() {
+        window.location.hash = '/path?a=2&b=3&c=hello';
+        var path = currentPath('hash');
+        assert.equal(path, '/path');
+      });
+    });
+
+    describe('using location.pathname', function() {
+      it('gets hash by default', function() {
+        window.history.pushState({}, '', '/path');
+        var path = currentPath('pathname');
+        assert.equal(path, '/path');
+      });
+
+      it('ensures that path is prepended with a slash', function() {
+        window.history.pushState({}, '', 'path');
+        var path = currentPath('pathname');
+        assert.equal(path, '/path');
+      });
+
+      it('does not include query parameters', function() {
+        window.history.pushState({}, '', '/path?a=2&b=3&c=hello');
+        var path = currentPath('pathname');
+        assert.equal(path, '/path');
+      });
+    });
+  });
+
+  describe('getSwitch', function() {
+    describe('default', function() {
+      beforeEach(function() {
+        this.props = {
+          basePath: '',
+          children: [
+            <div key="1" path="/">Home</div>,
+            <div key="2" path="/another">Another</div>,
+            <div key="3" path="/wildCardPath/.*">Wild</div>,
+            <div key="4" path="/path/.+/more">Dynamic</div>,
+            <div key="5" path="/duplicate">Dup 1</div>,
+            <div key="6" path="/duplicate">Dup 2</div>,
+            <div key="7" path={['/arr1', '/arr2', '/arr2/more']}>Array</div>
+          ]
+        };
+      });
+
+      it('gets component with matching path', function() {
+        var swtch = getSwitch('/another', this.props);
+        assert.equal(swtch.props.children, 'Another');
+      });
+
+      it('handles trailing /', function() {
+        var swtch = getSwitch('/another/', this.props);
+        assert.equal(swtch.props.children, 'Another');
+      });
+
+      it('returns null if there is no matching switch', function() {
+        var swtch = getSwitch('/notHere', this.props);
+        assert.isNull(swtch);
+      });
+
+      it('gets first match if duplicate paths', function() {
+        var swtch = getSwitch('/duplicate', this.props);
+        assert.equal(swtch.props.children, 'Dup 1');
+      });
+
+      it('handles paths with wild cards', function() {
+        var swtch = getSwitch('/wildCardPath/something', this.props);
+        var swtch2 = getSwitch('/wildCardPath/something/more', this.props);
+        assert.equal(swtch.props.children, 'Wild');
+        assert.equal(swtch2.props.children, 'Wild');
+      });
+
+      it('handles paths with dynamic segments', function() {
+        var swtch = getSwitch('/path/abc123/more', this.props);
+        var swtch2 = getSwitch('/path/somethingelse/more', this.props);
+        assert.equal(swtch.props.children, 'Dynamic');
+        assert.equal(swtch2.props.children, 'Dynamic');
+      });
+
+      it('handles array of paths', function() {
+        var swtch = getSwitch('/arr1', this.props);
+        var swtch2 = getSwitch('/arr2/more', this.props);
+        assert.equal(swtch.props.children, 'Array');
+        assert.equal(swtch2.props.children, 'Array');
+      });
+    });
+
+    describe('with basepath set', function() {
+      beforeEach(function() {
+        this.props = {
+          basePath: '/base',
+          children: [
+            <div key="1" path="/">Home</div>,
+            <div key="2" path="/another">Another</div>,
+            <div key="3" path="/duplicate">Dup 1</div>,
+            <div key="4" path="/duplicate">Dup 2</div>
+          ]
+        };
+      });
+
+      it('gets component with matching path', function() {
+        var swtch = getSwitch('/base/another', this.props);
+        assert.equal(swtch.props.children, 'Another');
+      });
+    });
+
+    describe('with no children', function() {
+      beforeEach(function() {
+        this.props = {
+          basePath: '/base',
+          children: null
+        };
+      });
+
+      it('renders nothing', function() {
+        var swtch = getSwitch('/base/another', this.props);
+        assert.equal(swtch, null);
+      });
+    });
+  });
+
+  describe('createRegexFromPaths', function() {
+    it('joins paths and creates a regex', function() {
+      var paths = ['/one/b', '/two/a/b', '/three'];
+      var regex = createRegexFromPaths(paths);
+      assert.equal(`${regex}`, '/^\\/one\\/b|\\/two\\/a\\/b|\\/three$/');
+      assert(regex instanceof RegExp);
+    });
+  });
+
+  describe('formatPathRegex', function() {
+    it('combines base path and path', function() {
+      var formattedPath = formatPathRegex('/base', '/path/test');
+      assert.equal(formattedPath, '/base/path/test/?');
+    });
+
+    it('handles path with trailing slash', function() {
+      var formattedPath = formatPathRegex('/base', '/path/test/');
+      assert.equal(formattedPath, '/base/path/test/?');
     });
   });
 });

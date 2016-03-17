@@ -1,5 +1,8 @@
 import React, {Component, PropTypes} from 'react';
-import {removeTrailingSlash} from './helpers';
+import {
+  getSwitch,
+  currentPath
+} from './helpers';
 
 export default class Switcher extends Component {
   static displayName = 'Switcher';
@@ -31,8 +34,8 @@ export default class Switcher extends Component {
   constructor(props) {
     super(props);
 
-    var currentPath = this.getLocation();
-    var switchElement = this.getSwitch(currentPath, props);
+    var currPath = currentPath(props.location);
+    var switchElement = getSwitch(currPath, props);
     this.state = {
       visibleSwitch: switchElement
     };
@@ -51,11 +54,7 @@ export default class Switcher extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    var currentPath = this.getLocation();
-    var switchElement = this.getSwitch(currentPath, nextProps);
-    this.setState({
-      visibleSwitch: switchElement
-    });
+    this.handleSwitchChange(nextProps);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -74,38 +73,21 @@ export default class Switcher extends Component {
     }
   }
 
-  getLocation = () => {
-    var location = decodeURI(window.location[this.props.location].slice(1).split('?')[0]);
-    if (location.charAt(0) !== '/') {
-      return `/${location}`;
-    } else {
-      return location;
-    }
-  };
+  handleSwitchChange = (props) => {
+    var currPath = currentPath(props.location);
+    var switchElement = getSwitch(currPath, props);
 
-  getSwitch(path, props) {
-    var children = [].concat(props.children || []);
-    var consistentPath = removeTrailingSlash(path);
-    return children.filter(child => {
-      var childPaths = [].concat(child.props.path).map(childPath => {
-        return `${removeTrailingSlash(props.basePath + childPath)}/?`;
-      });
-      var regex = new RegExp(`^${childPaths.join('|')}$`);
-      return regex.test(consistentPath);
-    })[0] || null;
-  }
-
-  handleRouteChange = (ev) => {
-    var currentPath = this.getLocation();
-    var switchElement = this.getSwitch(currentPath, this.props);
-
-    if (typeof this.props.onChange === 'function') {
-      this.props.onChange(!!switchElement, currentPath);
+    if (typeof props.onChange === 'function') {
+      props.onChange(!!switchElement, currPath);
     }
 
     this.setState({
       visibleSwitch: switchElement
     });
+  };
+
+  handleRouteChange = (ev) => {
+    this.handleSwitchChange(this.props);
   };
 
   render() {
