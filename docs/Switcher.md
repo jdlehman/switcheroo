@@ -55,6 +55,10 @@ If the `wrapper` prop is defined, the rendered child component will be wrapped i
 
 `basePath` is prepended to all path properties in the components inside `Switcher`. If `basePath` is set to `/base/path` then a component with path, `/home` will match the path `/base/path/home`. The base path may also have [dynamic segments](./dynamic_segments.md). If `basePath` is set to `/base/:id/`, `/home` will match something like `/base/someIdCouldBeAnything/home`.
 
-### preventUpdate (default: a function returning false)
+### preventUpdate (default: () => false)
 
 `preventUpdate` is an optional function. When `preventUpdate` returns true, subsequent renders will not occur despite props changing or route changes. This can be useful when animating or doing something in which the presentation of the component is desired to remain static.
+
+### mapDynamicSegments (default: data => data)
+
+`mapDynamicSegments` is an optional function property. When there are [dynamic segments](./dynamic_segments.md) in a path, it passes an object with these values (where the key names are the segment names) to `mapDynamicSegments` and merges the object returned by `mapDynamicSegments` with the props. `mapDynamicSegments` can be used to transform the dynamic segment data before it is merged with props. By default the dynamic segment data object is passed through.

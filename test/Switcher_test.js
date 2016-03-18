@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import ReactDOM from 'react-dom';
 import {assert} from 'chai';
 import sinon from 'sinon';
 import Switcher from 'index';
+import * as helpers from 'helpers';
 
 describe('Switcher', function() {
   describe('#handleRouteChange', function() {
@@ -18,10 +19,11 @@ describe('Switcher', function() {
 
       afterEach(function() {
         ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
       });
 
       it('sets visibleSwitch state', function() {
-        window.location.hash = '/';
+        sinon.stub(helpers, 'currentPath').returns('/');
         this.switcher.handleRouteChange();
         var visibleSwitch = this.switcher.state.visibleSwitch;
         assert.equal(visibleSwitch.props.children, 'Home');
@@ -51,8 +53,9 @@ describe('Switcher', function() {
       });
 
       it('onChange handles paths with dynamic segments', function() {
-        window.location.hash = '/hello/more/123a-b';
+        sinon.stub(helpers, 'currentPath').returns('/hello/more/123a-b');
         this.switcher.handleRouteChange();
+        helpers.currentPath.restore();
         sinon.assert.calledWith(this.handleChange,
           true,
           '/hello/more/123a-b',
@@ -78,17 +81,18 @@ describe('Switcher', function() {
 
       afterEach(function() {
         ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
       });
 
       it('renders nothing if no match', function() {
-        window.location.hash = '/nomatch';
+        sinon.stub(helpers, 'currentPath').returns('/nomatch');
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.isNull(node);
       });
 
       it('renders matching component', function() {
-        window.location.hash = '/';
+        sinon.stub(helpers, 'currentPath').returns('/');
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Home');
@@ -108,24 +112,25 @@ describe('Switcher', function() {
 
       afterEach(function() {
         ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
       });
 
       it('renders default handler when no match', function() {
-        window.location.hash = '/nomatch';
+        sinon.stub(helpers, 'currentPath').returns('/nomatch');
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Default Handler');
       });
 
       it('default handle can match /', function() {
-        window.location.hash = '/';
+        sinon.stub(helpers, 'currentPath').returns('/');
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Default Handler');
       });
 
       it('renders matching component', function() {
-        window.location.hash = '/home';
+        sinon.stub(helpers, 'currentPath').returns('/home');
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Home');
@@ -144,10 +149,11 @@ describe('Switcher', function() {
 
       afterEach(function() {
         ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
       });
 
       it('renders just wrapper when no match', function() {
-        window.location.hash = '/nomatch';
+        sinon.stub(helpers, 'currentPath').returns('/nomatch');
         this.switcher.handleRouteChange();
         var wrapper = ReactDOM.findDOMNode(this.switcher);
         assert.equal(wrapper.innerHTML, '');
@@ -155,12 +161,135 @@ describe('Switcher', function() {
       });
 
       it('renders matched component in wrapper', function() {
-        window.location.hash = '/';
+        sinon.stub(helpers, 'currentPath').returns('/');
         this.switcher.handleRouteChange();
         var wrapper = ReactDOM.findDOMNode(this.switcher);
         var component = wrapper.children[0];
         assert.equal(wrapper.tagName, 'SPAN');
         assert.equal(component.innerHTML, 'Home');
+      });
+    });
+
+    describe('with routes with dynamic segments', function() {
+      beforeEach(function() {
+        function MyComp(props) {
+          return (
+            <span>{props.id + props.page}</span>
+          );
+        }
+        MyComp.displayName = 'MyComp';
+        MyComp.propTypes = {
+          id: PropTypes.string,
+          page: PropTypes.string
+        };
+        this.switcher = ReactDOM.render(
+          <Switcher>
+            <MyComp path="/user/:id/information/:page" />
+            <span path="/user/id/information/page">Static Content</span>
+          </Switcher>,
+          document.getElementById('app')
+        );
+      });
+
+      afterEach(function() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
+      });
+
+      it('renders matched component and sets dynamic segments as props', function() {
+        sinon.stub(helpers, 'currentPath').returns('/user/123-abc/information/21');
+        this.switcher.handleRouteChange();
+        var component = ReactDOM.findDOMNode(this.switcher);
+        assert.equal(component.innerHTML, '123-abc21');
+      });
+    });
+  });
+
+  describe('mapDynamicSegments', function() {
+    describe('without a wrapper', function() {
+      beforeEach(function() {
+        function mapper({id, page}) {
+          var matches = id.match(/(.+)-(.+)/);
+          return {
+            userNum: matches[1],
+            userLetters: matches[2],
+            page: parseInt(page, 10) * 2
+          };
+        }
+        function MyComp(props) {
+          return (
+            <span>{props.userNum + props.userLetters + props.page}</span>
+          );
+        }
+        MyComp.displayName = 'MyComp';
+        MyComp.propTypes = {
+          userNum: PropTypes.string,
+          userLetters: PropTypes.string,
+          page: PropTypes.number
+        };
+        this.switcher = ReactDOM.render(
+          <Switcher mapDynamicSegments={mapper}>
+            <MyComp path="/user/:id/information/:page" />
+            <div path="/user/id/information/page">Static Path</div>
+          </Switcher>,
+          document.getElementById('app')
+        );
+      });
+
+      afterEach(function() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
+      });
+
+      it('renders matched component and sets dynamic segments as props', function() {
+        sinon.stub(helpers, 'currentPath').returns('/user/234-cde/information/421');
+        this.switcher.handleRouteChange();
+        var component = ReactDOM.findDOMNode(this.switcher);
+        assert.equal(component.innerHTML, '234cde842');
+      });
+    });
+
+    describe('with a wrapper', function() {
+      beforeEach(function() {
+        function mapper({id, page}) {
+          var matches = id.match(/(.+)-(.+)/);
+          return {
+            userNum: matches[1],
+            userLetters: matches[2],
+            page: parseInt(page, 10) * 2
+          };
+        }
+        function MyComp(props) {
+          return (
+            <span>{props.userNum + props.userLetters + props.page}</span>
+          );
+        }
+        MyComp.displayName = 'MyComp';
+        MyComp.propTypes = {
+          userNum: PropTypes.string,
+          userLetters: PropTypes.string,
+          page: PropTypes.number
+        };
+        this.switcher = ReactDOM.render(
+          <Switcher wrapper="div" mapDynamicSegments={mapper}>
+            <MyComp path="/user/:id/information/:page" />
+            <div path="/user/id/information/page">Static Path</div>
+          </Switcher>,
+          document.getElementById('app')
+        );
+      });
+
+      afterEach(function() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
+      });
+
+      it('renders matched component and sets dynamic segments as props', function() {
+        sinon.stub(helpers, 'currentPath').returns('/user/234-cde/information/421');
+        this.switcher.handleRouteChange();
+        var wrapper = ReactDOM.findDOMNode(this.switcher);
+        var component = wrapper.children[0];
+        assert.equal(component.innerHTML, '234cde842');
       });
     });
   });

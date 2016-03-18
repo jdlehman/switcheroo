@@ -20,7 +20,8 @@ export default class Switcher extends Component {
     wrapper: PropTypes.any,
     location: PropTypes.string,
     basePath: PropTypes.string,
-    preventUpdate: PropTypes.func
+    preventUpdate: PropTypes.func,
+    mapDynamicSegments: PropTypes.func
   };
 
   static defaultProps = {
@@ -29,7 +30,8 @@ export default class Switcher extends Component {
     load: true,
     location: 'hash',
     basePath: '',
-    preventUpdate: () => false
+    preventUpdate: () => false,
+    mapDynamicSegments: values => values
   };
 
   constructor(props) {
@@ -92,14 +94,20 @@ export default class Switcher extends Component {
   };
 
   render() {
+    const {props} = this.state.visibleSwitch || {};
+    const visibleSwitch = this.state.visibleSwitch && React.cloneElement(
+      this.state.visibleSwitch,
+      {...props, ...this.props.mapDynamicSegments(this.state.dynamicValues)}
+    );
+
     if (this.props.wrapper) {
       return React.createElement(
         this.props.wrapper,
         this.props,
-        this.state.visibleSwitch
+        visibleSwitch
       );
     } else {
-      return this.state.visibleSwitch;
+      return visibleSwitch;
     }
   }
 }
