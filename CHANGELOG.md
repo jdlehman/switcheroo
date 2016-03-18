@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0 (2015-3-18)
+
+Added:
+
+- Allow paths to contain [dynamic segments](./docs/dynamic_segments.md). These dynamic segments are passed to the component as props. [2aaa657](../../commit/2aaa657) [95be79d](../../commit/95be79d)
+- Add `mapDynamicSegments` prop to enable transforming dynamic segment data before it is passed as props. [2aaa657](../../commit/2aaa657) [95be79d](../../commit/95be79d)
+
 ## 1.1.1 (2015-3-16)
 
 Fixed:
