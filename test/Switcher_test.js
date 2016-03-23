@@ -99,6 +99,39 @@ describe('Switcher', function() {
       });
     });
 
+    describe('with multiple paths', function() {
+      beforeEach(function() {
+        this.switcher = ReactDOM.render(
+          <Switcher>
+            <div path={['/', '/other']}>Home</div>
+          </Switcher>,
+          document.getElementById('app')
+        );
+      });
+      afterEach(function() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
+      });
+      it('renders correct element', function() {
+        sinon.stub(helpers, 'currentPath').returns('/other');
+        this.switcher.handleRouteChange();
+        var node = ReactDOM.findDOMNode(this.switcher);
+        assert.equal(node.innerHTML, 'Home');
+      });
+      it('renders correct element', function() {
+        sinon.stub(helpers, 'currentPath').returns('/');
+        this.switcher.handleRouteChange();
+        var node = ReactDOM.findDOMNode(this.switcher);
+        assert.equal(node.innerHTML, 'Home');
+      });
+      it('renders correct elements', function() {
+        sinon.stub(helpers, 'currentPath').returns('/otherThing');
+        this.switcher.handleRouteChange();
+        var node = ReactDOM.findDOMNode(this.switcher);
+        assert.equal(node, null);
+      });
+    });
+
     describe('with default handler', function() {
       beforeEach(function() {
         this.switcher = ReactDOM.render(

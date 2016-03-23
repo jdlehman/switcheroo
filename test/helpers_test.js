@@ -171,7 +171,7 @@ describe('helpers', function() {
     it('joins paths and creates a regex', function() {
       var paths = ['/one/b', '/two/a/b', '/three'];
       var regex = createRegexFromPaths(paths);
-      assert.equal(`${regex}`, '/^\\/one\\/b|\\/two\\/a\\/b|\\/three$/');
+      assert.equal(`${regex}`, '/^(\\/one\\/b|\\/two\\/a\\/b|\\/three)$/');
       assert(regex instanceof RegExp);
     });
   });
