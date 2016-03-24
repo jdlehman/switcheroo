@@ -29,7 +29,7 @@ export function formatPathRegex(basePath, path) {
 }
 
 export function createRegexFromPaths(paths) {
-  return new RegExp(`^${paths.join('|')}$`);
+  return new RegExp(`^(${paths.join('|')})$`);
 }
 
 export function getSwitch(path, {children, basePath}) {
