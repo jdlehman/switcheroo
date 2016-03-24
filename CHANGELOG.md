@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 (2015-3-24)
+
+Fixed:
+
+- Fix bug where multiple paths ending in the same pattern would cause wrong nodes to render. [0398f56](../../commit/0398f56)
+
 ## 2.0.0 (2015-3-18)
 
 Added:
