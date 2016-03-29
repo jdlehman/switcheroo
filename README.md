@@ -21,12 +21,12 @@ npm install --save switcheroo
 While the `npm` package is recommended for production usage, if you just want to drop a `<script>` tag on your page you can also use the UMD/global build hosted on [`npmcdn`](https://npmcdn.com/switcheroo).
 
 ```html
-<script src="https://npmcdn.com/switcheroo@1.0.0"></script>
+<script src="https://npmcdn.com/switcheroo@2.0.1"></script>
 ```
 
 ## Try it out
 
-You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/1/edit?js,output).
+You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/3/edit?js,output).
 
 ## Features
 
@@ -34,6 +34,7 @@ You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/1/edit?js,
 - Any React component can be used as a ["Switch"](docs/Switch.md) without any modification, other than defining a `path` property on it.
 - Supports hashChange and pushState
 - Provides callbacks including when the path [changes](docs/Switcher.md#onchange)
+- Supports [dynamic path segments](docs/dynamic_segments.md) and passes dynamic segment data to "Switch" component as props.
 - Supports [React animations](https://facebook.github.io/react/docs/animation.html) via [`wrapper`](docs/Switcher.md#wrapper) prop
 - Highly configurable via props
 - Lightweight ~2k gzipped
@@ -49,6 +50,7 @@ import Switcher from 'switcheroo';
   <StoreComponent path="/store">
     <ItemComponent />
   </StoreComponent>
+  <UserComponent path="/user/:id" />
 </Switcher>
 ```
 
@@ -62,6 +64,10 @@ See the [animation example](examples/animation) to see animations in action.
 
 ## Rationale
 
-The purpose of `switcheroo` is to enable switching what React component is rendered based on the configured part of the URL without forcing any routing opinions on you, you can use whatever router you wish. This helps keep `switcheroo` small and flexible.
+The purpose of `switcheroo` is to enable switching what React component is rendered based on the configured part of the URL without forcing any routing opinions on you, you can use whatever router you wish. This helps keep `switcheroo` small and flexible. These design decisions also enable "decentralized routing" and more flexible and dynamic layouts.
+
+- *Decentralized routing*: You can build out shareable React components using `switcheroo` and not worry about these components having knowledge of the router. Only the top level app that the components are being imported into needs to know about the router.
+- *Flexible and dynamic layouts*: Most routing solutions have the notion of layouts, where each route has an explicit layout that is rendered on that route. This means if the components that make up those routes appear in multiple layouts, you need to define a top level layout for each combination that you desire, which can be repetitious. `switcheroo`'s decentralized nature allows each ["Switch"](docs/Switch.md) to specify all of the routes for which it should render, which means each layout can be dynamic. This prevents the case of having to create an entirely new layout for one small difference between an existing layout and will generally lead to less repetition/duplication in layouts. In addition to this, [`Switcher`](docs/Switcher.md)s can be nested infinitely, which allows for greater flexibility while still being expressive.
+
 
 If you are looking for a more robust and opinionated routing solution, I highly recommend taking a look at [react-router](https://github.com/rackt/react-router). This project actually spawned from an attempt to do something [similar](https://gist.github.com/jdlehman/b662cac8b8607abf51a6) with react-router.
