@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.2 (2015-4-1)
+
+Fixed:
+
+- Fix bug where dynamic segments were not set on initial mount or subsequent mounts. [19a58c2](../../commit/19a58c2)
+
 ## 2.0.1 (2015-3-24)
 
 Fixed:
