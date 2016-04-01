@@ -39,9 +39,10 @@ export default class Switcher extends Component {
 
     var currPath = currentPath(props.location);
     var switchElement = getSwitch(currPath, props);
+    var dynamicValues = getDynamicSegments(currPath, props.basePath, switchElement);
     this.state = {
       visibleSwitch: switchElement,
-      dynamicValues: {}
+      dynamicValues
     };
   }
 
