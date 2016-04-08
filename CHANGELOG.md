@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.3 (2015-4-1)
+
+Added:
+
+- Support react `^15.0.0` as a peerDependency. [ab95e2e](../../commit/ab95e2e)
+
 ## 2.0.2 (2015-4-1)
 
 Fixed:
