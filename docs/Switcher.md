@@ -23,19 +23,27 @@ To actually render anything, the `Switcher` must have any number of children ele
 
 ## Optional Props
 
-### pushState (default: false)
+### pushState
+
+> default: false
 
 When true, `Switcher` listens to the `popstate` event and looks for path changes on this event.
 
-### hashChange  (default: true)
+### hashChange
+
+> default: true
 
 When true, `Switcher` listens to the `hashchange` event and looks for path changes on this event.
 
-### load  (default: true)
+### load
+
+> default: true
 
 When true, `Switcher` listens to the `load` event and looks for path changes on this event.
 
-### location (default: 'hash')
+### location
+
+> default: 'hash'
 
 By default `window.location.hash` is used to match paths. If `location` is set to 'pathname', then `window.location.pathname` is used instead. Under the hood, it is using `window.location[this.props.location]`, so you can use `search` or any other valid property on `window.location`.
 
@@ -51,14 +59,20 @@ onChange(match, pathname, dynamicSegments) { ... }
 
 If the `wrapper` prop is defined, the rendered child component will be wrapped in the specified React component. Any additional props passed to the `Switcher` will also be properties of this wrapper component.
 
-### basePath (default: '')
+### basePath
+
+> default: ''
 
 `basePath` is prepended to all path properties in the components inside `Switcher`. If `basePath` is set to `/base/path` then a component with path, `/home` will match the path `/base/path/home`. The base path may also have [dynamic segments](./dynamic_segments.md). If `basePath` is set to `/base/:id/`, `/home` will match something like `/base/someIdCouldBeAnything/home`.
 
-### preventUpdate (default: () => false)
+### preventUpdate
+
+> default: () => false
 
 `preventUpdate` is an optional function. When `preventUpdate` returns true, subsequent renders will not occur despite props changing or route changes. This can be useful when animating or doing something in which the presentation of the component is desired to remain static.
 
-### mapDynamicSegments (default: data => data)
+### mapDynamicSegments
+
+> default: data => data
 
 `mapDynamicSegments` is an optional function property. When there are [dynamic segments](./dynamic_segments.md) in a path, it passes an object with these values (where the key names are the segment names) to `mapDynamicSegments` and merges the object returned by `mapDynamicSegments` with the props. `mapDynamicSegments` can be used to transform the dynamic segment data before it is merged with props. By default the dynamic segment data object is passed through.
