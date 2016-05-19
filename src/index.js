@@ -21,7 +21,8 @@ export default class Switcher extends Component {
     location: PropTypes.string,
     basePath: PropTypes.string,
     preventUpdate: PropTypes.func,
-    mapDynamicSegments: PropTypes.func
+    mapDynamicSegments: PropTypes.func,
+    renderSwitch: PropTypes.func
   };
 
   static defaultProps = {
@@ -100,6 +101,10 @@ export default class Switcher extends Component {
       this.state.visibleSwitch,
       {...props, ...this.props.mapDynamicSegments(this.state.dynamicValues)}
     );
+
+    if(this.props.renderSwitch) {
+      return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues);
+    }
 
     if (this.props.wrapper) {
       return React.createElement(

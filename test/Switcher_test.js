@@ -282,6 +282,45 @@ describe('Switcher', function() {
       });
     });
 
+    describe('with custom render', function() {
+      it('calls the custom render function with the component and values', function() {
+        sinon.stub(helpers, 'currentPath').returns('/user/234-cde/information/421');
+        function mapper({id, page}) {
+          var matches = id.match(/(.+)-(.+)/);
+          return {
+            userNum: matches[1],
+            userLetters: matches[2],
+            page: parseInt(page, 10) * 2
+          };
+        }
+        function MyComp(props) {
+          return (
+            <span>{props.userNum + props.userLetters + props.page}</span>
+          );
+        }
+        MyComp.displayName = 'MyComp';
+        MyComp.propTypes = {
+          userNum: PropTypes.string,
+          userLetters: PropTypes.string,
+          page: PropTypes.number
+        };
+        const render = sinon.stub().returnsArg(0);
+        ReactDOM.render(
+          <Switcher renderSwitch={render} mapDynamicSegments={mapper}>
+            <MyComp path="/user/:id/information/:page" />
+            <div path="/user/id/information/page">Static Path</div>
+          </Switcher>,
+          document.getElementById('app')
+        );
+        sinon.assert.calledOnce(render);
+        assert.deepEqual(render.args[0][1], {id: '234-cde', page: '421'});
+      });
+      afterEach(function() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('app'));
+        helpers.currentPath.restore();
+      });
+    });
+
     describe('with a wrapper', function() {
       beforeEach(function() {
         function mapper({id, page}) {
