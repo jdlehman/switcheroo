@@ -56,14 +56,14 @@ onChange(match, pathname, dynamicSegments) { ... }
 ```
 
 ### renderSwitch
+
 A function that receives the selected element as well as the dynamic values to render. If this prop is passed, the wrapper prop will not be used.
 
 ```js
-renderSwitch(selectedElement, dynamicData) { 
+renderSwitch(selectedElement, dynamicData) {
   return (<div>{selectedElement}</div>) //the rendered output of the Switcher
 }
 ```
-
 
 ### wrapper
 

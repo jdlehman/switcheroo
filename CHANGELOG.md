@@ -1,43 +1,49 @@
 # Changelog
 
-## 2.0.3 (2015-4-1)
+## 2.1.0 (2016-4-1)
+
+Added:
+
+- Introduce `renderSwitch` prop, that can accepts a render function to provide more fine-grained control that the `wrapper` prop cannot provide. [2a7b65d](../../commit/2a7b65d)
+
+## 2.0.3 (2016-4-1)
 
 Added:
 
 - Support react `^15.0.0` as a peerDependency. [ab95e2e](../../commit/ab95e2e)
 
-## 2.0.2 (2015-4-1)
+## 2.0.2 (2016-4-1)
 
 Fixed:
 
 - Fix bug where dynamic segments were not set on initial mount or subsequent mounts. [19a58c2](../../commit/19a58c2)
 
-## 2.0.1 (2015-3-24)
+## 2.0.1 (2016-3-24)
 
 Fixed:
 
 - Fix bug where multiple paths ending in the same pattern would cause wrong nodes to render. [0398f56](../../commit/0398f56)
 
-## 2.0.0 (2015-3-18)
+## 2.0.0 (2016-3-18)
 
 Added:
 
 - Allow paths to contain [dynamic segments](./docs/dynamic_segments.md). These dynamic segments are passed to the component as props. [2aaa657](../../commit/2aaa657) [95be79d](../../commit/95be79d)
 - Add `mapDynamicSegments` prop to enable transforming dynamic segment data before it is passed as props. [2aaa657](../../commit/2aaa657) [95be79d](../../commit/95be79d)
 
-## 1.1.1 (2015-3-16)
+## 1.1.1 (2016-3-16)
 
 Fixed:
 
 - Allow `Switcher` to render a null child. [2b51da2](../../commit/2b51da2)
 
-## 1.1.0 (2015-3-15)
+## 1.1.0 (2016-3-15)
 
 Added:
 
 - Added `preventUpdate` optional function prop to `Switcher`. When the function returns true, it prevents rendering changes. [562fa59](../../commit/562fa59)
 
-## 1.0.3 (2015-1-22)
+## 1.0.3 (2016-1-22)
 
 Fixed:
 
