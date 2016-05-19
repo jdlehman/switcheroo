@@ -55,6 +55,16 @@ By default `window.location.hash` is used to match paths. If `location` is set t
 onChange(match, pathname, dynamicSegments) { ... }
 ```
 
+### renderSwitch
+A function that receives the selected element as well as the dynamic values to render. If this prop is passed, the wrapper prop will not be used.
+
+```js
+renderSwitch(selectedElement, dynamicData) { 
+  return (<div>{selectedElement}</div>) //the rendered output of the Switcher
+}
+```
+
+
 ### wrapper
 
 If the `wrapper` prop is defined, the rendered child component will be wrapped in the specified React component. Any additional props passed to the `Switcher` will also be properties of this wrapper component.
