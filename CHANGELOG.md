@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0 (2016-7-15)
+
+Changed:
+
+- `Switcher` no longer passes all its props to wrapper components. It now only passes through additional props (ones that are not `Switcher` props).
+
 ## 2.1.0 (2016-4-1)
 
 Added:
@@ -10,7 +16,7 @@ Added:
 
 Added:
 
-- Support react `^15.0.0` as a peerDependency. [ab95e2e](../../commit/ab95e2e)
+- Support React `^15.0.0` as a peerDependency. [ab95e2e](../../commit/ab95e2e)
 
 ## 2.0.2 (2016-4-1)
 
