@@ -107,9 +107,11 @@ export default class Switcher extends Component {
     }
 
     if (this.props.wrapper) {
+      const passedProps = {...this.props};
+      Object.keys(Switcher.propTypes).forEach(k => delete passedProps[k]);
       return React.createElement(
         this.props.wrapper,
-        this.props,
+        passedProps,
         visibleSwitch
       );
     } else {
