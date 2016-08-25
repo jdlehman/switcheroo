@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.1 (2016-8-25)
+
+Added:
+
+- Moved build to rollup and added new build targets (amd, ES2015, commonjs, umd). The build still defaults to the minified umd build so there will be no noticeable differences except that the build is slightly smaller. [e807a30](../../commit/e807a30)
+
 ## 3.0.0 (2016-7-15)
 
 Changed:
