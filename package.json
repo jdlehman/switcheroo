@@ -2,9 +2,13 @@
   "name": "switcheroo",
   "version": "3.0.0",
   "description": "React component that switches between components based on route",
-  "main": "dist/switcheroo.min.js",
+  "main": "dist/switcheroo.umd.min.js",
+  "jsnext:main": "dist/switcheroo.es-modules.js",
   "scripts": {
-    "build": "$(npm bin)/webpack",
+    "build": "npm run clean && $(npm bin)/rollup -c && npm run minify",
+    "minify": "npm run minify-browser && npm run minify-umd",
+    "minify-browser": "$(npm bin)/uglifyjs dist/switcheroo.browser.js -cm > dist/switcheroo.browser.min.js",
+    "minify-umd": "$(npm bin)/uglifyjs dist/switcheroo.umd.js -cm > dist/switcheroo.umd.min.js",
     "lint:src": "$(npm bin)/eslint ./src",
     "lint:test": "$(npm bin)/eslint ./test",
     "lint": "npm run lint:src && npm run lint:test",
@@ -39,6 +43,7 @@
     "babel-loader": "6.2.4",
     "babel-plugin-transform-runtime": "6.7.5",
     "babel-preset-es2015": "6.6.0",
+    "babel-preset-es2015-rollup": "1.2.0",
     "babel-preset-react": "6.5.0",
     "babel-preset-stage-0": "6.5.0",
     "babel-runtime": "6.6.1",
@@ -50,8 +55,11 @@
     "mocha": "2.4.5",
     "react": "15.0.0",
     "react-dom": "15.0.0",
+    "rollup": "0.34.10",
+    "rollup-plugin-babel": "2.6.1",
+    "rollup-plugin-replace": "1.1.1",
     "sinon": "1.17.3",
-    "webpack": "1.12.14"
+    "uglify-js": "2.7.3"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0"
