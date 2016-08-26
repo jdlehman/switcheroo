@@ -1,3 +1,5 @@
+import {Children} from 'react';
+
 export function currentPath(location) {
   var path = decodeURI(window.location[location].slice(1).split('?')[0]);
   if (path.charAt(0) !== '/') {
@@ -34,7 +36,7 @@ export function createRegexFromPaths(paths) {
 
 export function getSwitch(path, {children, basePath}) {
   var consistentPath = removeTrailingSlash(path);
-  var switches = [].concat(children || []);
+  var switches = Children.toArray(children);
   return switches.filter(child => {
     var childPaths = [].concat(child.props.path).map(childPath => formatPathRegex(basePath, childPath));
     var regex = createRegexFromPaths(childPaths);

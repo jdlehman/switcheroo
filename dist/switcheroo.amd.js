@@ -43,7 +43,7 @@ function getSwitch(path, _ref) {
   var basePath = _ref.basePath;
 
   var consistentPath = removeTrailingSlash(path);
-  var switches = [].concat(children || []);
+  var switches = React.Children.toArray(children);
   return switches.filter(function (child) {
     var childPaths = [].concat(child.props.path).map(function (childPath) {
       return formatPathRegex(basePath, childPath);
