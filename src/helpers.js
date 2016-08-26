@@ -44,6 +44,18 @@ export function getSwitch(path, {children, basePath}) {
   })[0] || null;
 }
 
+export function getActivePath(currentPath, basePath, currentSwitch) {
+  if (!currentSwitch) { return null; }
+
+  const consistentPath = removeTrailingSlash(currentPath);
+  const paths = [].concat(currentSwitch.props.path);
+  return paths.filter(path => {
+    const formattedPath = formatPathRegex(basePath, path);
+    const regex = new RegExp(`^${formattedPath}$`);
+    return regex.test(consistentPath);
+  })[0] || null;
+}
+
 export function getDynamicSegments(path, basePath, swtch) {
   const dynamicValues = {};
   const consistentPath = removeTrailingSlash(path);

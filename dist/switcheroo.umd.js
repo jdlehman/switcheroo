@@ -57,6 +57,20 @@ function getSwitch(path, _ref) {
   })[0] || null;
 }
 
+function getActivePath(currentPath, basePath, currentSwitch) {
+  if (!currentSwitch) {
+    return null;
+  }
+
+  var consistentPath = removeTrailingSlash(currentPath);
+  var paths = [].concat(currentSwitch.props.path);
+  return paths.filter(function (path) {
+    var formattedPath = formatPathRegex(basePath, path);
+    var regex = new RegExp('^' + formattedPath + '$');
+    return regex.test(consistentPath);
+  })[0] || null;
+}
+
 function getDynamicSegments(path, basePath, swtch) {
   var dynamicValues = {};
   var consistentPath = removeTrailingSlash(path);
@@ -155,11 +169,13 @@ var Switcher = function (_Component) {
     _initialiseProps.call(_this);
 
     var currPath = currentPath(props.location);
-    var switchElement = getSwitch(currPath, props);
-    var dynamicValues = getDynamicSegments(currPath, props.basePath, switchElement);
+    var visibleSwitch = getSwitch(currPath, props);
+    var activePath = getActivePath(currPath, props.basePath, visibleSwitch);
+    var dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
     _this.state = {
-      visibleSwitch: switchElement,
-      dynamicValues: dynamicValues
+      visibleSwitch: visibleSwitch,
+      dynamicValues: dynamicValues,
+      activePath: activePath
     };
     return _this;
   }
@@ -209,10 +225,10 @@ var Switcher = function (_Component) {
 
       var props = _ref.props;
 
-      var visibleSwitch = this.state.visibleSwitch && React__default.cloneElement(this.state.visibleSwitch, _extends({}, props, this.props.mapDynamicSegments(this.state.dynamicValues)));
+      var visibleSwitch = this.state.visibleSwitch && React__default.cloneElement(this.state.visibleSwitch, _extends({}, props, this.props.mapDynamicSegments(this.state.dynamicValues), { activePath: this.state.activePath }));
 
       if (this.props.renderSwitch) {
-        return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues);
+        return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues, this.state.activePath);
       }
 
       if (this.props.wrapper) {
@@ -269,13 +285,14 @@ var _initialiseProps = function _initialiseProps() {
   this.handleSwitchChange = function (props) {
     var currPath = currentPath(props.location);
     var visibleSwitch = getSwitch(currPath, props);
+    var activePath = getActivePath(currPath, props.basePath, visibleSwitch);
     var dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
 
     if (typeof props.onChange === 'function') {
-      props.onChange(!!visibleSwitch, currPath, dynamicValues);
+      props.onChange(!!visibleSwitch, currPath, dynamicValues, activePath);
     }
 
-    _this3.setState({ visibleSwitch: visibleSwitch, dynamicValues: dynamicValues });
+    _this3.setState({ visibleSwitch: visibleSwitch, dynamicValues: dynamicValues, activePath: activePath });
   };
 
   this.handleRouteChange = function (ev) {
