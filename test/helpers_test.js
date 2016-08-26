@@ -8,7 +8,8 @@ import {
   getSwitch,
   replaceDynamicSegments,
   getDynamicSegmentNames,
-  getDynamicSegments
+  getDynamicSegments,
+  getActivePath
 } from 'helpers';
 
 describe('helpers', function() {
@@ -265,6 +266,23 @@ describe('helpers', function() {
         another: 'something-123',
         last: 'data'
       });
+    });
+  });
+
+  describe('getActivePath', function() {
+    it('returns null if there is no match/currentSwitch', function() {
+      var activePath = getActivePath('/something', '/base', null);
+      assert.isNull(activePath);
+    });
+
+    it('returns the active path from the current switch', function() {
+      var currentSwitch = {
+        props: {
+          path: ['/home', '/abc/something/:id', '/abc/something']
+        }
+      };
+      var activePath = getActivePath('/base/abc/something/1233', '/base', currentSwitch);
+      assert.equal(activePath, '/abc/something/:id');
     });
   });
 });

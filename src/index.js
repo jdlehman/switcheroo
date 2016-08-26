@@ -2,7 +2,8 @@ import React, {Component, PropTypes} from 'react';
 import {
   getSwitch,
   currentPath,
-  getDynamicSegments
+  getDynamicSegments,
+  getActivePath
 } from './helpers';
 
 export default class Switcher extends Component {
@@ -39,11 +40,13 @@ export default class Switcher extends Component {
     super(props);
 
     const currPath = currentPath(props.location);
-    const switchElement = getSwitch(currPath, props);
-    const dynamicValues = getDynamicSegments(currPath, props.basePath, switchElement);
+    const visibleSwitch = getSwitch(currPath, props);
+    const activePath = getActivePath(currPath, props.basePath, visibleSwitch);
+    const dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
     this.state = {
-      visibleSwitch: switchElement,
-      dynamicValues
+      visibleSwitch,
+      dynamicValues,
+      activePath
     };
   }
 
@@ -82,13 +85,14 @@ export default class Switcher extends Component {
   handleSwitchChange = (props) => {
     const currPath = currentPath(props.location);
     const visibleSwitch = getSwitch(currPath, props);
+    const activePath = getActivePath(currPath, props.basePath, visibleSwitch);
     const dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
 
     if (typeof props.onChange === 'function') {
-      props.onChange(!!visibleSwitch, currPath, dynamicValues);
+      props.onChange(!!visibleSwitch, currPath, dynamicValues, activePath);
     }
 
-    this.setState({visibleSwitch, dynamicValues});
+    this.setState({visibleSwitch, dynamicValues, activePath});
   };
 
   handleRouteChange = (ev) => {
@@ -99,11 +103,11 @@ export default class Switcher extends Component {
     const {props} = this.state.visibleSwitch || {};
     const visibleSwitch = this.state.visibleSwitch && React.cloneElement(
       this.state.visibleSwitch,
-      {...props, ...this.props.mapDynamicSegments(this.state.dynamicValues)}
+      {...props, ...this.props.mapDynamicSegments(this.state.dynamicValues), activePath: this.state.activePath}
     );
 
     if(this.props.renderSwitch) {
-      return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues);
+      return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues, this.state.activePath);
     }
 
     if (this.props.wrapper) {

@@ -29,6 +29,13 @@ describe('Switcher', function() {
         assert.equal(visibleSwitch.props.children, 'Home');
         assert.equal(visibleSwitch.type, 'div');
       });
+
+      it('sets activePath state', function() {
+        sinon.stub(helpers, 'currentPath').returns('/');
+        this.switcher.handleRouteChange();
+        var activePath = this.switcher.state.activePath;
+        assert.equal(activePath, '/');
+      });
     });
 
     describe('with onChange function defined', function() {
@@ -62,7 +69,8 @@ describe('Switcher', function() {
           {
             dynamic: 'hello',
             data: '123a-b'
-          }
+          },
+          '/:dynamic/more/:data'
         );
       });
     });
@@ -108,22 +116,26 @@ describe('Switcher', function() {
           document.getElementById('app')
         );
       });
+
       afterEach(function() {
         ReactDOM.unmountComponentAtNode(document.getElementById('app'));
         helpers.currentPath.restore();
       });
+
       it('renders correct element', function() {
         sinon.stub(helpers, 'currentPath').returns('/other');
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Home');
       });
+
       it('renders correct element', function() {
         sinon.stub(helpers, 'currentPath').returns('/');
         this.switcher.handleRouteChange();
         var node = ReactDOM.findDOMNode(this.switcher);
         assert.equal(node.innerHTML, 'Home');
       });
+
       it('renders correct elements', function() {
         sinon.stub(helpers, 'currentPath').returns('/otherThing');
         this.switcher.handleRouteChange();
@@ -251,7 +263,7 @@ describe('Switcher', function() {
         }
         function MyComp(props) {
           return (
-            <span>{props.userNum + props.userLetters + props.page}</span>
+            <span>{props.userNum + props.userLetters + props.page + props.activePath}</span>
           );
         }
         MyComp.displayName = 'MyComp';
@@ -278,7 +290,7 @@ describe('Switcher', function() {
         sinon.stub(helpers, 'currentPath').returns('/user/234-cde/information/421');
         this.switcher.handleRouteChange();
         var component = ReactDOM.findDOMNode(this.switcher);
-        assert.equal(component.innerHTML, '234cde842');
+        assert.equal(component.innerHTML, '234cde842/user/:id/information/:page');
       });
     });
 
@@ -314,6 +326,7 @@ describe('Switcher', function() {
         );
         sinon.assert.calledOnce(render);
         assert.deepEqual(render.args[0][1], {id: '234-cde', page: '421'});
+        assert.deepEqual(render.args[0][2], '/user/:id/information/:page');
       });
       afterEach(function() {
         ReactDOM.unmountComponentAtNode(document.getElementById('app'));
@@ -333,14 +346,15 @@ describe('Switcher', function() {
         }
         function MyComp(props) {
           return (
-            <span>{props.userNum + props.userLetters + props.page}</span>
+            <span>{props.userNum + props.userLetters + props.page + props.activePath}</span>
           );
         }
         MyComp.displayName = 'MyComp';
         MyComp.propTypes = {
           userNum: PropTypes.string,
           userLetters: PropTypes.string,
-          page: PropTypes.number
+          page: PropTypes.number,
+          activePath: PropTypes.string
         };
         this.switcher = ReactDOM.render(
           <Switcher wrapper="div" mapDynamicSegments={mapper}>
@@ -361,7 +375,7 @@ describe('Switcher', function() {
         this.switcher.handleRouteChange();
         var wrapper = ReactDOM.findDOMNode(this.switcher);
         var component = wrapper.children[0];
-        assert.equal(component.innerHTML, '234cde842');
+        assert.equal(component.innerHTML, '234cde842/user/:id/information/:page');
       });
     });
   });
