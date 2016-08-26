@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.1.0 (2016-8-26)
+
+Added:
+
+- Added `activePath` as an argument to `onChange` and `renderSwitch` callbacks. It also gets set as a prop on the component being rendered. `activePath` is the RegExp string path (as defined on the `Switch`'s prop) that was matched. It essentially provides information about why a component was rendered (by which matching path), which is mostly useful when an array of paths are passed in as props.
+
+Fixed:
+
+- No longer assumes props.children is an array. [3ec6428](../../3ec6428)
+
 ## 3.0.1 (2016-8-25)
 
 Added:
