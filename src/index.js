@@ -38,9 +38,9 @@ export default class Switcher extends Component {
   constructor(props) {
     super(props);
 
-    var currPath = currentPath(props.location);
-    var switchElement = getSwitch(currPath, props);
-    var dynamicValues = getDynamicSegments(currPath, props.basePath, switchElement);
+    const currPath = currentPath(props.location);
+    const switchElement = getSwitch(currPath, props);
+    const dynamicValues = getDynamicSegments(currPath, props.basePath, switchElement);
     this.state = {
       visibleSwitch: switchElement,
       dynamicValues
@@ -80,9 +80,9 @@ export default class Switcher extends Component {
   }
 
   handleSwitchChange = (props) => {
-    var currPath = currentPath(props.location);
-    var visibleSwitch = getSwitch(currPath, props);
-    var dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
+    const currPath = currentPath(props.location);
+    const visibleSwitch = getSwitch(currPath, props);
+    const dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
 
     if (typeof props.onChange === 'function') {
       props.onChange(!!visibleSwitch, currPath, dynamicValues);
