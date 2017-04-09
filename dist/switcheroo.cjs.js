@@ -42,8 +42,8 @@ function createRegexFromPaths(paths) {
 }
 
 function getSwitch(path, _ref) {
-  var children = _ref.children;
-  var basePath = _ref.basePath;
+  var children = _ref.children,
+      basePath = _ref.basePath;
 
   var consistentPath = removeTrailingSlash(path);
   var switches = React.Children.toArray(children);
@@ -89,11 +89,118 @@ function getDynamicSegments(path, basePath, swtch) {
   return dynamicValues;
 }
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-  return typeof obj;
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
-};
+var asyncGenerator = function () {
+  function AwaitValue(value) {
+    this.value = value;
+  }
+
+  function AsyncGenerator(gen) {
+    var front, back;
+
+    function send(key, arg) {
+      return new Promise(function (resolve, reject) {
+        var request = {
+          key: key,
+          arg: arg,
+          resolve: resolve,
+          reject: reject,
+          next: null
+        };
+
+        if (back) {
+          back = back.next = request;
+        } else {
+          front = back = request;
+          resume(key, arg);
+        }
+      });
+    }
+
+    function resume(key, arg) {
+      try {
+        var result = gen[key](arg);
+        var value = result.value;
+
+        if (value instanceof AwaitValue) {
+          Promise.resolve(value.value).then(function (arg) {
+            resume("next", arg);
+          }, function (arg) {
+            resume("throw", arg);
+          });
+        } else {
+          settle(result.done ? "return" : "normal", result.value);
+        }
+      } catch (err) {
+        settle("throw", err);
+      }
+    }
+
+    function settle(type, value) {
+      switch (type) {
+        case "return":
+          front.resolve({
+            value: value,
+            done: true
+          });
+          break;
+
+        case "throw":
+          front.reject(value);
+          break;
+
+        default:
+          front.resolve({
+            value: value,
+            done: false
+          });
+          break;
+      }
+
+      front = front.next;
+
+      if (front) {
+        resume(front.key, front.arg);
+      } else {
+        back = null;
+      }
+    }
+
+    this._invoke = send;
+
+    if (typeof gen.return !== "function") {
+      this.return = undefined;
+    }
+  }
+
+  if (typeof Symbol === "function" && Symbol.asyncIterator) {
+    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
+      return this;
+    };
+  }
+
+  AsyncGenerator.prototype.next = function (arg) {
+    return this._invoke("next", arg);
+  };
+
+  AsyncGenerator.prototype.throw = function (arg) {
+    return this._invoke("throw", arg);
+  };
+
+  AsyncGenerator.prototype.return = function (arg) {
+    return this._invoke("return", arg);
+  };
+
+  return {
+    wrap: function (fn) {
+      return function () {
+        return new AsyncGenerator(fn.apply(this, arguments));
+      };
+    },
+    await: function (value) {
+      return new AwaitValue(value);
+    }
+  };
+}();
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -163,7 +270,7 @@ var Switcher = function (_Component) {
   function Switcher(props) {
     classCallCheck(this, Switcher);
 
-    var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Switcher).call(this, props));
+    var _this = possibleConstructorReturn(this, (Switcher.__proto__ || Object.getPrototypeOf(Switcher)).call(this, props));
 
     _initialiseProps.call(_this);
 
@@ -218,11 +325,8 @@ var Switcher = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
-
-      var _ref = this.state.visibleSwitch || {};
-
-      var props = _ref.props;
+      var _ref = this.state.visibleSwitch || {},
+          props = _ref.props;
 
       var visibleSwitch = this.state.visibleSwitch && React__default.cloneElement(this.state.visibleSwitch, _extends({}, props, this.props.mapDynamicSegments(this.state.dynamicValues), { activePath: this.state.activePath }));
 
@@ -231,17 +335,11 @@ var Switcher = function (_Component) {
       }
 
       if (this.props.wrapper) {
-        var _ret = function () {
-          var passedProps = _extends({}, _this2.props);
-          Object.keys(Switcher.propTypes).forEach(function (k) {
-            return delete passedProps[k];
-          });
-          return {
-            v: React__default.createElement(_this2.props.wrapper, passedProps, visibleSwitch)
-          };
-        }();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+        var passedProps = _extends({}, this.props);
+        Object.keys(Switcher.propTypes).forEach(function (k) {
+          return delete passedProps[k];
+        });
+        return React__default.createElement(this.props.wrapper, passedProps, visibleSwitch);
       } else {
         return visibleSwitch;
       }
@@ -279,7 +377,7 @@ Switcher.defaultProps = {
 };
 
 var _initialiseProps = function _initialiseProps() {
-  var _this3 = this;
+  var _this2 = this;
 
   this.handleSwitchChange = function (props) {
     var currPath = currentPath(props.location);
@@ -291,11 +389,11 @@ var _initialiseProps = function _initialiseProps() {
       props.onChange(!!visibleSwitch, currPath, dynamicValues, activePath);
     }
 
-    _this3.setState({ visibleSwitch: visibleSwitch, dynamicValues: dynamicValues, activePath: activePath });
+    _this2.setState({ visibleSwitch: visibleSwitch, dynamicValues: dynamicValues, activePath: activePath });
   };
 
   this.handleRouteChange = function (ev) {
-    _this3.handleSwitchChange(_this3.props);
+    _this2.handleSwitchChange(_this2.props);
   };
 };
 
