@@ -1,4 +1,4 @@
-import React, { Component, PropTypes, Children } from 'react';
+import React, { Children, Component, PropTypes } from 'react';
 
 function currentPath(location) {
   var path = decodeURI(window.location[location].slice(1).split('?')[0]);
@@ -41,7 +41,7 @@ function getSwitch(path, _ref) {
       basePath = _ref.basePath;
 
   var consistentPath = removeTrailingSlash(path);
-  var switches = React.Children.toArray(children);
+  var switches = Children.toArray(children);
   return switches.filter(function (child) {
     var childPaths = [].concat(child.props.path).map(function (childPath) {
       return formatPathRegex(basePath, childPath);
@@ -84,188 +84,23 @@ function getDynamicSegments(path, basePath, swtch) {
   return dynamicValues;
 }
 
-var asyncGenerator = function () {
-  function AwaitValue(value) {
-    this.value = value;
-  }
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-  function AsyncGenerator(gen) {
-    var front, back;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-    function send(key, arg) {
-      return new Promise(function (resolve, reject) {
-        var request = {
-          key: key,
-          arg: arg,
-          resolve: resolve,
-          reject: reject,
-          next: null
-        };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        if (back) {
-          back = back.next = request;
-        } else {
-          front = back = request;
-          resume(key, arg);
-        }
-      });
-    }
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    function resume(key, arg) {
-      try {
-        var result = gen[key](arg);
-        var value = result.value;
-
-        if (value instanceof AwaitValue) {
-          Promise.resolve(value.value).then(function (arg) {
-            resume("next", arg);
-          }, function (arg) {
-            resume("throw", arg);
-          });
-        } else {
-          settle(result.done ? "return" : "normal", result.value);
-        }
-      } catch (err) {
-        settle("throw", err);
-      }
-    }
-
-    function settle(type, value) {
-      switch (type) {
-        case "return":
-          front.resolve({
-            value: value,
-            done: true
-          });
-          break;
-
-        case "throw":
-          front.reject(value);
-          break;
-
-        default:
-          front.resolve({
-            value: value,
-            done: false
-          });
-          break;
-      }
-
-      front = front.next;
-
-      if (front) {
-        resume(front.key, front.arg);
-      } else {
-        back = null;
-      }
-    }
-
-    this._invoke = send;
-
-    if (typeof gen.return !== "function") {
-      this.return = undefined;
-    }
-  }
-
-  if (typeof Symbol === "function" && Symbol.asyncIterator) {
-    AsyncGenerator.prototype[Symbol.asyncIterator] = function () {
-      return this;
-    };
-  }
-
-  AsyncGenerator.prototype.next = function (arg) {
-    return this._invoke("next", arg);
-  };
-
-  AsyncGenerator.prototype.throw = function (arg) {
-    return this._invoke("throw", arg);
-  };
-
-  AsyncGenerator.prototype.return = function (arg) {
-    return this._invoke("return", arg);
-  };
-
-  return {
-    wrap: function (fn) {
-      return function () {
-        return new AsyncGenerator(fn.apply(this, arguments));
-      };
-    },
-    await: function (value) {
-      return new AwaitValue(value);
-    }
-  };
-}();
-
-var classCallCheck = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-var createClass = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
-var inherits = function (subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
-  }
-
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    }
-  });
-  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-};
-
-var possibleConstructorReturn = function (self, call) {
-  if (!self) {
-    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-  }
-
-  return call && (typeof call === "object" || typeof call === "function") ? call : self;
-};
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Switcher = function (_Component) {
-  inherits(Switcher, _Component);
+  _inherits(Switcher, _Component);
 
   function Switcher(props) {
-    classCallCheck(this, Switcher);
+    _classCallCheck(this, Switcher);
 
-    var _this = possibleConstructorReturn(this, (Switcher.__proto__ || Object.getPrototypeOf(Switcher)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Switcher.__proto__ || Object.getPrototypeOf(Switcher)).call(this, props));
 
     _initialiseProps.call(_this);
 
@@ -281,7 +116,7 @@ var Switcher = function (_Component) {
     return _this;
   }
 
-  createClass(Switcher, [{
+  _createClass(Switcher, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       if (this.props.load) {
@@ -323,7 +158,7 @@ var Switcher = function (_Component) {
       var _ref = this.state.visibleSwitch || {},
           props = _ref.props;
 
-      var visibleSwitch = this.state.visibleSwitch && React__default.cloneElement(this.state.visibleSwitch, _extends({}, props, this.props.mapDynamicSegments(this.state.dynamicValues), { activePath: this.state.activePath }));
+      var visibleSwitch = this.state.visibleSwitch && React.cloneElement(this.state.visibleSwitch, _extends({}, props, this.props.mapDynamicSegments(this.state.dynamicValues), { activePath: this.state.activePath }));
 
       if (this.props.renderSwitch) {
         return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues, this.state.activePath);
@@ -334,28 +169,29 @@ var Switcher = function (_Component) {
         Object.keys(Switcher.propTypes).forEach(function (k) {
           return delete passedProps[k];
         });
-        return React__default.createElement(this.props.wrapper, passedProps, visibleSwitch);
+        return React.createElement(this.props.wrapper, passedProps, visibleSwitch);
       } else {
         return visibleSwitch;
       }
     }
   }]);
+
   return Switcher;
-}(React.Component);
+}(Component);
 
 Switcher.displayName = 'Switcher';
 Switcher.propTypes = {
-  children: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.node), React.PropTypes.node]),
-  pushState: React.PropTypes.bool,
-  hashChange: React.PropTypes.bool,
-  load: React.PropTypes.bool,
-  onChange: React.PropTypes.func,
-  wrapper: React.PropTypes.any,
-  location: React.PropTypes.string,
-  basePath: React.PropTypes.string,
-  preventUpdate: React.PropTypes.func,
-  mapDynamicSegments: React.PropTypes.func,
-  renderSwitch: React.PropTypes.func
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  pushState: PropTypes.bool,
+  hashChange: PropTypes.bool,
+  load: PropTypes.bool,
+  onChange: PropTypes.func,
+  wrapper: PropTypes.any,
+  location: PropTypes.string,
+  basePath: PropTypes.string,
+  preventUpdate: PropTypes.func,
+  mapDynamicSegments: PropTypes.func,
+  renderSwitch: PropTypes.func
 };
 Switcher.defaultProps = {
   pushState: false,

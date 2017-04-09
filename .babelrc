@@ -1,11 +1,7 @@
 {
-  "presets": ["es2015", "stage-0", "react"],
-  "env": {
-    "test": {
-      "auxiliaryCommentBefore": "istanbul ignore next"
-    },
-    "production": {
-      "plugins": ["transform-runtime"]
-    }
-  }
+  "presets": [
+    "es2015",
+    "stage-0",
+    "react"
+  ]
 }

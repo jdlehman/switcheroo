@@ -4,15 +4,17 @@ import replace from 'rollup-plugin-replace';
 export default {
   entry: 'src/index.js',
   plugins: [
-    babel({
-      babelrc: false,
-      presets: ['es2015-rollup', 'stage-0']
-    }),
     replace({
       'process.env.NODE_DEBUG': false,
       'process.env.NODE_ENV': 'production'
+    }),
+    babel({
+      exclude: 'node_modules/**',
+      babelrc: false,
+      presets: [['es2015', {modules: false}], 'stage-0', 'react']
     })
   ],
+  external: ['react'],
   globals: {
     react: 'React'
   },

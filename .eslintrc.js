@@ -1,9 +1,9 @@
 module.exports = {
   'extends': [
-    'customink',
-    'customink/browser',
-    'customink/mocha',
-    'customink/react'
+    'panoply',
+    'panoply/browser',
+    'panoply/mocha',
+    'panoply/react'
   ],
 
   'globals': {
