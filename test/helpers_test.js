@@ -1,4 +1,4 @@
-import {assert} from 'chai';
+import { assert } from 'chai';
 import React from 'react';
 import {
   removeTrailingSlash,
@@ -226,7 +226,9 @@ describe('helpers', function() {
     it('returns an empty object if no dynamic segments', function() {
       var path = '/base/helloWorld/more/something-123/data/urlStuffs';
       var basePath = '/base';
-      var swtch = <span path='/base/helloWorld/more/something-123/data/urlStuffs' />;
+      var swtch = (
+        <span path="/base/helloWorld/more/something-123/data/urlStuffs" />
+      );
       var dynamicValues = getDynamicSegments(path, basePath, swtch);
       assert.deepEqual(dynamicValues, {});
     });
@@ -258,7 +260,13 @@ describe('helpers', function() {
       var path = '/base/helloWorld/more/something-123/data/urlStuffs';
       var basePath = '/base';
       var swtch = (
-        <span path={['/:test/more', '/:test/more/:another/:last/urlStuffs', '/another']} />
+        <span
+          path={[
+            '/:test/more',
+            '/:test/more/:another/:last/urlStuffs',
+            '/another'
+          ]}
+        />
       );
       var dynamicValues = getDynamicSegments(path, basePath, swtch);
       assert.deepEqual(dynamicValues, {
@@ -281,7 +289,11 @@ describe('helpers', function() {
           path: ['/home', '/abc/something/:id', '/abc/something']
         }
       };
-      var activePath = getActivePath('/base/abc/something/1233', '/base', currentSwitch);
+      var activePath = getActivePath(
+        '/base/abc/something/1233',
+        '/base',
+        currentSwitch
+      );
       assert.equal(activePath, '/abc/something/:id');
     });
   });

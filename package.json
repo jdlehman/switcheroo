@@ -17,7 +17,14 @@
     "clean": "rm -rf dist",
     "build-examples": "$(yarn bin)/babel-node ./examples/buildAll.js",
     "deploy-site": "git subtree push --prefix examples origin gh-pages",
+    "precommit": "lint-staged",
     "prepublish": "yarn run clean && yarn run build"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write --single-quote {src,test}/**/*.js",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -48,9 +55,14 @@
     "chai": "^3.5.0",
     "eslint": "^3.19.0",
     "eslint-config-panoply": "^1.2.0",
+    "eslint-config-prettier": "^1.7.0",
+    "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^6.1.2",
+    "husky": "^0.13.3",
     "jsdom": "^9.12.0",
+    "lint-staged": "^3.4.0",
     "mocha": "^3.2.0",
+    "prettier": "^1.2.2",
     "react": "^15.5.3",
     "react-dom": "^15.5.3",
     "rollup": "^0.41.6",

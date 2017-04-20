@@ -1,15 +1,23 @@
 module.exports = {
-  'extends': [
+  plugins: ['prettier'],
+
+  extends: [
     'panoply',
     'panoply/browser',
     'panoply/mocha',
-    'panoply/react'
+    'panoply/react',
+    'prettier',
+    'prettier/react'
   ],
 
-  'globals': {
-    'require': true,
-    'process': true,
-    'global': true,
-    'module': true,
+  globals: {
+    require: true,
+    process: true,
+    global: true,
+    module: true
+  },
+
+  rules: {
+    'prettier/prettier': ['error', { singleQuote: true }]
   }
 };

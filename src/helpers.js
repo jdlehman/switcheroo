@@ -1,4 +1,4 @@
-import {Children} from 'react';
+import { Children } from 'react';
 
 export function currentPath(location) {
   const path = decodeURI(window.location[location].slice(1).split('?')[0]);
@@ -34,26 +34,34 @@ export function createRegexFromPaths(paths) {
   return new RegExp(`^(${paths.join('|')})$`);
 }
 
-export function getSwitch(path, {children, basePath}) {
+export function getSwitch(path, { children, basePath }) {
   const consistentPath = removeTrailingSlash(path);
   const switches = Children.toArray(children);
-  return switches.filter(child => {
-    const childPaths = [].concat(child.props.path).map(childPath => formatPathRegex(basePath, childPath));
-    const regex = createRegexFromPaths(childPaths);
-    return regex.test(consistentPath);
-  })[0] || null;
+  return (
+    switches.filter(child => {
+      const childPaths = []
+        .concat(child.props.path)
+        .map(childPath => formatPathRegex(basePath, childPath));
+      const regex = createRegexFromPaths(childPaths);
+      return regex.test(consistentPath);
+    })[0] || null
+  );
 }
 
 export function getActivePath(currentPath, basePath, currentSwitch) {
-  if (!currentSwitch) { return null; }
+  if (!currentSwitch) {
+    return null;
+  }
 
   const consistentPath = removeTrailingSlash(currentPath);
   const paths = [].concat(currentSwitch.props.path);
-  return paths.filter(path => {
-    const formattedPath = formatPathRegex(basePath, path);
-    const regex = new RegExp(`^${formattedPath}$`);
-    return regex.test(consistentPath);
-  })[0] || null;
+  return (
+    paths.filter(path => {
+      const formattedPath = formatPathRegex(basePath, path);
+      const regex = new RegExp(`^${formattedPath}$`);
+      return regex.test(consistentPath);
+    })[0] || null
+  );
 }
 
 export function getDynamicSegments(path, basePath, swtch) {

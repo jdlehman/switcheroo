@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   getSwitch,
@@ -43,7 +43,11 @@ export default class Switcher extends Component {
     const currPath = currentPath(props.location);
     const visibleSwitch = getSwitch(currPath, props);
     const activePath = getActivePath(currPath, props.basePath, visibleSwitch);
-    const dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
+    const dynamicValues = getDynamicSegments(
+      currPath,
+      props.basePath,
+      visibleSwitch
+    );
     this.state = {
       visibleSwitch,
       dynamicValues,
@@ -83,36 +87,47 @@ export default class Switcher extends Component {
     }
   }
 
-  handleSwitchChange = (props) => {
+  handleSwitchChange = props => {
     const currPath = currentPath(props.location);
     const visibleSwitch = getSwitch(currPath, props);
     const activePath = getActivePath(currPath, props.basePath, visibleSwitch);
-    const dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
+    const dynamicValues = getDynamicSegments(
+      currPath,
+      props.basePath,
+      visibleSwitch
+    );
 
     if (typeof props.onChange === 'function') {
       props.onChange(!!visibleSwitch, currPath, dynamicValues, activePath);
     }
 
-    this.setState({visibleSwitch, dynamicValues, activePath});
+    this.setState({ visibleSwitch, dynamicValues, activePath });
   };
 
-  handleRouteChange = (ev) => {
+  handleRouteChange = ev => {
     this.handleSwitchChange(this.props);
   };
 
   render() {
-    const {props} = this.state.visibleSwitch || {};
-    const visibleSwitch = this.state.visibleSwitch && React.cloneElement(
-      this.state.visibleSwitch,
-      {...props, ...this.props.mapDynamicSegments(this.state.dynamicValues), activePath: this.state.activePath}
-    );
+    const { props } = this.state.visibleSwitch || {};
+    const visibleSwitch =
+      this.state.visibleSwitch &&
+      React.cloneElement(this.state.visibleSwitch, {
+        ...props,
+        ...this.props.mapDynamicSegments(this.state.dynamicValues),
+        activePath: this.state.activePath
+      });
 
-    if(this.props.renderSwitch) {
-      return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues, this.state.activePath);
+    if (this.props.renderSwitch) {
+      return this.props.renderSwitch(
+        visibleSwitch,
+        this.state.dynamicValues,
+        this.state.activePath
+      );
     }
 
     if (this.props.wrapper) {
-      const passedProps = {...this.props};
+      const passedProps = { ...this.props };
       Object.keys(Switcher.propTypes).forEach(k => delete passedProps[k]);
       return React.createElement(
         this.props.wrapper,

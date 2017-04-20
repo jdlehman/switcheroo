@@ -1,12 +1,14 @@
 'use strict';
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+function _interopDefault(ex) {
+  return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex;
+}
 
 var React = require('react');
 var React__default = _interopDefault(React);
 
 function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  return (module = { exports: {} }), fn(module, module.exports), module.exports;
 }
 
 /**
@@ -21,7 +23,7 @@ function createCommonjsModule(fn, module) {
  */
 
 function makeEmptyFunction(arg) {
-  return function () {
+  return function() {
     return arg;
   };
 }
@@ -37,10 +39,10 @@ emptyFunction.thatReturns = makeEmptyFunction;
 emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
 emptyFunction.thatReturnsTrue = makeEmptyFunction(true);
 emptyFunction.thatReturnsNull = makeEmptyFunction(null);
-emptyFunction.thatReturnsThis = function () {
+emptyFunction.thatReturnsThis = function() {
   return this;
 };
-emptyFunction.thatReturnsArgument = function (arg) {
+emptyFunction.thatReturnsArgument = function(arg) {
   return arg;
 };
 
@@ -83,13 +85,18 @@ function invariant(condition, format, a, b, c, d, e, f) {
   if (!condition) {
     var error;
     if (format === undefined) {
-      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+      error = new Error(
+        'Minified exception occurred; use the non-minified dev environment ' +
+          'for the full error message and additional helpful warnings.'
+      );
     } else {
       var args = [a, b, c, d, e, f];
       var argIndex = 0;
-      error = new Error(format.replace(/%s/g, function () {
-        return args[argIndex++];
-      }));
+      error = new Error(
+        format.replace(/%s/g, function() {
+          return args[argIndex++];
+        })
+      );
       error.name = 'Invariant Violation';
     }
 
@@ -110,16 +117,24 @@ var invariant_1 = invariant;
 var warning = emptyFunction_1;
 
 if (production !== 'production') {
-  (function () {
+  (function() {
     var printWarning = function printWarning(format) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      for (
+        var _len = arguments.length,
+          args = Array(_len > 1 ? _len - 1 : 0),
+          _key = 1;
+        _key < _len;
+        _key++
+      ) {
         args[_key - 1] = arguments[_key];
       }
 
       var argIndex = 0;
-      var message = 'Warning: ' + format.replace(/%s/g, function () {
-        return args[argIndex++];
-      });
+      var message =
+        'Warning: ' +
+        format.replace(/%s/g, function() {
+          return args[argIndex++];
+        });
       if (typeof console !== 'undefined') {
         console.error(message);
       }
@@ -133,7 +148,10 @@ if (production !== 'production') {
 
     warning = function warning(condition, format) {
       if (format === undefined) {
-        throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+        throw new Error(
+          '`warning(condition, format, ...args)` requires a warning ' +
+            'message argument'
+        );
       }
 
       if (format.indexOf('Failed Composite propType: ') === 0) {
@@ -141,7 +159,13 @@ if (production !== 'production') {
       }
 
       if (!condition) {
-        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        for (
+          var _len2 = arguments.length,
+            args = Array(_len2 > 2 ? _len2 - 2 : 0),
+            _key2 = 2;
+          _key2 < _len2;
+          _key2++
+        ) {
           args[_key2 - 2] = arguments[_key2];
         }
 
@@ -195,12 +219,37 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         try {
           // This is intentionally an invariant that gets caught. It's the same
           // behavior as without this statement except with a better message.
-          invariant$1(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', componentName || 'React class', location, typeSpecName);
-          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret$1);
+          invariant$1(
+            typeof typeSpecs[typeSpecName] === 'function',
+            '%s: %s type `%s` is invalid; it must be a function, usually from ' +
+              'React.PropTypes.',
+            componentName || 'React class',
+            location,
+            typeSpecName
+          );
+          error = typeSpecs[typeSpecName](
+            values,
+            typeSpecName,
+            componentName,
+            location,
+            null,
+            ReactPropTypesSecret$1
+          );
         } catch (ex) {
           error = ex;
         }
-        warning$1(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
+        warning$1(
+          !error || error instanceof Error,
+          '%s: type specification of %s `%s` is invalid; the type checker ' +
+            'function must return `null` or an `Error` but returned a %s. ' +
+            'You may have forgotten to pass an argument to the type checker ' +
+            'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+            'shape all require an argument).',
+          componentName || 'React class',
+          location,
+          typeSpecName,
+          typeof error
+        );
         if (error instanceof Error && !(error.message in loggedTypeFailures)) {
           // Only monitor this failure once because there tends to be a lot of the
           // same error.
@@ -208,7 +257,13 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 
           var stack = getStack ? getStack() : '';
 
-          warning$1(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
+          warning$1(
+            false,
+            'Failed %s type: %s%s',
+            location,
+            error.message,
+            stack != null ? stack : ''
+          );
         }
       }
     }
@@ -237,7 +292,10 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
    * @return {?function}
    */
   function getIteratorFn(maybeIterable) {
-    var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+    var iteratorFn =
+      maybeIterable &&
+      ((ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL]) ||
+        maybeIterable[FAUX_ITERATOR_SYMBOL]);
     if (typeof iteratorFn === 'function') {
       return iteratorFn;
     }
@@ -351,7 +409,15 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       var manualPropTypeCallCache = {};
       var manualPropTypeWarningCount = 0;
     }
-    function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+    function checkType(
+      isRequired,
+      props,
+      propName,
+      componentName,
+      location,
+      propFullName,
+      secret
+    ) {
       componentName = componentName || ANONYMOUS;
       propFullName = propFullName || propName;
 
@@ -361,10 +427,13 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
           invariant_1(
             false,
             'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
-            'Use `PropTypes.checkPropTypes()` to call them. ' +
-            'Read more at http://fb.me/use-check-prop-types'
+              'Use `PropTypes.checkPropTypes()` to call them. ' +
+              'Read more at http://fb.me/use-check-prop-types'
           );
-        } else if (production !== 'production' && typeof console !== 'undefined') {
+        } else if (
+          production !== 'production' &&
+          typeof console !== 'undefined'
+        ) {
           // Old behavior for people using React.PropTypes
           var cacheKey = componentName + ':' + propName;
           if (
@@ -375,10 +444,11 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
             warning_1(
               false,
               'You are manually calling a React.PropTypes validation ' +
-              'function for the `%s` prop on `%s`. This is deprecated ' +
-              'and will throw in the standalone `prop-types` package. ' +
-              'You may be seeing this warning due to a third-party PropTypes ' +
-              'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.',
+                'function for the `%s` prop on `%s`. This is deprecated ' +
+                'and will throw in the standalone `prop-types` package. ' +
+                'You may be seeing this warning due to a third-party PropTypes ' +
+                'library. See https://fb.me/react-warning-dont-call-proptypes ' +
+                'for details.',
               propFullName,
               componentName
             );
@@ -390,9 +460,23 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       if (props[propName] == null) {
         if (isRequired) {
           if (props[propName] === null) {
-            return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required ' + ('in `' + componentName + '`, but its value is `null`.'));
+            return new PropTypeError(
+              'The ' +
+                location +
+                ' `' +
+                propFullName +
+                '` is marked as required ' +
+                ('in `' + componentName + '`, but its value is `null`.')
+            );
           }
-          return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required in ' + ('`' + componentName + '`, but its value is `undefined`.'));
+          return new PropTypeError(
+            'The ' +
+              location +
+              ' `' +
+              propFullName +
+              '` is marked as required in ' +
+              ('`' + componentName + '`, but its value is `undefined`.')
+          );
         }
         return null;
       } else {
@@ -407,7 +491,14 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
   }
 
   function createPrimitiveTypeChecker(expectedType) {
-    function validate(props, propName, componentName, location, propFullName, secret) {
+    function validate(
+      props,
+      propName,
+      componentName,
+      location,
+      propFullName,
+      secret
+    ) {
       var propValue = props[propName];
       var propType = getPropType(propValue);
       if (propType !== expectedType) {
@@ -416,7 +507,19 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
         // 'of type `object`'.
         var preciseType = getPreciseType(propValue);
 
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'));
+        return new PropTypeError(
+          'Invalid ' +
+            location +
+            ' `' +
+            propFullName +
+            '` of type ' +
+            ('`' +
+              preciseType +
+              '` supplied to `' +
+              componentName +
+              '`, expected ') +
+            ('`' + expectedType + '`.')
+        );
       }
       return null;
     }
@@ -430,15 +533,39 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
   function createArrayOfTypeChecker(typeChecker) {
     function validate(props, propName, componentName, location, propFullName) {
       if (typeof typeChecker !== 'function') {
-        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside arrayOf.');
+        return new PropTypeError(
+          'Property `' +
+            propFullName +
+            '` of component `' +
+            componentName +
+            '` has invalid PropType notation inside arrayOf.'
+        );
       }
       var propValue = props[propName];
       if (!Array.isArray(propValue)) {
         var propType = getPropType(propValue);
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an array.'));
+        return new PropTypeError(
+          'Invalid ' +
+            location +
+            ' `' +
+            propFullName +
+            '` of type ' +
+            ('`' +
+              propType +
+              '` supplied to `' +
+              componentName +
+              '`, expected an array.')
+        );
       }
       for (var i = 0; i < propValue.length; i++) {
-        var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret_1);
+        var error = typeChecker(
+          propValue,
+          i,
+          componentName,
+          location,
+          propFullName + '[' + i + ']',
+          ReactPropTypesSecret_1
+        );
         if (error instanceof Error) {
           return error;
         }
@@ -453,7 +580,18 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       var propValue = props[propName];
       if (!isValidElement(propValue)) {
         var propType = getPropType(propValue);
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement.'));
+        return new PropTypeError(
+          'Invalid ' +
+            location +
+            ' `' +
+            propFullName +
+            '` of type ' +
+            ('`' +
+              propType +
+              '` supplied to `' +
+              componentName +
+              '`, expected a single ReactElement.')
+        );
       }
       return null;
     }
@@ -465,7 +603,19 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       if (!(props[propName] instanceof expectedClass)) {
         var expectedClassName = expectedClass.name || ANONYMOUS;
         var actualClassName = getClassName(props[propName]);
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + actualClassName + '` supplied to `' + componentName + '`, expected ') + ('instance of `' + expectedClassName + '`.'));
+        return new PropTypeError(
+          'Invalid ' +
+            location +
+            ' `' +
+            propFullName +
+            '` of type ' +
+            ('`' +
+              actualClassName +
+              '` supplied to `' +
+              componentName +
+              '`, expected ') +
+            ('instance of `' + expectedClassName + '`.')
+        );
       }
       return null;
     }
@@ -474,7 +624,12 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
 
   function createEnumTypeChecker(expectedValues) {
     if (!Array.isArray(expectedValues)) {
-      production !== 'production' ? warning_1(false, 'Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
+      production !== 'production'
+        ? warning_1(
+            false,
+            'Invalid argument supplied to oneOf, expected an instance of array.'
+          )
+        : void 0;
       return emptyFunction_1.thatReturnsNull;
     }
 
@@ -487,7 +642,20 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       }
 
       var valuesString = JSON.stringify(expectedValues);
-      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + propValue + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+      return new PropTypeError(
+        'Invalid ' +
+          location +
+          ' `' +
+          propFullName +
+          '` of value `' +
+          propValue +
+          '` ' +
+          ('supplied to `' +
+            componentName +
+            '`, expected one of ' +
+            valuesString +
+            '.')
+      );
     }
     return createChainableTypeChecker(validate);
   }
@@ -495,16 +663,40 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
   function createObjectOfTypeChecker(typeChecker) {
     function validate(props, propName, componentName, location, propFullName) {
       if (typeof typeChecker !== 'function') {
-        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside objectOf.');
+        return new PropTypeError(
+          'Property `' +
+            propFullName +
+            '` of component `' +
+            componentName +
+            '` has invalid PropType notation inside objectOf.'
+        );
       }
       var propValue = props[propName];
       var propType = getPropType(propValue);
       if (propType !== 'object') {
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an object.'));
+        return new PropTypeError(
+          'Invalid ' +
+            location +
+            ' `' +
+            propFullName +
+            '` of type ' +
+            ('`' +
+              propType +
+              '` supplied to `' +
+              componentName +
+              '`, expected an object.')
+        );
       }
       for (var key in propValue) {
         if (propValue.hasOwnProperty(key)) {
-          var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
+          var error = typeChecker(
+            propValue,
+            key,
+            componentName,
+            location,
+            propFullName + '.' + key,
+            ReactPropTypesSecret_1
+          );
           if (error instanceof Error) {
             return error;
           }
@@ -517,19 +709,40 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
 
   function createUnionTypeChecker(arrayOfTypeCheckers) {
     if (!Array.isArray(arrayOfTypeCheckers)) {
-      production !== 'production' ? warning_1(false, 'Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
+      production !== 'production'
+        ? warning_1(
+            false,
+            'Invalid argument supplied to oneOfType, expected an instance of array.'
+          )
+        : void 0;
       return emptyFunction_1.thatReturnsNull;
     }
 
     function validate(props, propName, componentName, location, propFullName) {
       for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
         var checker = arrayOfTypeCheckers[i];
-        if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret_1) == null) {
+        if (
+          checker(
+            props,
+            propName,
+            componentName,
+            location,
+            propFullName,
+            ReactPropTypesSecret_1
+          ) == null
+        ) {
           return null;
         }
       }
 
-      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`.'));
+      return new PropTypeError(
+        'Invalid ' +
+          location +
+          ' `' +
+          propFullName +
+          '` supplied to ' +
+          ('`' + componentName + '`.')
+      );
     }
     return createChainableTypeChecker(validate);
   }
@@ -537,7 +750,14 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
   function createNodeChecker() {
     function validate(props, propName, componentName, location, propFullName) {
       if (!isNode(props[propName])) {
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`, expected a ReactNode.'));
+        return new PropTypeError(
+          'Invalid ' +
+            location +
+            ' `' +
+            propFullName +
+            '` supplied to ' +
+            ('`' + componentName + '`, expected a ReactNode.')
+        );
       }
       return null;
     }
@@ -549,14 +769,30 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       var propValue = props[propName];
       var propType = getPropType(propValue);
       if (propType !== 'object') {
-        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+        return new PropTypeError(
+          'Invalid ' +
+            location +
+            ' `' +
+            propFullName +
+            '` of type `' +
+            propType +
+            '` ' +
+            ('supplied to `' + componentName + '`, expected `object`.')
+        );
       }
       for (var key in shapeTypes) {
         var checker = shapeTypes[key];
         if (!checker) {
           continue;
         }
-        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
+        var error = checker(
+          propValue,
+          key,
+          componentName,
+          location,
+          propFullName + '.' + key,
+          ReactPropTypesSecret_1
+        );
         if (error) {
           return error;
         }
@@ -685,8 +921,8 @@ var factoryWithThrowingShims = function() {
     invariant_1(
       false,
       'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
-      'Use PropTypes.checkPropTypes() to call them. ' +
-      'Read more at http://fb.me/use-check-prop-types'
+        'Use PropTypes.checkPropTypes() to call them. ' +
+        'Read more at http://fb.me/use-check-prop-types'
     );
   }
   shim.isRequired = shim;
@@ -719,8 +955,8 @@ var factoryWithThrowingShims = function() {
   return ReactPropTypes;
 };
 
-var index = createCommonjsModule(function (module) {
-/**
+var index = createCommonjsModule(function(module) {
+  /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
  *
@@ -729,27 +965,33 @@ var index = createCommonjsModule(function (module) {
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-if (production !== 'production') {
-  var REACT_ELEMENT_TYPE = (typeof Symbol === 'function' &&
-    Symbol.for &&
-    Symbol.for('react.element')) ||
-    0xeac7;
+  if (production !== 'production') {
+    var REACT_ELEMENT_TYPE =
+      (typeof Symbol === 'function' &&
+        Symbol.for &&
+        Symbol.for('react.element')) ||
+      0xeac7;
 
-  var isValidElement = function(object) {
-    return typeof object === 'object' &&
-      object !== null &&
-      object.$$typeof === REACT_ELEMENT_TYPE;
-  };
+    var isValidElement = function(object) {
+      return (
+        typeof object === 'object' &&
+        object !== null &&
+        object.$$typeof === REACT_ELEMENT_TYPE
+      );
+    };
 
-  // By explicitly using `prop-types` you are opting into new development behavior.
-  // http://fb.me/prop-types-in-prod
-  var throwOnDirectAccess = true;
-  module.exports = factoryWithTypeCheckers(isValidElement, throwOnDirectAccess);
-} else {
-  // By explicitly using `prop-types` you are opting into new production behavior.
-  // http://fb.me/prop-types-in-prod
-  module.exports = factoryWithThrowingShims();
-}
+    // By explicitly using `prop-types` you are opting into new development behavior.
+    // http://fb.me/prop-types-in-prod
+    var throwOnDirectAccess = true;
+    module.exports = factoryWithTypeCheckers(
+      isValidElement,
+      throwOnDirectAccess
+    );
+  } else {
+    // By explicitly using `prop-types` you are opting into new production behavior.
+    // http://fb.me/prop-types-in-prod
+    module.exports = factoryWithThrowingShims();
+  }
 });
 
 function currentPath(location) {
@@ -775,7 +1017,7 @@ function replaceDynamicSegments(path) {
 
 function getDynamicSegmentNames(path) {
   var dynamicSegementNames = path.match(/:[^\/]+/g) || [];
-  return dynamicSegementNames.map(function (name) {
+  return dynamicSegementNames.map(function(name) {
     return name.substr(1);
   });
 }
@@ -789,18 +1031,19 @@ function createRegexFromPaths(paths) {
 }
 
 function getSwitch(path, _ref) {
-  var children = _ref.children,
-      basePath = _ref.basePath;
+  var children = _ref.children, basePath = _ref.basePath;
 
   var consistentPath = removeTrailingSlash(path);
   var switches = React.Children.toArray(children);
-  return switches.filter(function (child) {
-    var childPaths = [].concat(child.props.path).map(function (childPath) {
-      return formatPathRegex(basePath, childPath);
-    });
-    var regex = createRegexFromPaths(childPaths);
-    return regex.test(consistentPath);
-  })[0] || null;
+  return (
+    switches.filter(function(child) {
+      var childPaths = [].concat(child.props.path).map(function(childPath) {
+        return formatPathRegex(basePath, childPath);
+      });
+      var regex = createRegexFromPaths(childPaths);
+      return regex.test(consistentPath);
+    })[0] || null
+  );
 }
 
 function getActivePath(currentPath, basePath, currentSwitch) {
@@ -810,24 +1053,26 @@ function getActivePath(currentPath, basePath, currentSwitch) {
 
   var consistentPath = removeTrailingSlash(currentPath);
   var paths = [].concat(currentSwitch.props.path);
-  return paths.filter(function (path) {
-    var formattedPath = formatPathRegex(basePath, path);
-    var regex = new RegExp('^' + formattedPath + '$');
-    return regex.test(consistentPath);
-  })[0] || null;
+  return (
+    paths.filter(function(path) {
+      var formattedPath = formatPathRegex(basePath, path);
+      var regex = new RegExp('^' + formattedPath + '$');
+      return regex.test(consistentPath);
+    })[0] || null
+  );
 }
 
 function getDynamicSegments(path, basePath, swtch) {
   var dynamicValues = {};
   var consistentPath = removeTrailingSlash(path);
   if (swtch) {
-    [].concat(swtch.props.path).forEach(function (childPath) {
+    [].concat(swtch.props.path).forEach(function(childPath) {
       var dynamicSegments = getDynamicSegmentNames(basePath + childPath);
       var regexStr = formatPathRegex(basePath, childPath);
       var matches = consistentPath.match(new RegExp('^' + regexStr + '$'));
       if (matches) {
         matches.shift();
-        dynamicSegments.forEach(function (segment, index) {
+        dynamicSegments.forEach(function(segment, index) {
           dynamicValues[segment] = matches[index];
         });
       }
@@ -836,30 +1081,96 @@ function getDynamicSegments(path, basePath, swtch) {
   return dynamicValues;
 }
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _extends =
+  Object.assign ||
+  function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = (function() {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ('value' in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+  return function(Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+})();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError('Cannot call a class as a function');
+  }
+}
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError(
+      "this hasn't been initialised - super() hasn't been called"
+    );
+  }
+  return call && (typeof call === 'object' || typeof call === 'function')
+    ? call
+    : self;
+}
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== 'function' && superClass !== null) {
+    throw new TypeError(
+      'Super expression must either be null or a function, not ' +
+        typeof superClass
+    );
+  }
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass)
+    Object.setPrototypeOf
+      ? Object.setPrototypeOf(subClass, superClass)
+      : (subClass.__proto__ = superClass);
+}
 
-var Switcher = function (_Component) {
+var Switcher = (function(_Component) {
   _inherits(Switcher, _Component);
 
   function Switcher(props) {
     _classCallCheck(this, Switcher);
 
-    var _this = _possibleConstructorReturn(this, (Switcher.__proto__ || Object.getPrototypeOf(Switcher)).call(this, props));
+    var _this = _possibleConstructorReturn(
+      this,
+      (Switcher.__proto__ || Object.getPrototypeOf(Switcher)).call(this, props)
+    );
 
     _initialiseProps.call(_this);
 
     var currPath = currentPath(props.location);
     var visibleSwitch = getSwitch(currPath, props);
     var activePath = getActivePath(currPath, props.basePath, visibleSwitch);
-    var dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
+    var dynamicValues = getDynamicSegments(
+      currPath,
+      props.basePath,
+      visibleSwitch
+    );
     _this.state = {
       visibleSwitch: visibleSwitch,
       dynamicValues: dynamicValues,
@@ -868,68 +1179,93 @@ var Switcher = function (_Component) {
     return _this;
   }
 
-  _createClass(Switcher, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      if (this.props.load) {
-        window.addEventListener('load', this.handleRouteChange);
+  _createClass(Switcher, [
+    {
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        if (this.props.load) {
+          window.addEventListener('load', this.handleRouteChange);
+        }
+        if (this.props.pushState) {
+          window.addEventListener('popstate', this.handleRouteChange);
+        }
+        if (this.props.hashChange) {
+          window.addEventListener('hashchange', this.handleRouteChange);
+        }
       }
-      if (this.props.pushState) {
-        window.addEventListener('popstate', this.handleRouteChange);
+    },
+    {
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        this.handleSwitchChange(nextProps);
       }
-      if (this.props.hashChange) {
-        window.addEventListener('hashchange', this.handleRouteChange);
+    },
+    {
+      key: 'shouldComponentUpdate',
+      value: function shouldComponentUpdate(nextProps) {
+        return !nextProps.preventUpdate();
       }
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      this.handleSwitchChange(nextProps);
-    }
-  }, {
-    key: 'shouldComponentUpdate',
-    value: function shouldComponentUpdate(nextProps) {
-      return !nextProps.preventUpdate();
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      if (this.props.load) {
-        window.removeEventListener('load', this.handleRouteChange);
+    },
+    {
+      key: 'componentWillUnmount',
+      value: function componentWillUnmount() {
+        if (this.props.load) {
+          window.removeEventListener('load', this.handleRouteChange);
+        }
+        if (this.props.pushState) {
+          window.removeEventListener('popstate', this.handleRouteChange);
+        }
+        if (this.props.hashChange) {
+          window.removeEventListener('hashchange', this.handleRouteChange);
+        }
       }
-      if (this.props.pushState) {
-        window.removeEventListener('popstate', this.handleRouteChange);
-      }
-      if (this.props.hashChange) {
-        window.removeEventListener('hashchange', this.handleRouteChange);
-      }
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _ref = this.state.visibleSwitch || {},
-          props = _ref.props;
+    },
+    {
+      key: 'render',
+      value: function render() {
+        var _ref = this.state.visibleSwitch || {}, props = _ref.props;
 
-      var visibleSwitch = this.state.visibleSwitch && React__default.cloneElement(this.state.visibleSwitch, _extends({}, props, this.props.mapDynamicSegments(this.state.dynamicValues), { activePath: this.state.activePath }));
+        var visibleSwitch =
+          this.state.visibleSwitch &&
+          React__default.cloneElement(
+            this.state.visibleSwitch,
+            _extends(
+              {},
+              props,
+              this.props.mapDynamicSegments(this.state.dynamicValues),
+              {
+                activePath: this.state.activePath
+              }
+            )
+          );
 
-      if (this.props.renderSwitch) {
-        return this.props.renderSwitch(visibleSwitch, this.state.dynamicValues, this.state.activePath);
-      }
+        if (this.props.renderSwitch) {
+          return this.props.renderSwitch(
+            visibleSwitch,
+            this.state.dynamicValues,
+            this.state.activePath
+          );
+        }
 
-      if (this.props.wrapper) {
-        var passedProps = _extends({}, this.props);
-        Object.keys(Switcher.propTypes).forEach(function (k) {
-          return delete passedProps[k];
-        });
-        return React__default.createElement(this.props.wrapper, passedProps, visibleSwitch);
-      } else {
-        return visibleSwitch;
+        if (this.props.wrapper) {
+          var passedProps = _extends({}, this.props);
+          Object.keys(Switcher.propTypes).forEach(function(k) {
+            return delete passedProps[k];
+          });
+          return React__default.createElement(
+            this.props.wrapper,
+            passedProps,
+            visibleSwitch
+          );
+        } else {
+          return visibleSwitch;
+        }
       }
     }
-  }]);
+  ]);
 
   return Switcher;
-}(React.Component);
+})(React.Component);
 
 Switcher.displayName = 'Switcher';
 Switcher.propTypes = {
@@ -962,20 +1298,28 @@ Switcher.defaultProps = {
 var _initialiseProps = function _initialiseProps() {
   var _this2 = this;
 
-  this.handleSwitchChange = function (props) {
+  this.handleSwitchChange = function(props) {
     var currPath = currentPath(props.location);
     var visibleSwitch = getSwitch(currPath, props);
     var activePath = getActivePath(currPath, props.basePath, visibleSwitch);
-    var dynamicValues = getDynamicSegments(currPath, props.basePath, visibleSwitch);
+    var dynamicValues = getDynamicSegments(
+      currPath,
+      props.basePath,
+      visibleSwitch
+    );
 
     if (typeof props.onChange === 'function') {
       props.onChange(!!visibleSwitch, currPath, dynamicValues, activePath);
     }
 
-    _this2.setState({ visibleSwitch: visibleSwitch, dynamicValues: dynamicValues, activePath: activePath });
+    _this2.setState({
+      visibleSwitch: visibleSwitch,
+      dynamicValues: dynamicValues,
+      activePath: activePath
+    });
   };
 
-  this.handleRouteChange = function (ev) {
+  this.handleRouteChange = function(ev) {
     _this2.handleSwitchChange(_this2.props);
   };
 };

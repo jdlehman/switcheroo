@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import {assert} from 'chai';
+import { assert } from 'chai';
 import sinon from 'sinon';
 import Switcher from 'index';
 import * as helpers from 'helpers';
@@ -64,7 +64,8 @@ describe('Switcher', function() {
         sinon.stub(helpers, 'currentPath').returns('/hello/more/123a-b');
         this.switcher.handleRouteChange();
         helpers.currentPath.restore();
-        sinon.assert.calledWith(this.handleChange,
+        sinon.assert.calledWith(
+          this.handleChange,
           true,
           '/hello/more/123a-b',
           {
@@ -219,9 +220,7 @@ describe('Switcher', function() {
     describe('with routes with dynamic segments', function() {
       beforeEach(function() {
         function MyComp(props) {
-          return (
-            <span>{props.id + props.page}</span>
-          );
+          return <span>{props.id + props.page}</span>;
         }
         MyComp.displayName = 'MyComp';
         MyComp.propTypes = {
@@ -243,7 +242,9 @@ describe('Switcher', function() {
       });
 
       it('renders matched component and sets dynamic segments as props', function() {
-        sinon.stub(helpers, 'currentPath').returns('/user/123-abc/information/21');
+        sinon
+          .stub(helpers, 'currentPath')
+          .returns('/user/123-abc/information/21');
         this.switcher.handleRouteChange();
         var component = ReactDOM.findDOMNode(this.switcher);
         assert.equal(component.innerHTML, '123-abc21');
@@ -254,7 +255,7 @@ describe('Switcher', function() {
   describe('mapDynamicSegments', function() {
     describe('without a wrapper', function() {
       beforeEach(function() {
-        function mapper({id, page}) {
+        function mapper({ id, page }) {
           var matches = id.match(/(.+)-(.+)/);
           return {
             userNum: matches[1],
@@ -264,14 +265,20 @@ describe('Switcher', function() {
         }
         function MyComp(props) {
           return (
-            <span>{props.userNum + props.userLetters + props.page + props.activePath}</span>
+            <span>
+              {props.userNum +
+                props.userLetters +
+                props.page +
+                props.activePath}
+            </span>
           );
         }
         MyComp.displayName = 'MyComp';
         MyComp.propTypes = {
           userNum: PropTypes.string,
           userLetters: PropTypes.string,
-          page: PropTypes.number
+          page: PropTypes.number,
+          activePath: PropTypes.string
         };
         this.switcher = ReactDOM.render(
           <Switcher mapDynamicSegments={mapper}>
@@ -288,17 +295,24 @@ describe('Switcher', function() {
       });
 
       it('renders matched component and sets dynamic segments as props', function() {
-        sinon.stub(helpers, 'currentPath').returns('/user/234-cde/information/421');
+        sinon
+          .stub(helpers, 'currentPath')
+          .returns('/user/234-cde/information/421');
         this.switcher.handleRouteChange();
         var component = ReactDOM.findDOMNode(this.switcher);
-        assert.equal(component.innerHTML, '234cde842/user/:id/information/:page');
+        assert.equal(
+          component.innerHTML,
+          '234cde842/user/:id/information/:page'
+        );
       });
     });
 
     describe('with custom render', function() {
       it('calls the custom render function with the component and values', function() {
-        sinon.stub(helpers, 'currentPath').returns('/user/234-cde/information/421');
-        function mapper({id, page}) {
+        sinon
+          .stub(helpers, 'currentPath')
+          .returns('/user/234-cde/information/421');
+        function mapper({ id, page }) {
           var matches = id.match(/(.+)-(.+)/);
           return {
             userNum: matches[1],
@@ -307,9 +321,7 @@ describe('Switcher', function() {
           };
         }
         function MyComp(props) {
-          return (
-            <span>{props.userNum + props.userLetters + props.page}</span>
-          );
+          return <span>{props.userNum + props.userLetters + props.page}</span>;
         }
         MyComp.displayName = 'MyComp';
         MyComp.propTypes = {
@@ -326,7 +338,7 @@ describe('Switcher', function() {
           document.getElementById('app')
         );
         sinon.assert.calledOnce(render);
-        assert.deepEqual(render.args[0][1], {id: '234-cde', page: '421'});
+        assert.deepEqual(render.args[0][1], { id: '234-cde', page: '421' });
         assert.deepEqual(render.args[0][2], '/user/:id/information/:page');
       });
       afterEach(function() {
@@ -337,7 +349,7 @@ describe('Switcher', function() {
 
     describe('with a wrapper', function() {
       beforeEach(function() {
-        function mapper({id, page}) {
+        function mapper({ id, page }) {
           var matches = id.match(/(.+)-(.+)/);
           return {
             userNum: matches[1],
@@ -347,7 +359,12 @@ describe('Switcher', function() {
         }
         function MyComp(props) {
           return (
-            <span>{props.userNum + props.userLetters + props.page + props.activePath}</span>
+            <span>
+              {props.userNum +
+                props.userLetters +
+                props.page +
+                props.activePath}
+            </span>
           );
         }
         MyComp.displayName = 'MyComp';
@@ -372,11 +389,16 @@ describe('Switcher', function() {
       });
 
       it('renders matched component and sets dynamic segments as props', function() {
-        sinon.stub(helpers, 'currentPath').returns('/user/234-cde/information/421');
+        sinon
+          .stub(helpers, 'currentPath')
+          .returns('/user/234-cde/information/421');
         this.switcher.handleRouteChange();
         var wrapper = ReactDOM.findDOMNode(this.switcher);
         var component = wrapper.children[0];
-        assert.equal(component.innerHTML, '234cde842/user/:id/information/:page');
+        assert.equal(
+          component.innerHTML,
+          '234cde842/user/:id/information/:page'
+        );
       });
     });
   });
