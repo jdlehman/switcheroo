@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.1 (2016-4-20)
+
+Fixed:
+
+- Move away from deprecated `React.PropTypes` and use `prop-types` package. [4ad51a5](../../4ad51a5)
+
 ## 3.1.0 (2016-8-26)
 
 Added:
