@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.4 (2016-4-26)
+
+Fixed:
+
+- Prevent prettier from running on built files in `dist`. This one will actually update `dist` correctly [f8bb603](../../commit/f8bb603)
+
 ## 3.1.3 (2016-4-26)
 
 Fixed:
