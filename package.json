@@ -21,8 +21,12 @@
     "prepublish": "yarn run clean && yarn run build"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write --single-quote {src,test}/**/*.js",
+    "src/**/*.js": [
+      "prettier --write --single-quote",
+      "git add"
+    ],
+    "test/**/*.js": [
+      "prettier --write --single-quote",
       "git add"
     ]
   },
