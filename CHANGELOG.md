@@ -1,10 +1,16 @@
 # Changelog
 
+## 3.1.2 (2016-4-26)
+
+Fixed:
+
+- Correctly configure rollup for production to strip out development code. [506fc6c](../../commit/506fc6c)
+
 ## 3.1.1 (2016-4-20)
 
 Fixed:
 
-- Move away from deprecated `React.PropTypes` and use `prop-types` package. [4ad51a5](../../4ad51a5)
+- Move away from deprecated `React.PropTypes` and use `prop-types` package. [4ad51a5](../../commit/4ad51a5)
 
 ## 3.1.0 (2016-8-26)
 
@@ -14,7 +20,7 @@ Added:
 
 Fixed:
 
-- No longer assumes props.children is an array. [3ec6428](../../3ec6428)
+- No longer assumes props.children is an array. [3ec6428](../../commit/3ec6428)
 
 ## 3.0.1 (2016-8-25)
 
