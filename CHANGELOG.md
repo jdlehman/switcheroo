@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.3 (2016-4-26)
+
+Fixed:
+
+- Update build in `dist`
+
 ## 3.1.2 (2016-4-26)
 
 Fixed:
