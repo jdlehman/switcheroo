@@ -1,7 +1,5 @@
 import babel from 'rollup-plugin-babel';
 import replace from 'rollup-plugin-replace';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
 
 export default {
   entry: 'src/index.js',
@@ -10,17 +8,16 @@ export default {
       'process.env.NODE_DEBUG': false,
       'process.env.NODE_ENV': '"production"'
     }),
-    resolve({ jsnext: true, main: true }),
-    commonjs({ include: 'node_modules/**' }),
     babel({
       exclude: 'node_modules/**',
       babelrc: false,
       presets: [['es2015', { modules: false }], 'stage-0', 'react']
     })
   ],
-  external: ['react'],
+  external: ['react', 'prop-types'],
   globals: {
-    react: 'React'
+    react: 'React',
+    'prop-types': 'PropTypes'
   },
   moduleName: 'switcheroo',
   moduleId: 'switcheroo',
