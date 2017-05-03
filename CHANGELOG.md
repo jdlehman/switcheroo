@@ -1,24 +1,30 @@
 # Changelog
 
-## 3.1.4 (2016-4-26)
+## 3.1.5 (2017-5-3)
+
+Fixed:
+
+Make `prop-types` a peer dependency to help switcheroo users get rid of warnings. [b286b6c](../../commit/b286b6c)
+
+## 3.1.4 (2017-4-26)
 
 Fixed:
 
 - Prevent prettier from running on built files in `dist`. This one will actually update `dist` correctly [f8bb603](../../commit/f8bb603)
 
-## 3.1.3 (2016-4-26)
+## 3.1.3 (2017-4-26)
 
 Fixed:
 
 - Update build in `dist`
 
-## 3.1.2 (2016-4-26)
+## 3.1.2 (2017-4-26)
 
 Fixed:
 
 - Correctly configure rollup for production to strip out development code. [506fc6c](../../commit/506fc6c)
 
-## 3.1.1 (2016-4-20)
+## 3.1.1 (2017-4-20)
 
 Fixed:
 
