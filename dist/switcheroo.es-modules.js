@@ -1,5 +1,14 @@
-import React, { Children, Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Children, Component, PropTypes } from 'react';
+import PropTypes$1 from 'prop-types';
+
+// http://stackoverflow.com/a/2117523
+function generateGuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0;
+    var v = c === 'x' ? r : r & 0x3 | 0x8;
+    return v.toString(16);
+  });
+}
 
 function currentPath(location) {
   var path = decodeURI(window.location[location].slice(1).split('?')[0]);
@@ -85,23 +94,93 @@ function getDynamicSegments(path, basePath, swtch) {
   return dynamicValues;
 }
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+
+var _extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+
+  return target;
+};
+
+
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
 
 var Switcher = function (_Component) {
-  _inherits(Switcher, _Component);
+  inherits(Switcher, _Component);
 
   function Switcher(props) {
-    _classCallCheck(this, Switcher);
+    classCallCheck(this, Switcher);
 
-    var _this = _possibleConstructorReturn(this, (Switcher.__proto__ || Object.getPrototypeOf(Switcher)).call(this, props));
+    var _this = possibleConstructorReturn(this, (Switcher.__proto__ || Object.getPrototypeOf(Switcher)).call(this, props));
 
     _initialiseProps.call(_this);
 
@@ -117,17 +196,31 @@ var Switcher = function (_Component) {
     return _this;
   }
 
-  _createClass(Switcher, [{
+  createClass(Switcher, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
+      var usingProvider = this.context.switcherProvider;
+      if (usingProvider) {
+        this._id = generateGuid();
+      }
+
       if (this.props.load) {
-        window.addEventListener('load', this.handleRouteChange);
+        usingProvider ? this.context.switcherProvider.loadListeners.push({
+          id: this._id,
+          fn: this.handleRouteChange
+        }) : window.addEventListener('load', this.handleRouteChange);
       }
       if (this.props.pushState) {
-        window.addEventListener('popstate', this.handleRouteChange);
+        usingProvider ? this.context.switcherProvider.popStateListeners.push({
+          id: this._id,
+          fn: this.handleRouteChange
+        }) : window.addEventListener('popstate', this.handleRouteChange);
       }
       if (this.props.hashChange) {
-        window.addEventListener('hashchange', this.handleRouteChange);
+        usingProvider ? this.context.switcherProvider.hashChangeListeners.push({
+          id: this._id,
+          fn: this.handleRouteChange
+        }) : window.addEventListener('hashchange', this.handleRouteChange);
       }
     }
   }, {
@@ -178,23 +271,29 @@ var Switcher = function (_Component) {
       }
     }
   }]);
-
   return Switcher;
 }(Component);
 
 Switcher.displayName = 'Switcher';
 Switcher.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
-  pushState: PropTypes.bool,
-  hashChange: PropTypes.bool,
-  load: PropTypes.bool,
-  onChange: PropTypes.func,
-  wrapper: PropTypes.any,
-  location: PropTypes.string,
-  basePath: PropTypes.string,
-  preventUpdate: PropTypes.func,
-  mapDynamicSegments: PropTypes.func,
-  renderSwitch: PropTypes.func
+  children: PropTypes$1.oneOfType([PropTypes$1.arrayOf(PropTypes$1.node), PropTypes$1.node]),
+  pushState: PropTypes$1.bool,
+  hashChange: PropTypes$1.bool,
+  load: PropTypes$1.bool,
+  onChange: PropTypes$1.func,
+  wrapper: PropTypes$1.any,
+  location: PropTypes$1.string,
+  basePath: PropTypes$1.string,
+  preventUpdate: PropTypes$1.func,
+  mapDynamicSegments: PropTypes$1.func,
+  renderSwitch: PropTypes$1.func
+};
+Switcher.contextTypes = {
+  switcherProvider: PropTypes$1.shape({
+    loadListeners: PropTypes$1.array.isRequired,
+    popStateListeners: PropTypes$1.array.isRequired,
+    hashChangeListeners: PropTypes$1.array.isRequired
+  })
 };
 Switcher.defaultProps = {
   pushState: false,
@@ -231,4 +330,80 @@ var _initialiseProps = function _initialiseProps() {
   };
 };
 
-export default Switcher;
+var SwitcherProvider = function (_Component) {
+  inherits(SwitcherProvider, _Component);
+
+  function SwitcherProvider() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    classCallCheck(this, SwitcherProvider);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = possibleConstructorReturn(this, (_ref = SwitcherProvider.__proto__ || Object.getPrototypeOf(SwitcherProvider)).call.apply(_ref, [this].concat(args))), _this), _this.switcherProvider = {
+      loadListeners: [],
+      popStateListeners: [],
+      hashChangeListeners: []
+    }, _this.handleLoadListeners = function (e) {
+      _this.switcherProvider.loadListeners.forEach(function (_ref2) {
+        var fn = _ref2.fn;
+        return fn(e);
+      });
+    }, _this.handlePopStateListeners = function (e) {
+      _this.switcherProvider.popStateListeners.forEach(function (_ref3) {
+        var fn = _ref3.fn;
+        return fn(e);
+      });
+    }, _this.handleHashChangeListeners = function (e) {
+      _this.switcherProvider.hashChangeListeners.forEach(function (_ref4) {
+        var fn = _ref4.fn;
+        return fn(e);
+      });
+    }, _temp), possibleConstructorReturn(_this, _ret);
+  }
+
+  createClass(SwitcherProvider, [{
+    key: 'getChildContext',
+    value: function getChildContext() {
+      return { switcherProvider: this.switcherProvider };
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      window.addEventListener('load', this.handleLoadListeners);
+      window.addEventListener('popstate', this.handlePopStateListeners);
+      window.addEventListener('hashchange', this.handleHashChangeListeners);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('load', this.handleLoadListeners);
+      window.removeEventListener('popstate', this.handlePopStateListeners);
+      window.removeEventListener('hashchange', this.handleHashChangeListeners);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return this.props.children;
+    }
+  }]);
+  return SwitcherProvider;
+}(Component);
+
+SwitcherProvider.displayName = 'SwitcherProvider';
+SwitcherProvider.propTypes = {
+  children: PropTypes.node
+};
+SwitcherProvider.childContextTypes = {
+  switcherProvider: PropTypes.shape({
+    loadListeners: PropTypes.array.isRequired,
+    popStateListeners: PropTypes.array.isRequired,
+    hashChangeListeners: PropTypes.array.isRequired
+  })
+};
+
+export { SwitcherProvider };export default Switcher;
