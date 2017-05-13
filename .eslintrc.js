@@ -14,7 +14,9 @@ module.exports = {
     require: true,
     process: true,
     global: true,
-    module: true
+    module: true,
+    // from jest
+    expect: true
   },
 
   rules: {

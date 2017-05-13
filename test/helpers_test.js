@@ -1,4 +1,3 @@
-import { assert } from 'chai';
 import React from 'react';
 import {
   removeTrailingSlash,
@@ -9,76 +8,78 @@ import {
   replaceDynamicSegments,
   getDynamicSegmentNames,
   getDynamicSegments,
-  getActivePath
-} from 'helpers';
+  getActivePath,
+  generateGuid
+} from '../src/helpers';
 
-describe('helpers', function() {
-  describe('removeTrailingSlash', function() {
-    it('removes trailing slash to path with it', function() {
-      var path = '/test/something/more';
-      var newPath = removeTrailingSlash(`${path}/`);
-      assert.equal(newPath, path);
+describe('helpers', () => {
+  describe('removeTrailingSlash', () => {
+    it('removes trailing slash to path with it', () => {
+      const path = '/test/something/more';
+      const newPath = removeTrailingSlash(`${path}/`);
+      expect(newPath).toEqual(path);
     });
 
-    it('returns unmodified path if it does not have a trailing slash', function() {
-      var path = '/test/something/more';
-      var newPath = removeTrailingSlash(path);
-      assert.equal(newPath, path);
+    it('returns unmodified path if it does not have a trailing slash', () => {
+      const path = '/test/something/more';
+      const newPath = removeTrailingSlash(path);
+      expect(newPath).toEqual(path);
     });
 
-    it('returns unmodified path if path is /', function() {
-      var path = '/';
-      var newPath = removeTrailingSlash(path);
-      assert.equal(newPath, path);
+    it('returns unmodified path if path is /', () => {
+      const path = '/';
+      const newPath = removeTrailingSlash(path);
+      expect(newPath).toEqual(path);
     });
   });
 
-  describe('currentPath', function() {
-    describe('using location.hash', function() {
-      it('gets hash by default', function() {
+  describe('currentPath', () => {
+    describe('using location.hash', () => {
+      it('gets hash by default', () => {
         window.location.hash = '/path';
-        var path = currentPath('hash');
-        assert.equal(path, '/path');
+        const path = currentPath('hash');
+        expect(path).toEqual('/path');
       });
 
-      it('ensures that path is prepended with a slash', function() {
+      it('ensures that path is prepended with a slash', () => {
         window.location.hash = 'path';
-        var path = currentPath('hash');
-        assert.equal(path, '/path');
+        const path = currentPath('hash');
+        expect(path).toEqual('/path');
       });
 
-      it('does not include query parameters', function() {
+      it('does not include query parameters', () => {
         window.location.hash = '/path?a=2&b=3&c=hello';
-        var path = currentPath('hash');
-        assert.equal(path, '/path');
+        const path = currentPath('hash');
+        expect(path).toEqual('/path');
       });
     });
 
-    describe('using location.pathname', function() {
-      it('gets hash by default', function() {
+    describe('using location.pathname', () => {
+      it('gets hash by default', () => {
         window.history.pushState({}, '', '/path');
-        var path = currentPath('pathname');
-        assert.equal(path, '/path');
+        const path = currentPath('pathname');
+        expect(path).toEqual('/path');
       });
 
-      it('ensures that path is prepended with a slash', function() {
+      it('ensures that path is prepended with a slash', () => {
         window.history.pushState({}, '', 'path');
-        var path = currentPath('pathname');
-        assert.equal(path, '/path');
+        const path = currentPath('pathname');
+        expect(path).toEqual('/path');
       });
 
-      it('does not include query parameters', function() {
+      it('does not include query parameters', () => {
         window.history.pushState({}, '', '/path?a=2&b=3&c=hello');
-        var path = currentPath('pathname');
-        assert.equal(path, '/path');
+        const path = currentPath('pathname');
+        expect(path).toEqual('/path');
       });
     });
   });
 
-  describe('getSwitch', function() {
-    describe('default', function() {
-      beforeEach(function() {
-        this.props = {
+  describe('getSwitch', () => {
+    describe('default', () => {
+      let props;
+      beforeEach(() => {
+        props = {
           basePath: '',
           children: [
             <div key="1" path="/">Home</div>,
@@ -92,51 +93,52 @@ describe('helpers', function() {
         };
       });
 
-      it('gets component with matching path', function() {
-        var swtch = getSwitch('/another', this.props);
-        assert.equal(swtch.props.children, 'Another');
+      it('gets component with matching path', () => {
+        const swtch = getSwitch('/another', props);
+        expect(swtch.props.children).toEqual('Another');
       });
 
-      it('handles trailing /', function() {
-        var swtch = getSwitch('/another/', this.props);
-        assert.equal(swtch.props.children, 'Another');
+      it('handles trailing /', () => {
+        const swtch = getSwitch('/another/', props);
+        expect(swtch.props.children).toEqual('Another');
       });
 
-      it('returns null if there is no matching switch', function() {
-        var swtch = getSwitch('/notHere', this.props);
-        assert.isNull(swtch);
+      it('returns null if there is no matching switch', () => {
+        const swtch = getSwitch('/notHere', props);
+        expect(swtch).toBeNull();
       });
 
-      it('gets first match if duplicate paths', function() {
-        var swtch = getSwitch('/duplicate', this.props);
-        assert.equal(swtch.props.children, 'Dup 1');
+      it('gets first match if duplicate paths', () => {
+        const swtch = getSwitch('/duplicate', props);
+        expect(swtch.props.children).toEqual('Dup 1');
       });
 
-      it('handles paths with wild cards', function() {
-        var swtch = getSwitch('/wildCardPath/something', this.props);
-        var swtch2 = getSwitch('/wildCardPath/something/more', this.props);
-        assert.equal(swtch.props.children, 'Wild');
-        assert.equal(swtch2.props.children, 'Wild');
+      it('handles paths with wild cards', () => {
+        const swtch = getSwitch('/wildCardPath/something', props);
+        const swtch2 = getSwitch('/wildCardPath/something/more', props);
+        expect(swtch.props.children).toEqual('Wild');
+        expect(swtch2.props.children).toEqual('Wild');
       });
 
-      it('handles paths with dynamic segments', function() {
-        var swtch = getSwitch('/path/abc123/more', this.props);
-        var swtch2 = getSwitch('/path/somethingelse/more', this.props);
-        assert.equal(swtch.props.children, 'Dynamic');
-        assert.equal(swtch2.props.children, 'Dynamic');
+      it('handles paths with dynamic segments', () => {
+        const swtch = getSwitch('/path/abc123/more', props);
+        const swtch2 = getSwitch('/path/somethingelse/more', props);
+        expect(swtch.props.children).toEqual('Dynamic');
+        expect(swtch2.props.children).toEqual('Dynamic');
       });
 
-      it('handles array of paths', function() {
-        var swtch = getSwitch('/arr1', this.props);
-        var swtch2 = getSwitch('/arr2/more', this.props);
-        assert.equal(swtch.props.children, 'Array');
-        assert.equal(swtch2.props.children, 'Array');
+      it('handles array of paths', () => {
+        const swtch = getSwitch('/arr1', props);
+        const swtch2 = getSwitch('/arr2/more', props);
+        expect(swtch.props.children).toEqual('Array');
+        expect(swtch2.props.children).toEqual('Array');
       });
     });
 
-    describe('with basepath set', function() {
-      beforeEach(function() {
-        this.props = {
+    describe('with basepath set', () => {
+      let props;
+      beforeEach(() => {
+        props = {
           basePath: '/base',
           children: [
             <div key="1" path="/">Home</div>,
@@ -147,119 +149,120 @@ describe('helpers', function() {
         };
       });
 
-      it('gets component with matching path', function() {
-        var swtch = getSwitch('/base/another', this.props);
-        assert.equal(swtch.props.children, 'Another');
+      it('gets component with matching path', () => {
+        const swtch = getSwitch('/base/another', props);
+        expect(swtch.props.children).toEqual('Another');
       });
     });
 
-    describe('with no children', function() {
-      beforeEach(function() {
-        this.props = {
+    describe('with no children', () => {
+      let props;
+      beforeEach(() => {
+        props = {
           basePath: '/base',
           children: null
         };
       });
 
-      it('renders nothing', function() {
-        var swtch = getSwitch('/base/another', this.props);
-        assert.equal(swtch, null);
+      it('renders nothing', () => {
+        const swtch = getSwitch('/base/another', props);
+        expect(swtch).toEqual(null);
       });
     });
   });
 
-  describe('createRegexFromPaths', function() {
-    it('joins paths and creates a regex', function() {
-      var paths = ['/one/b', '/two/a/b', '/three'];
-      var regex = createRegexFromPaths(paths);
-      assert.equal(`${regex}`, '/^(\\/one\\/b|\\/two\\/a\\/b|\\/three)$/');
-      assert(regex instanceof RegExp);
+  describe('createRegexFromPaths', () => {
+    it('joins paths and creates a regex', () => {
+      const paths = ['/one/b', '/two/a/b', '/three'];
+      const regex = createRegexFromPaths(paths);
+      expect(`${regex}`).toEqual('/^(\\/one\\/b|\\/two\\/a\\/b|\\/three)$/');
+      expect(regex instanceof RegExp);
     });
   });
 
-  describe('formatPathRegex', function() {
-    it('combines base path and path', function() {
-      var formattedPath = formatPathRegex('/base', '/path/test');
-      assert.equal(formattedPath, '/base/path/test/?');
+  describe('formatPathRegex', () => {
+    it('combines base path and path', () => {
+      const formattedPath = formatPathRegex('/base', '/path/test');
+      expect(formattedPath).toEqual('/base/path/test/?');
     });
 
-    it('handles path with trailing slash', function() {
-      var formattedPath = formatPathRegex('/base', '/path/test/');
-      assert.equal(formattedPath, '/base/path/test/?');
+    it('handles path with trailing slash', () => {
+      const formattedPath = formatPathRegex('/base', '/path/test/');
+      expect(formattedPath).toEqual('/base/path/test/?');
     });
 
-    it('replaces dynamic segments', function() {
-      var formattedPath = formatPathRegex('/base', '/path/:dyn1/test/:dyn2');
-      assert.equal(formattedPath, '/base/path/([^/]+)/test/([^/]+)/?');
-    });
-  });
-
-  describe('replaceDynamicSegments', function() {
-    it('replaces dynamic expressions with regex string', function() {
-      var path = '/:test/more/:another/:last/urlStuffs';
-      var newPath = replaceDynamicSegments(path);
-      assert.deepEqual(newPath, '/([^/]+)/more/([^/]+)/([^/]+)/urlStuffs');
-    });
-
-    it('does nothing if no dynamic segments', function() {
-      var path = '/test/more/another/last/urlStuffs';
-      var newPath = replaceDynamicSegments(path);
-      assert.deepEqual(newPath, path);
+    it('replaces dynamic segments', () => {
+      const formattedPath = formatPathRegex('/base', '/path/:dyn1/test/:dyn2');
+      expect(formattedPath).toEqual('/base/path/([^/]+)/test/([^/]+)/?');
     });
   });
 
-  describe('getDynamicSegmentNames', function() {
-    it('returns an array with string names of dynamic segments', function() {
-      var path = '/:test/more/:another/:last/urlStuffs';
-      var dynamicSegments = getDynamicSegmentNames(path);
-      assert.deepEqual(dynamicSegments, ['test', 'another', 'last']);
+  describe('replaceDynamicSegments', () => {
+    it('replaces dynamic expressions with regex string', () => {
+      const path = '/:test/more/:another/:last/urlStuffs';
+      const newPath = replaceDynamicSegments(path);
+      expect(newPath).toEqual('/([^/]+)/more/([^/]+)/([^/]+)/urlStuffs');
     });
 
-    it('returns an empty array if no dynamic segments', function() {
-      var path = '/test/more/another/last/urlStuffs';
-      var dynamicSegments = getDynamicSegmentNames(path);
-      assert.deepEqual(dynamicSegments, []);
+    it('does nothing if no dynamic segments', () => {
+      const path = '/test/more/another/last/urlStuffs';
+      const newPath = replaceDynamicSegments(path);
+      expect(newPath).toEqual(path);
     });
   });
 
-  describe('getDynamicSegments', function() {
-    it('returns an empty object if no dynamic segments', function() {
-      var path = '/base/helloWorld/more/something-123/data/urlStuffs';
-      var basePath = '/base';
-      var swtch = (
+  describe('getDynamicSegmentNames', () => {
+    it('returns an array with string names of dynamic segments', () => {
+      const path = '/:test/more/:another/:last/urlStuffs';
+      const dynamicSegments = getDynamicSegmentNames(path);
+      expect(dynamicSegments).toEqual(['test', 'another', 'last']);
+    });
+
+    it('returns an empty array if no dynamic segments', () => {
+      const path = '/test/more/another/last/urlStuffs';
+      const dynamicSegments = getDynamicSegmentNames(path);
+      expect(dynamicSegments).toEqual([]);
+    });
+  });
+
+  describe('getDynamicSegments', () => {
+    it('returns an empty object if no dynamic segments', () => {
+      const path = '/base/helloWorld/more/something-123/data/urlStuffs';
+      const basePath = '/base';
+      const swtch = (
         <span path="/base/helloWorld/more/something-123/data/urlStuffs" />
       );
-      var dynamicValues = getDynamicSegments(path, basePath, swtch);
-      assert.deepEqual(dynamicValues, {});
+      const dynamicValues = getDynamicSegments(path, basePath, swtch);
+      expect(dynamicValues).toEqual({});
     });
 
-    it('returns an object of dynamic segments {name: value, ...}', function() {
-      var path = '/base/helloWorld/more/something-123/data/urlStuffs';
-      var basePath = '/base';
-      var swtch = <span path="/:test/more/:another/:last/urlStuffs" />;
-      var dynamicValues = getDynamicSegments(path, basePath, swtch);
-      assert.deepEqual(dynamicValues, {
+    it('returns an object of dynamic segments {name: value, ...}', () => {
+      const path = '/base/helloWorld/more/something-123/data/urlStuffs';
+      const basePath = '/base';
+      const swtch = <span path="/:test/more/:another/:last/urlStuffs" />;
+      const dynamicValues = getDynamicSegments(path, basePath, swtch);
+      expect(dynamicValues).toEqual({
         test: 'helloWorld',
         another: 'something-123',
         last: 'data'
       });
     });
 
-    it('handles dynamic segments in the base path', function() {
-      var path = '/stuff/helloWorld/more/';
-      var basePath = '/:base';
-      var swtch = <span path="/helloWorld/:data" />;
-      var dynamicValues = getDynamicSegments(path, basePath, swtch);
-      assert.deepEqual(dynamicValues, {
+    it('handles dynamic segments in the base path', () => {
+      const path = '/stuff/helloWorld/more/';
+      const basePath = '/:base';
+      const swtch = <span path="/helloWorld/:data" />;
+      const dynamicValues = getDynamicSegments(path, basePath, swtch);
+      expect(dynamicValues).toEqual({
         base: 'stuff',
         data: 'more'
       });
     });
 
-    it('handles switches with an array of paths', function() {
-      var path = '/base/helloWorld/more/something-123/data/urlStuffs';
-      var basePath = '/base';
-      var swtch = (
+    it('handles switches with an array of paths', () => {
+      const path = '/base/helloWorld/more/something-123/data/urlStuffs';
+      const basePath = '/base';
+      const swtch = (
         <span
           path={[
             '/:test/more',
@@ -268,8 +271,8 @@ describe('helpers', function() {
           ]}
         />
       );
-      var dynamicValues = getDynamicSegments(path, basePath, swtch);
-      assert.deepEqual(dynamicValues, {
+      const dynamicValues = getDynamicSegments(path, basePath, swtch);
+      expect(dynamicValues).toEqual({
         test: 'helloWorld',
         another: 'something-123',
         last: 'data'
@@ -277,24 +280,30 @@ describe('helpers', function() {
     });
   });
 
-  describe('getActivePath', function() {
-    it('returns null if there is no match/currentSwitch', function() {
-      var activePath = getActivePath('/something', '/base', null);
-      assert.isNull(activePath);
+  describe('getActivePath', () => {
+    it('returns null if there is no match/currentSwitch', () => {
+      const activePath = getActivePath('/something', '/base', null);
+      expect(activePath).toBeNull();
     });
 
-    it('returns the active path from the current switch', function() {
-      var currentSwitch = {
+    it('returns the active path from the current switch', () => {
+      const currentSwitch = {
         props: {
           path: ['/home', '/abc/something/:id', '/abc/something']
         }
       };
-      var activePath = getActivePath(
+      const activePath = getActivePath(
         '/base/abc/something/1233',
         '/base',
         currentSwitch
       );
-      assert.equal(activePath, '/abc/something/:id');
+      expect(activePath).toEqual('/abc/something/:id');
+    });
+  });
+
+  describe('generateGuid', () => {
+    it('generates a unique guid', () => {
+      expect(generateGuid()).not.toEqual(generateGuid());
     });
   });
 });
