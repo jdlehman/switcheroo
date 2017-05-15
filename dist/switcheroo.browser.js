@@ -407,7 +407,7 @@ var SwitcherProvider = function (_Component) {
 
 SwitcherProvider.displayName = 'SwitcherProvider';
 SwitcherProvider.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
+  children: PropTypes.node
 };
 SwitcherProvider.childContextTypes = {
   switcherProvider: PropTypes.shape({

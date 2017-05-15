@@ -5,10 +5,7 @@ export default class SwitcherProvider extends Component {
   static displayName = 'SwitcherProvider';
 
   static propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node
-    ])
+    children: PropTypes.node
   };
 
   static childContextTypes = {
