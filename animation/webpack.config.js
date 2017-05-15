@@ -1,7 +1,9 @@
 var webpack = require('webpack');
-var autoprefixer = require('autoprefixer');
+var path = require('path');
 
 module.exports = {
+  cache: true,
+  target: 'web',
   devtool: 'eval',
   entry: [
     'webpack-dev-server/client?http://localhost:8000',
@@ -14,19 +16,21 @@ module.exports = {
     publicPath: '/dist/'
   },
   resolve: {
-    extensions: ['', '.js'],
-    modulesDirectories: ['node_modules'],
-    fallback: __dirname
+    extensions: ['.js', '.css'],
+    modules: ['node_modules', __dirname]
   },
   module: {
-    loaders: [
-      {test: /\.js$/, loader: 'babel', exclude: /node_modules/},
-      {test: /\.css$/, loaders: ['style', 'css', 'postcss'], exclude: /node_modules/}
+    rules: [
+      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+      {
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader', 'postcss-loader'],
+        exclude: /node_modules/
+      }
     ]
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
-  ],
-  postcss: [autoprefixer]
+    new webpack.NoEmitOnErrorsPlugin()
+  ]
 };

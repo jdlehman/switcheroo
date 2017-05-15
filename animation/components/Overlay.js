@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {VelocityTransitionGroup} from 'velocity-react';
+import React, { Component } from 'react';
+import { VelocityTransitionGroup } from 'velocity-react';
 import Switcher from 'switcheroo';
 
 export default class Overlay extends Component {
@@ -32,9 +32,10 @@ export default class Overlay extends Component {
     };
     return (
       <Switcher
-          wrapper={VelocityTransitionGroup}
-          enter={Animations.slideUpIn}
-          leave={Animations.slideUpOut}>
+        wrapper={VelocityTransitionGroup}
+        enter={Animations.slideUpIn}
+        leave={Animations.slideUpOut}
+      >
         <div path="/route2" className="overlay">
           <div className="overlay-close" onClick={this.closeOverlay}>Close</div>
           <h1 className="overlay-header">
