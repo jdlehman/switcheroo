@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Switcher from 'switcheroo';
 
 export default class Overlay extends Component {

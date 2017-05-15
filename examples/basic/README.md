@@ -8,6 +8,6 @@
 
 ### With server (to reflect any edits to code)
 
-- `npm install`
-- `npm start`
+- `yarn`
+- `yarn start`
 - navigate to `http://localhost:8000`
