@@ -1,11 +1,14 @@
-import { Component } from 'react';
+import React, { Children, Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class SwitcherProvider extends Component {
   static displayName = 'SwitcherProvider';
 
   static propTypes = {
-    children: PropTypes.node
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
+    ])
   };
 
   static childContextTypes = {
@@ -51,6 +54,10 @@ export default class SwitcherProvider extends Component {
   };
 
   render() {
-    return this.props.children;
+    if (Children.count(this.props.children) > 1) {
+      return <span className="switcher-provider">{this.props.children}</span>;
+    } else {
+      return this.props.children;
+    }
   }
 }

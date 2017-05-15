@@ -1,8 +1,8 @@
-(function (exports,React,PropTypes$1) {
+(function (exports,React,PropTypes) {
 'use strict';
 
 var React__default = 'default' in React ? React['default'] : React;
-PropTypes$1 = 'default' in PropTypes$1 ? PropTypes$1['default'] : PropTypes$1;
+PropTypes = 'default' in PropTypes ? PropTypes['default'] : PropTypes;
 
 // http://stackoverflow.com/a/2117523
 function generateGuid() {
@@ -279,23 +279,23 @@ var Switcher = function (_Component) {
 
 Switcher.displayName = 'Switcher';
 Switcher.propTypes = {
-  children: PropTypes$1.oneOfType([PropTypes$1.arrayOf(PropTypes$1.node), PropTypes$1.node]),
-  pushState: PropTypes$1.bool,
-  hashChange: PropTypes$1.bool,
-  load: PropTypes$1.bool,
-  onChange: PropTypes$1.func,
-  wrapper: PropTypes$1.any,
-  location: PropTypes$1.string,
-  basePath: PropTypes$1.string,
-  preventUpdate: PropTypes$1.func,
-  mapDynamicSegments: PropTypes$1.func,
-  renderSwitch: PropTypes$1.func
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  pushState: PropTypes.bool,
+  hashChange: PropTypes.bool,
+  load: PropTypes.bool,
+  onChange: PropTypes.func,
+  wrapper: PropTypes.any,
+  location: PropTypes.string,
+  basePath: PropTypes.string,
+  preventUpdate: PropTypes.func,
+  mapDynamicSegments: PropTypes.func,
+  renderSwitch: PropTypes.func
 };
 Switcher.contextTypes = {
-  switcherProvider: PropTypes$1.shape({
-    loadListeners: PropTypes$1.array.isRequired,
-    popStateListeners: PropTypes$1.array.isRequired,
-    hashChangeListeners: PropTypes$1.array.isRequired
+  switcherProvider: PropTypes.shape({
+    loadListeners: PropTypes.array.isRequired,
+    popStateListeners: PropTypes.array.isRequired,
+    hashChangeListeners: PropTypes.array.isRequired
   })
 };
 Switcher.defaultProps = {
@@ -391,7 +391,15 @@ var SwitcherProvider = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      return this.props.children;
+      if (React.Children.count(this.props.children) > 1) {
+        return React__default.createElement(
+          'span',
+          { className: 'switcher-provider' },
+          this.props.children
+        );
+      } else {
+        return this.props.children;
+      }
     }
   }]);
   return SwitcherProvider;
@@ -399,13 +407,13 @@ var SwitcherProvider = function (_Component) {
 
 SwitcherProvider.displayName = 'SwitcherProvider';
 SwitcherProvider.propTypes = {
-  children: React.PropTypes.node
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
 };
 SwitcherProvider.childContextTypes = {
-  switcherProvider: React.PropTypes.shape({
-    loadListeners: React.PropTypes.array.isRequired,
-    popStateListeners: React.PropTypes.array.isRequired,
-    hashChangeListeners: React.PropTypes.array.isRequired
+  switcherProvider: PropTypes.shape({
+    loadListeners: PropTypes.array.isRequired,
+    popStateListeners: PropTypes.array.isRequired,
+    hashChangeListeners: PropTypes.array.isRequired
   })
 };
 
