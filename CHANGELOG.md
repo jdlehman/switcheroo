@@ -1,10 +1,20 @@
 # Changelog
 
+## 3.2.0 (2017-5-17)
+
+Added:
+
+- Added [`SwitcherProvider`](./docs/SwitcherProvider.md) component. This can be wrapped at the top level such that browser events (`load`, `pushState`, `hashChange`) are registered only once for the entire tree rather than for each `Switcher` within the app.
+
+Changed:
+
+- The `dist` directory is no longer checked into git. These files are only included in the npm package or using [unpkg](https://unpkg.com/switcheroo).
+
 ## 3.1.5 (2017-5-3)
 
 Fixed:
 
-Make `prop-types` a peer dependency to help switcheroo users get rid of warnings. [b286b6c](../../commit/b286b6c)
+- Make `prop-types` a peer dependency to help switcheroo users get rid of warnings. [b286b6c](../../commit/b286b6c)
 
 ## 3.1.4 (2017-4-26)
 
