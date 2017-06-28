@@ -24,7 +24,61 @@ describe('SwitcherProvider', () => {
     expect(component.text()).toEqual('Another ChildHomeHome');
     helpers.currentPath.restore();
   });
+
+  it('removes event listeners when a child Switcher is unmounted', () => {
+    sinon.stub(helpers, 'currentPath').returns('/');
+    const component = renderNested();
+    const innerSwitcher = component.find('Switcher').last();
+    const listenerId = innerSwitcher.node._id;
+    const instance = component.instance();
+
+    expect(instance.switcherProvider.loadListeners.length).toEqual(2);
+    expect(instance.switcherProvider.hashChangeListeners.length).toEqual(2);
+    expect(
+      instance.switcherProvider.loadListeners
+        .map(({ id }) => id)
+        .indexOf(listenerId)
+    ).not.toEqual(-1);
+    expect(
+      instance.switcherProvider.hashChangeListeners
+        .map(({ id }) => id)
+        .indexOf(listenerId)
+    ).not.toEqual(-1);
+    helpers.currentPath.restore();
+
+    sinon.stub(helpers, 'currentPath').returns('/hello');
+    component.update();
+    expect(instance.switcherProvider.loadListeners.length).toEqual(1);
+    expect(instance.switcherProvider.hashChangeListeners.length).toEqual(1);
+    expect(
+      instance.switcherProvider.loadListeners
+        .map(({ id }) => id)
+        .indexOf(listenerId)
+    ).toEqual(-1);
+    expect(
+      instance.switcherProvider.hashChangeListeners
+        .map(({ id }) => id)
+        .indexOf(listenerId)
+    ).toEqual(-1);
+    helpers.currentPath.restore();
+  });
 });
+
+function renderNested() {
+  return mount(
+    <SwitcherProvider>
+      <div>
+        <Switcher>
+          <Switcher path="/">
+            <div path={['/', '/other']}>Home</div>
+            <div path="/second">Second</div>
+          </Switcher>
+          <div path="/hello">Hello</div>
+        </Switcher>
+      </div>
+    </SwitcherProvider>
+  );
+}
 
 function renderComponent() {
   return mount(
