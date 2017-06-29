@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.1 (2017-6-29)
+
+Fixed:
+
+- Fix a bug that prevented `Switcher` event listeners from being removed when nested in `SwitcherProvider`. [e4ef9c6](../../commit/e4ef9c6)
+
 ## 3.2.0 (2017-5-17)
 
 Added:
