@@ -105,14 +105,33 @@ export default class Switcher extends Component {
   }
 
   componentWillUnmount() {
+    const usingProvider = this.context.switcherProvider;
     if (this.props.load) {
-      window.removeEventListener('load', this.handleRouteChange);
+      if (usingProvider) {
+        this.context.switcherProvider.loadListeners = this.context.switcherProvider.loadListeners.filter(
+          ({ id }) => id !== this._id
+        );
+      } else {
+        window.removeEventListener('load', this.handleRouteChange);
+      }
     }
     if (this.props.pushState) {
-      window.removeEventListener('popstate', this.handleRouteChange);
+      if (usingProvider) {
+        this.context.switcherProvider.popStateListeners = this.context.switcherProvider.popStateListeners.filter(
+          ({ id }) => id !== this._id
+        );
+      } else {
+        window.removeEventListener('popstate', this.handleRouteChange);
+      }
     }
     if (this.props.hashChange) {
-      window.removeEventListener('hashchange', this.handleRouteChange);
+      if (usingProvider) {
+        this.context.switcherProvider.hashChangeListeners = this.context.switcherProvider.hashChangeListeners.filter(
+          ({ id }) => id !== this._id
+        );
+      } else {
+        window.removeEventListener('hashchange', this.handleRouteChange);
+      }
     }
   }
 
