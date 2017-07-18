@@ -10,12 +10,21 @@ export function generateGuid() {
 }
 
 export function currentPath(location) {
-  const path = decodeURI(window.location[location].slice(1).split('?')[0]);
-  if (path.charAt(0) !== '/') {
-    return `/${path}`;
-  } else {
-    return path;
-  }
+  const [windowLocation, paramString] = window.location[location]
+    .slice(1)
+    .split('?');
+  const params = (paramString || '')
+    .split('&')
+    .map(param => param.split('='))
+    .reduce((obj, [key, val]) => {
+      obj[key] = val;
+      return obj;
+    }, {});
+
+  const path = decodeURI(windowLocation);
+  return path.charAt(0) !== '/'
+    ? { path: `/${path}`, params }
+    : { path, params };
 }
 
 export function removeTrailingSlash(path) {

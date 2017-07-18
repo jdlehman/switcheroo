@@ -34,22 +34,40 @@ describe('helpers', () => {
   });
 
   describe('currentPath', () => {
+    describe('query params', () => {
+      it('gets empty object as params by default', () => {
+        window.location.hash = '/path';
+        const { params } = currentPath('hash');
+        expect(params).toEqual({});
+      });
+
+      it('returns parsed query parameters', () => {
+        window.location.hash = '/path?number=123&color=red&enabled';
+        const { params } = currentPath('hash');
+        expect(params).toEqual({
+          number: '123',
+          color: 'red',
+          enabled: undefined
+        });
+      });
+    });
+
     describe('using location.hash', () => {
       it('gets hash by default', () => {
         window.location.hash = '/path';
-        const path = currentPath('hash');
+        const { path } = currentPath('hash');
         expect(path).toEqual('/path');
       });
 
       it('ensures that path is prepended with a slash', () => {
         window.location.hash = 'path';
-        const path = currentPath('hash');
+        const { path } = currentPath('hash');
         expect(path).toEqual('/path');
       });
 
-      it('does not include query parameters', () => {
+      it('path does not include query parameters', () => {
         window.location.hash = '/path?a=2&b=3&c=hello';
-        const path = currentPath('hash');
+        const { path } = currentPath('hash');
         expect(path).toEqual('/path');
       });
     });
@@ -57,19 +75,19 @@ describe('helpers', () => {
     describe('using location.pathname', () => {
       it('gets hash by default', () => {
         window.history.pushState({}, '', '/path');
-        const path = currentPath('pathname');
+        const { path } = currentPath('pathname');
         expect(path).toEqual('/path');
       });
 
       it('ensures that path is prepended with a slash', () => {
         window.history.pushState({}, '', 'path');
-        const path = currentPath('pathname');
+        const { path } = currentPath('pathname');
         expect(path).toEqual('/path');
       });
 
       it('does not include query parameters', () => {
         window.history.pushState({}, '', '/path?a=2&b=3&c=hello');
-        const path = currentPath('pathname');
+        const { path } = currentPath('pathname');
         expect(path).toEqual('/path');
       });
     });
