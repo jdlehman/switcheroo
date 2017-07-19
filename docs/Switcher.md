@@ -49,10 +49,10 @@ By default `window.location.hash` is used to match paths. If `location` is set t
 
 ### onChange
 
-`onChange` enables a hook to call the provided function whenever the path changes. The function is provided 3 arguments, the first being a boolean of whether the path had a match, the second being the path as a string, the third being the values of the matched [dynamic segments](./dynamic_segments) (`/:id`, etc), and the fourth being the activePath (which is the matching path RegEx string specified on the Switch).
+`onChange` enables a hook to call the provided function whenever the path changes. The function is provided 5 arguments, the first being a boolean of whether the path had a match, the second being the path as a string, the third being the values of the matched [dynamic segments](./dynamic_segments) (`/:id`, etc), the fourth being the activePath (which is the matching path RegEx string specified on the Switch), and the fifth being an object containing the keys and values of the query parameters in the path.
 
 ```js
-onChange(match, pathname, dynamicSegments, activePath) { ... }
+onChange(match, pathname, dynamicSegments, activePath, queryParams) { ... }
 ```
 
 ### renderSwitch
@@ -60,7 +60,7 @@ onChange(match, pathname, dynamicSegments, activePath) { ... }
 A function that receives the selected element as well as the dynamic values to render and the activePath. If this prop is passed, the wrapper prop will not be used.
 
 ```js
-renderSwitch(selectedElement, dynamicData, activePath) {
+renderSwitch(selectedElement, dynamicData, activePath, queryParams) {
   return (<div>{selectedElement}</div>) //the rendered output of the Switcher
 }
 ```

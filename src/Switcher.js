@@ -49,18 +49,19 @@ export default class Switcher extends Component {
   constructor(props) {
     super(props);
 
-    const currPath = currentPath(props.location);
-    const visibleSwitch = getSwitch(currPath, props);
-    const activePath = getActivePath(currPath, props.basePath, visibleSwitch);
+    const { path, params } = currentPath(props.location);
+    const visibleSwitch = getSwitch(path, props);
+    const activePath = getActivePath(path, props.basePath, visibleSwitch);
     const dynamicValues = getDynamicSegments(
-      currPath,
+      path,
       props.basePath,
       visibleSwitch
     );
     this.state = {
       visibleSwitch,
       dynamicValues,
-      activePath
+      activePath,
+      params
     };
   }
 
@@ -136,20 +137,20 @@ export default class Switcher extends Component {
   }
 
   handleSwitchChange = props => {
-    const currPath = currentPath(props.location);
-    const visibleSwitch = getSwitch(currPath, props);
-    const activePath = getActivePath(currPath, props.basePath, visibleSwitch);
+    const { path, params } = currentPath(props.location);
+    const visibleSwitch = getSwitch(path, props);
+    const activePath = getActivePath(path, props.basePath, visibleSwitch);
     const dynamicValues = getDynamicSegments(
-      currPath,
+      path,
       props.basePath,
       visibleSwitch
     );
 
     if (typeof props.onChange === 'function') {
-      props.onChange(!!visibleSwitch, currPath, dynamicValues, activePath);
+      props.onChange(!!visibleSwitch, path, dynamicValues, activePath, params);
     }
 
-    this.setState({ visibleSwitch, dynamicValues, activePath });
+    this.setState({ visibleSwitch, dynamicValues, activePath, params });
   };
 
   handleRouteChange = ev => {
@@ -163,14 +164,16 @@ export default class Switcher extends Component {
       React.cloneElement(this.state.visibleSwitch, {
         ...props,
         ...this.props.mapDynamicSegments(this.state.dynamicValues),
-        activePath: this.state.activePath
+        activePath: this.state.activePath,
+        params: this.state.params
       });
 
     if (this.props.renderSwitch) {
       return this.props.renderSwitch(
         visibleSwitch,
         this.state.dynamicValues,
-        this.state.activePath
+        this.state.activePath,
+        this.state.params
       );
     }
 

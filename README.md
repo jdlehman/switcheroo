@@ -35,6 +35,7 @@ You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/edit?js,ou
 - Supports hashChange and pushState
 - Provides callbacks including when the path [changes](docs/Switcher.md#onchange)
 - Supports [dynamic path segments](docs/dynamic_segments.md) and passes dynamic segment data to "Switch" component as props.
+- Passes query parameters to "Switch" component as props.
 - Supports [React animations](https://facebook.github.io/react/docs/animation.html) via [`wrapper`](docs/Switcher.md#wrapper) prop
 - Highly configurable via props
 - Lightweight ~2k gzipped
