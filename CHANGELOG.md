@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.3.0 (2017-7-19)
+
+Added:
+
+- Pass object of key value query parameters to `Switch` props (`params`), `onChange` callback, and `renderSwitch` function. [797be1b](../../commit/797be1b)
+
 ## 3.2.1 (2017-6-29)
 
 Fixed:
