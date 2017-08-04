@@ -1,12 +1,9 @@
+// @flow
 import React, { Children, Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class SwitcherProvider extends Component {
   static displayName = 'SwitcherProvider';
-
-  static propTypes = {
-    children: PropTypes.node
-  };
 
   static childContextTypes = {
     switcherProvider: PropTypes.shape({
@@ -14,6 +11,10 @@ export default class SwitcherProvider extends Component {
       popStateListeners: PropTypes.array.isRequired,
       hashChangeListeners: PropTypes.array.isRequired
     })
+  };
+
+  props: {
+    children: React.Element<*>
   };
 
   getChildContext() {
@@ -38,15 +39,15 @@ export default class SwitcherProvider extends Component {
     hashChangeListeners: []
   };
 
-  handleLoadListeners = e => {
+  handleLoadListeners = (e: Event) => {
     this.switcherProvider.loadListeners.forEach(({ fn }) => fn(e));
   };
 
-  handlePopStateListeners = e => {
+  handlePopStateListeners = (e: Event) => {
     this.switcherProvider.popStateListeners.forEach(({ fn }) => fn(e));
   };
 
-  handleHashChangeListeners = e => {
+  handleHashChangeListeners = (e: Event) => {
     this.switcherProvider.hashChangeListeners.forEach(({ fn }) => fn(e));
   };
 

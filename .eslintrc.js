@@ -1,14 +1,15 @@
 module.exports = {
   plugins: ['prettier'],
 
-  extends: [
-    'panoply',
-    'panoply/browser',
-    'panoply/mocha',
-    'panoply/react',
-    'prettier',
-    'prettier/react'
-  ],
+  extends: ['prettier', 'prettier/react'],
+  extends: ['eslint:recommended', 'plugin:react/recommended', 'prettier'],
+
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+    'jest/globals': true
+  },
 
   globals: {
     require: true,

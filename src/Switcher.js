@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -8,24 +10,59 @@ import {
   generateGuid
 } from './helpers';
 
-export default class Switcher extends Component {
+type Props = {
+  children: React.Element<*>,
+  pushState: boolean,
+  hashChange: boolean,
+  load: boolean,
+  onChange?: (
+    visibleSwitch: boolean,
+    path: string,
+    dynamicValues: {},
+    activePath: ?string,
+    params: {}
+  ) => void,
+  wrapper?: ReactClass<*>,
+  location: string,
+  basePath: string,
+  preventUpdate: () => boolean,
+  mapDynamicSegments: (segments: {}) => {},
+  renderSwitch?: (
+    visibleSwitch: ?React.Element<*>,
+    dynamicValues: {},
+    activePath: ?string,
+    params: {}
+  ) => void
+};
+
+type DefaultProps = {
+  pushState: boolean,
+  hashChange: boolean,
+  load: boolean,
+  location: string,
+  basePath: string,
+  preventUpdate: () => boolean,
+  mapDynamicSegments: (segments: {}) => {}
+};
+
+type State = {
+  visibleSwitch: ?React.Element<*>,
+  dynamicValues: {},
+  activePath: ?string,
+  params: {}
+};
+
+export default class Switcher extends Component<DefaultProps, Props, State> {
   static displayName = 'Switcher';
 
-  static propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node
-    ]),
-    pushState: PropTypes.bool,
-    hashChange: PropTypes.bool,
-    load: PropTypes.bool,
-    onChange: PropTypes.func,
-    wrapper: PropTypes.any,
-    location: PropTypes.string,
-    basePath: PropTypes.string,
-    preventUpdate: PropTypes.func,
-    mapDynamicSegments: PropTypes.func,
-    renderSwitch: PropTypes.func
+  static defaultProps = {
+    pushState: false,
+    hashChange: true,
+    load: true,
+    location: 'hash',
+    basePath: '',
+    preventUpdate: () => false,
+    mapDynamicSegments: (segments: {}) => (segments: {})
   };
 
   static contextTypes = {
@@ -36,17 +73,10 @@ export default class Switcher extends Component {
     })
   };
 
-  static defaultProps = {
-    pushState: false,
-    hashChange: true,
-    load: true,
-    location: 'hash',
-    basePath: '',
-    preventUpdate: () => false,
-    mapDynamicSegments: values => values
-  };
+  state: State;
+  _id: ?string;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     const { path, params } = currentPath(props.location);
@@ -66,7 +96,7 @@ export default class Switcher extends Component {
   }
 
   componentDidMount() {
-    const usingProvider = this.context.switcherProvider;
+    const usingProvider: ?boolean = this.context.switcherProvider;
     if (usingProvider) {
       this._id = generateGuid();
     }
@@ -97,11 +127,11 @@ export default class Switcher extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     this.handleSwitchChange(nextProps);
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: Props) {
     return !nextProps.preventUpdate();
   }
 
@@ -136,7 +166,7 @@ export default class Switcher extends Component {
     }
   }
 
-  handleSwitchChange = props => {
+  handleSwitchChange = (props: Props) => {
     const { path, params } = currentPath(props.location);
     const visibleSwitch = getSwitch(path, props);
     const activePath = getActivePath(path, props.basePath, visibleSwitch);
@@ -153,7 +183,7 @@ export default class Switcher extends Component {
     this.setState({ visibleSwitch, dynamicValues, activePath, params });
   };
 
-  handleRouteChange = ev => {
+  handleRouteChange = (ev: Event) => {
     this.handleSwitchChange(this.props);
   };
 
@@ -181,7 +211,7 @@ export default class Switcher extends Component {
       const passedProps = { ...this.props };
       Object.keys(Switcher.propTypes).forEach(k => delete passedProps[k]);
       return React.createElement(
-        this.props.wrapper,
+        this.props.wrapper || 'span',
         passedProps,
         visibleSwitch
       );

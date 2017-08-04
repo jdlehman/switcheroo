@@ -1,15 +1,19 @@
-import { Children } from 'react';
+/* @flow */
+
+import React, { Children } from 'react';
 
 // http://stackoverflow.com/a/2117523
 export function generateGuid() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(
+    c: string
+  ) {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 }
 
-export function currentPath(location) {
+export function currentPath(location: string) {
   const [windowLocation, paramString] = window.location[location]
     .slice(1)
     .split('?');
@@ -20,14 +24,13 @@ export function currentPath(location) {
       obj[key] = val;
       return obj;
     }, {});
-
   const path = decodeURI(windowLocation);
   return path.charAt(0) !== '/'
     ? { path: `/${path}`, params }
     : { path, params };
 }
 
-export function removeTrailingSlash(path) {
+export function removeTrailingSlash(path: string) {
   if (path === '/') {
     return path;
   } else {
@@ -35,24 +38,27 @@ export function removeTrailingSlash(path) {
   }
 }
 
-export function replaceDynamicSegments(path) {
+export function replaceDynamicSegments(path: string) {
   return path.replace(/\/:[^\/]+/g, '/([^/]+)');
 }
 
-export function getDynamicSegmentNames(path) {
+export function getDynamicSegmentNames(path: string) {
   const dynamicSegementNames = path.match(/:[^\/]+/g) || [];
   return dynamicSegementNames.map(name => name.substr(1));
 }
 
-export function formatPathRegex(basePath, path) {
+export function formatPathRegex(basePath: string, path: string) {
   return replaceDynamicSegments(`${removeTrailingSlash(basePath + path)}/?`);
 }
 
-export function createRegexFromPaths(paths) {
+export function createRegexFromPaths(paths: Array<string>) {
   return new RegExp(`^(${paths.join('|')})$`);
 }
 
-export function getSwitch(path, { children, basePath }) {
+export function getSwitch(
+  path: string,
+  { children, basePath }: { children: React.Element<*>, basePath: string }
+) {
   const consistentPath = removeTrailingSlash(path);
   const switches = Children.toArray(children);
   return (
@@ -66,7 +72,11 @@ export function getSwitch(path, { children, basePath }) {
   );
 }
 
-export function getActivePath(currentPath, basePath, currentSwitch) {
+export function getActivePath(
+  currentPath: string,
+  basePath: string,
+  currentSwitch: ?React.Element<*>
+) {
   if (!currentSwitch) {
     return null;
   }
@@ -82,7 +92,11 @@ export function getActivePath(currentPath, basePath, currentSwitch) {
   );
 }
 
-export function getDynamicSegments(path, basePath, swtch) {
+export function getDynamicSegments(
+  path: string,
+  basePath: string,
+  swtch: ?React.Element<*>
+) {
   const dynamicValues = {};
   const consistentPath = removeTrailingSlash(path);
   if (swtch) {
