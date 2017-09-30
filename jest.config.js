@@ -1,4 +1,6 @@
 module.exports = {
   testRegex: '_test.js$',
-  testURL: 'http://localhost'
+  testURL: 'http://localhost',
+  rootDir: 'test',
+  setupFiles: ['<rootDir>/polyfills.js', '<rootDir>/setup.js']
 };
