@@ -8,10 +8,6 @@ module.exports = {
 
   parser: 'babel-eslint',
 
-  ecmaFeatures: {
-    modules: true
-  },
-
   extends: ['prettier', 'prettier/react'],
 
   globals: {
