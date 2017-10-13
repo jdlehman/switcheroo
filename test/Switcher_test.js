@@ -11,6 +11,7 @@ describe('Switcher', () => {
       let switcher;
       beforeEach(() => {
         switcher = renderComponent(<div path="/">Home</div>);
+        console.log(switcher.html());
       });
 
       afterEach(() => {
@@ -20,6 +21,7 @@ describe('Switcher', () => {
       it('sets visibleSwitch state', () => {
         sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         const visibleSwitch = switcher.state('visibleSwitch');
         expect(visibleSwitch.props.children).toEqual('Home');
         expect(visibleSwitch.type).toEqual('div');
@@ -28,6 +30,7 @@ describe('Switcher', () => {
       it('sets activePath state', () => {
         sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         const activePath = switcher.state('activePath');
         expect(activePath).toEqual('/');
       });
@@ -40,8 +43,12 @@ describe('Switcher', () => {
         handleChange = sinon.spy();
         switcher = renderComponent(
           [
-            <div key="/" path="/">Home</div>,
-            <div key="dynamic" path="/:dynamic/more/:data">Dynamic</div>
+            <div key="/" path="/">
+              Home
+            </div>,
+            <div key="dynamic" path="/:dynamic/more/:data">
+              Dynamic
+            </div>
           ],
           { onChange: handleChange }
         );
@@ -49,6 +56,7 @@ describe('Switcher', () => {
 
       it('calls onChange after path change', () => {
         switcher.instance().handleRouteChange();
+        switcher.update();
         sinon.assert.called(handleChange);
       });
 
@@ -57,6 +65,7 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/hello/more/123a-b', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         helpers.currentPath.restore();
         sinon.assert.calledWith(
           handleChange,
@@ -88,12 +97,14 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/nomatch', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('');
       });
 
       it('renders matching component', () => {
         sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('Home');
       });
     });
@@ -113,12 +124,14 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/other', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('Home');
       });
 
       it('renders correct element', () => {
         sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('Home');
       });
 
@@ -127,6 +140,7 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/otherThing', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('');
       });
     });
@@ -135,8 +149,12 @@ describe('Switcher', () => {
       let switcher;
       beforeEach(() => {
         switcher = renderComponent([
-          <div key="home" path="/home">Home</div>,
-          <div key="default" path="/.*">Default Handler</div>
+          <div key="home" path="/home">
+            Home
+          </div>,
+          <div key="default" path="/.*">
+            Default Handler
+          </div>
         ]);
       });
 
@@ -149,12 +167,14 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/nomatch', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('Default Handler');
       });
 
       it('default handle can match /', () => {
         sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('Default Handler');
       });
 
@@ -163,6 +183,7 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/home', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('Home');
       });
     });
@@ -184,6 +205,7 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/nomatch', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('');
         expect(switcher.find('span').length).toEqual(1);
       });
@@ -191,6 +213,7 @@ describe('Switcher', () => {
       it('renders matched component in wrapper', () => {
         sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.text()).toEqual('Home');
         expect(switcher.find('span').length).toEqual(1);
       });
@@ -216,6 +239,7 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/user/123-abc/information/21', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.find('MyComp').length).toEqual(1);
         expect(switcher.props()).toEqual({
           id: '123-abc',
@@ -235,7 +259,9 @@ describe('Switcher', () => {
         switcher = renderComponent(
           [
             <MyComp key="dynamic" path="/user/:id/information/:page" />,
-            <div key="static" path="/user/id/information/page">Static Path</div>
+            <div key="static" path="/user/id/information/page">
+              Static Path
+            </div>
           ],
           { mapDynamicSegments: mapper }
         );
@@ -250,6 +276,7 @@ describe('Switcher', () => {
           .stub(helpers, 'currentPath')
           .returns({ path: '/user/234-cde/information/421', params: {} });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.find('MyComp').length).toEqual(1);
         expect(switcher.props()).toEqual({
           userNum: '234',
@@ -297,7 +324,9 @@ describe('Switcher', () => {
         renderComponent(
           [
             <MyComp key="dynamic" path="/user/:id/information/:page" />,
-            <div key="static" path="/user/id/information/page">Static Path</div>
+            <div key="static" path="/user/id/information/page">
+              Static Path
+            </div>
           ],
           { renderSwitch: render, mapDynamicSegments: mapper }
         );
@@ -317,7 +346,9 @@ describe('Switcher', () => {
         switcher = renderComponent(
           [
             <MyComp key="dynamic" path="/user/:id/information/:page" />,
-            <div key="static" path="/user/id/information/page">Static Path</div>
+            <div key="static" path="/user/id/information/page">
+              Static Path
+            </div>
           ],
           { wrapper: 'div', mapDynamicSegments: mapper }
         );
@@ -333,8 +364,14 @@ describe('Switcher', () => {
           params: { tab: 'blue' }
         });
         switcher.instance().handleRouteChange();
+        switcher.update();
         expect(switcher.find('MyComp').length).toEqual(1);
-        expect(switcher.children().first().props()).toEqual({
+        expect(
+          switcher
+            .children()
+            .first()
+            .props()
+        ).toEqual({
           userNum: '234',
           userLetters: 'cde',
           path: '/user/:id/information/:page',
@@ -348,11 +385,7 @@ describe('Switcher', () => {
 });
 
 function renderComponent(children = [], props = {}) {
-  return shallow(
-    <Switcher {...props}>
-      {children}
-    </Switcher>
-  );
+  return shallow(<Switcher {...props}>{children}</Switcher>);
 }
 
 function mapper({ id, page }) {
@@ -365,11 +398,7 @@ function mapper({ id, page }) {
 }
 
 function MyComp({ userNum, userLetters, page, activePath }) {
-  return (
-    <span>
-      {userNum + userLetters + page + activePath}
-    </span>
-  );
+  return <span>{userNum + userLetters + page + activePath}</span>;
 }
 MyComp.displayName = 'MyComp';
 MyComp.propTypes = {

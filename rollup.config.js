@@ -4,7 +4,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 
 export default {
-  entry: 'src/index.js',
+  input: 'src/index.js',
   plugins: [
     replace({
       'process.env.NODE_DEBUG': false,
@@ -23,13 +23,13 @@ export default {
   globals: {
     react: 'React'
   },
-  moduleName: 'switcheroo',
+  name: 'switcheroo',
   moduleId: 'switcheroo',
-  targets: [
-    { format: 'umd', dest: 'dist/switcheroo.umd.js' },
-    { format: 'iife', dest: 'dist/switcheroo.browser.js' },
-    { format: 'amd', dest: 'dist/switcheroo.amd.js' },
-    { format: 'cjs', dest: 'dist/switcheroo.cjs.js' },
-    { format: 'es', dest: 'dist/switcheroo.es-modules.js' }
+  output: [
+    { format: 'umd', file: 'dist/switcheroo.umd.js' },
+    { format: 'iife', file: 'dist/switcheroo.browser.js' },
+    { format: 'amd', file: 'dist/switcheroo.amd.js' },
+    { format: 'cjs', file: 'dist/switcheroo.cjs.js' },
+    { format: 'es', file: 'dist/switcheroo.es-modules.js' }
   ]
 };

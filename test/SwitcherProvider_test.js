@@ -12,6 +12,8 @@ describe('SwitcherProvider', () => {
     helpers.currentPath.restore();
 
     sinon.stub(helpers, 'currentPath').returns({ path: '/second', params: {} });
+    // trigger hash change manually
+    component.instance().handleHashChangeListeners();
     component.update();
     expect(component.text()).toEqual('Second');
     helpers.currentPath.restore();
@@ -29,7 +31,7 @@ describe('SwitcherProvider', () => {
     sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
     const component = renderNested();
     const innerSwitcher = component.find('Switcher').last();
-    const listenerId = innerSwitcher.node._id;
+    const listenerId = innerSwitcher.instance()._id;
     const instance = component.instance();
 
     expect(instance.switcherProvider.loadListeners.length).toEqual(2);
@@ -47,6 +49,8 @@ describe('SwitcherProvider', () => {
     helpers.currentPath.restore();
 
     sinon.stub(helpers, 'currentPath').returns({ path: '/hello', params: {} });
+    // trigger hash change manually
+    component.instance().handleHashChangeListeners();
     component.update();
     expect(instance.switcherProvider.loadListeners.length).toEqual(1);
     expect(instance.switcherProvider.hashChangeListeners.length).toEqual(1);

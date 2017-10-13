@@ -100,13 +100,27 @@ describe('helpers', () => {
         props = {
           basePath: '',
           children: [
-            <div key="1" path="/">Home</div>,
-            <div key="2" path="/another">Another</div>,
-            <div key="3" path="/wildCardPath/.*">Wild</div>,
-            <div key="4" path="/path/.+/more">Dynamic</div>,
-            <div key="5" path="/duplicate">Dup 1</div>,
-            <div key="6" path="/duplicate">Dup 2</div>,
-            <div key="7" path={['/arr1', '/arr2', '/arr2/more']}>Array</div>
+            <div key="1" path="/">
+              Home
+            </div>,
+            <div key="2" path="/another">
+              Another
+            </div>,
+            <div key="3" path="/wildCardPath/.*">
+              Wild
+            </div>,
+            <div key="4" path="/path/.+/more">
+              Dynamic
+            </div>,
+            <div key="5" path="/duplicate">
+              Dup 1
+            </div>,
+            <div key="6" path="/duplicate">
+              Dup 2
+            </div>,
+            <div key="7" path={['/arr1', '/arr2', '/arr2/more']}>
+              Array
+            </div>
           ]
         };
       });
@@ -159,10 +173,18 @@ describe('helpers', () => {
         props = {
           basePath: '/base',
           children: [
-            <div key="1" path="/">Home</div>,
-            <div key="2" path="/another">Another</div>,
-            <div key="3" path="/duplicate">Dup 1</div>,
-            <div key="4" path="/duplicate">Dup 2</div>
+            <div key="1" path="/">
+              Home
+            </div>,
+            <div key="2" path="/another">
+              Another
+            </div>,
+            <div key="3" path="/duplicate">
+              Dup 1
+            </div>,
+            <div key="4" path="/duplicate">
+              Dup 2
+            </div>
           ]
         };
       });
