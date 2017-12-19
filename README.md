@@ -1,10 +1,9 @@
 [![npm version](https://badge.fury.io/js/switcheroo.svg)](http://badge.fury.io/js/switcheroo)
 [![Build Status](https://secure.travis-ci.org/jdlehman/switcheroo.svg?branch=master)](http://travis-ci.org/jdlehman/switcheroo)
 [![Dependency Status](https://david-dm.org/jdlehman/switcheroo.svg)](https://david-dm.org/jdlehman/switcheroo)
+[![Greenkeeper badge](https://badges.greenkeeper.io/jdlehman/switcheroo.svg)](https://greenkeeper.io/)
 
 # switcheroo
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/jdlehman/switcheroo.svg)](https://greenkeeper.io/)
 
 `switcheroo` allows you to specify a React container component that renders a single child component based on a property of `window.location` (`hash`, `pathname`, etc.), using `window.location.hash` by default.
 
@@ -28,7 +27,7 @@ While the `npm` package is recommended for production usage, if you just want to
 
 ## Try it out
 
-You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/edit?js,output).
+You can try out `switcheroo` now on [jsbin](https://jsbin.com/qusomol/edit?js,output). Or see it in action powering Custom Ink's [design lab](https://www.customink.com/ndx/).
 
 ## Features
 
