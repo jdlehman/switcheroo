@@ -4,6 +4,8 @@
 
 # switcheroo
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jdlehman/switcheroo.svg)](https://greenkeeper.io/)
+
 `switcheroo` allows you to specify a React container component that renders a single child component based on a property of `window.location` (`hash`, `pathname`, etc.), using `window.location.hash` by default.
 
 The `Switcher` container component provided by `switcheroo` can accept any React elements, as long as they have a `path` property. `switcheroo` is very configurable, and you can read about the properties the [`Switcher`](docs/Switcher.md) and children elements (that we will refer to as ["Switches"](docs/Switch.md)) take in the [docs](docs/). A higher order component to help improve `Switcher` performance in larger applications is also provided, [`SwitcherProvider`](docs/SwitcherProvider.md).
