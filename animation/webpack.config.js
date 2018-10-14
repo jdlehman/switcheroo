@@ -7,6 +7,7 @@ module.exports = {
   cache: true,
   target: 'web',
   devtool: 'eval',
+  mode: 'production',
   entry: './index.js',
   output: {
     path: __dirname + '/dist',
@@ -20,7 +21,14 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        options: {
+          presets: ['@babel/preset-env', '@babel/preset-react']
+        }
+      },
       {
         test: /\.css$/,
         loaders: ['style-loader', 'css-loader', 'postcss-loader'],
@@ -33,7 +41,6 @@ module.exports = {
       'process.env': {
         NODE_ENV: JSON.stringify('production')
       }
-    }),
-    new webpack.optimize.UglifyJsPlugin()
+    })
   ]
 };
