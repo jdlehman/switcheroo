@@ -34,15 +34,15 @@ describe('SwitcherProvider', () => {
     const listenerId = innerSwitcher.instance()._id;
     const instance = component.instance();
 
-    expect(instance.switcherProvider.loadListeners.length).toEqual(2);
-    expect(instance.switcherProvider.hashChangeListeners.length).toEqual(2);
+    expect(instance._listenerContext.listeners.load.length).toEqual(2);
+    expect(instance._listenerContext.listeners.hashChange.length).toEqual(2);
     expect(
-      instance.switcherProvider.loadListeners
+      instance._listenerContext.listeners.load
         .map(({ id }) => id)
         .indexOf(listenerId)
     ).not.toEqual(-1);
     expect(
-      instance.switcherProvider.hashChangeListeners
+      instance._listenerContext.listeners.hashChange
         .map(({ id }) => id)
         .indexOf(listenerId)
     ).not.toEqual(-1);
@@ -52,15 +52,16 @@ describe('SwitcherProvider', () => {
     // trigger hash change manually
     component.instance().handleHashChangeListeners();
     component.update();
-    expect(instance.switcherProvider.loadListeners.length).toEqual(1);
-    expect(instance.switcherProvider.hashChangeListeners.length).toEqual(1);
+    console.log('HERE');
+    expect(instance._listenerContext.listeners.load.length).toEqual(1);
+    expect(instance._listenerContext.listeners.hashChange.length).toEqual(1);
     expect(
-      instance.switcherProvider.loadListeners
+      instance._listenerContext.listeners.load
         .map(({ id }) => id)
         .indexOf(listenerId)
     ).toEqual(-1);
     expect(
-      instance.switcherProvider.hashChangeListeners
+      instance._listenerContext.listeners.hashChange
         .map(({ id }) => id)
         .indexOf(listenerId)
     ).toEqual(-1);

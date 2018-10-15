@@ -25,15 +25,12 @@ export default class Switcher extends Component {
     basePath: PropTypes.string,
     preventUpdate: PropTypes.func,
     mapDynamicSegments: PropTypes.func,
-    renderSwitch: PropTypes.func
-  };
-
-  static contextTypes = {
-    switcherProvider: PropTypes.shape({
-      loadListeners: PropTypes.array.isRequired,
-      popStateListeners: PropTypes.array.isRequired,
-      hashChangeListeners: PropTypes.array.isRequired
-    })
+    renderSwitch: PropTypes.func,
+    usingProvider: PropTypes.bool,
+    addLoadListener: PropTypes.func,
+    addPopStateListener: PropTypes.func,
+    addHashChangeListener: PropTypes.func,
+    removeListeners: PropTypes.func
   };
 
   static defaultProps = {
@@ -43,7 +40,12 @@ export default class Switcher extends Component {
     location: 'hash',
     basePath: '',
     preventUpdate: () => false,
-    mapDynamicSegments: values => values
+    mapDynamicSegments: values => values,
+    usingProvider: false,
+    addLoadListener: () => {},
+    addPopStateListener: () => {},
+    addHashChangeListener: () => {},
+    removeListeners: () => {}
   };
 
   constructor(props) {
@@ -66,30 +68,29 @@ export default class Switcher extends Component {
   }
 
   componentDidMount() {
-    const usingProvider = this.context.switcherProvider;
-    if (usingProvider) {
+    if (this.props.usingProvider) {
       this._id = generateGuid();
     }
 
     if (this.props.load) {
-      usingProvider
-        ? this.context.switcherProvider.loadListeners.push({
+      this.props.usingProvider
+        ? this.props.addLoadListener({
             id: this._id,
             fn: this.handleRouteChange
           })
         : window.addEventListener('load', this.handleRouteChange);
     }
     if (this.props.pushState) {
-      usingProvider
-        ? this.context.switcherProvider.popStateListeners.push({
+      this.props.usingProvider
+        ? this.props.addPopStateListener({
             id: this._id,
             fn: this.handleRouteChange
           })
         : window.addEventListener('popstate', this.handleRouteChange);
     }
     if (this.props.hashChange) {
-      usingProvider
-        ? this.context.switcherProvider.hashChangeListeners.push({
+      this.props.usingProvider
+        ? this.props.addHashChangeListener({
             id: this._id,
             fn: this.handleRouteChange
           })
@@ -106,31 +107,16 @@ export default class Switcher extends Component {
   }
 
   componentWillUnmount() {
-    const usingProvider = this.context.switcherProvider;
-    if (this.props.load) {
-      if (usingProvider) {
-        this.context.switcherProvider.loadListeners = this.context.switcherProvider.loadListeners.filter(
-          ({ id }) => id !== this._id
-        );
-      } else {
+    if (this.props.usingProvider) {
+      this.props.removeListeners(this._id);
+    } else {
+      if (this.props.load) {
         window.removeEventListener('load', this.handleRouteChange);
       }
-    }
-    if (this.props.pushState) {
-      if (usingProvider) {
-        this.context.switcherProvider.popStateListeners = this.context.switcherProvider.popStateListeners.filter(
-          ({ id }) => id !== this._id
-        );
-      } else {
+      if (this.props.pushState) {
         window.removeEventListener('popstate', this.handleRouteChange);
       }
-    }
-    if (this.props.hashChange) {
-      if (usingProvider) {
-        this.context.switcherProvider.hashChangeListeners = this.context.switcherProvider.hashChangeListeners.filter(
-          ({ id }) => id !== this._id
-        );
-      } else {
+      if (this.props.hashChange) {
         window.removeEventListener('hashchange', this.handleRouteChange);
       }
     }

@@ -1,2 +1,2 @@
-export default from './Switcher';
+export default from './SwitcherConsumer';
 export SwitcherProvider from './SwitcherProvider';

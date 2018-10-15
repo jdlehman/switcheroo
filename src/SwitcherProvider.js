@@ -1,23 +1,13 @@
 import React, { Children, Component } from 'react';
 import PropTypes from 'prop-types';
+import { Provider, createListenerContext } from './listenerContext';
 
 export default class SwitcherProvider extends Component {
   static displayName = 'SwitcherProvider';
 
-  static propTypes = {
-    children: PropTypes.node
-  };
-
-  static childContextTypes = {
-    switcherProvider: PropTypes.shape({
-      loadListeners: PropTypes.array.isRequired,
-      popStateListeners: PropTypes.array.isRequired,
-      hashChangeListeners: PropTypes.array.isRequired
-    })
-  };
-
-  getChildContext() {
-    return { switcherProvider: this.switcherProvider };
+  constructor(props) {
+    super(props);
+    this._listenerContext = createListenerContext(true);
   }
 
   componentDidMount() {
@@ -32,29 +22,29 @@ export default class SwitcherProvider extends Component {
     window.removeEventListener('hashchange', this.handleHashChangeListeners);
   }
 
-  switcherProvider = {
-    loadListeners: [],
-    popStateListeners: [],
-    hashChangeListeners: []
-  };
-
   handleLoadListeners = e => {
-    this.switcherProvider.loadListeners.forEach(({ fn }) => fn(e));
+    this._listenerContext.listeners.load.forEach(({ fn }) => fn(e));
   };
 
   handlePopStateListeners = e => {
-    this.switcherProvider.popStateListeners.forEach(({ fn }) => fn(e));
+    this._listenerContext.listeners.popState.forEach(({ fn }) => fn(e));
   };
 
   handleHashChangeListeners = e => {
-    this.switcherProvider.hashChangeListeners.forEach(({ fn }) => fn(e));
+    this._listenerContext.listeners.hashChange.forEach(({ fn }) => fn(e));
   };
 
   render() {
     if (Children.count(this.props.children) > 1) {
-      return <span className="switcher-provider">{this.props.children}</span>;
+      return (
+        <Provider value={this._listenerContext}>
+          <span className="switcher-provider">{this.props.children}</span>
+        </Provider>
+      );
     } else {
-      return this.props.children;
+      return (
+        <Provider value={this._listenerContext}>{this.props.children}</Provider>
+      );
     }
   }
 }

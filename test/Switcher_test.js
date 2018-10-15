@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import PropTypes from 'prop-types';
 import sinon from 'sinon';
-import Switcher from '../src';
+import Switcher from '../src/Switcher';
 import * as helpers from '../src/helpers';
 
 describe('Switcher', () => {
@@ -11,6 +11,7 @@ describe('Switcher', () => {
       let switcher;
       beforeEach(() => {
         switcher = renderComponent(<div path="/">Home</div>);
+        console.log(switcher);
         console.log(switcher.html());
       });
 
