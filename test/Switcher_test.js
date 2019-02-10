@@ -10,7 +10,6 @@ describe('Switcher', () => {
       let switcher;
       beforeEach(() => {
         switcher = renderComponent(<div path="/">Home</div>);
-        console.log(switcher.html());
       });
 
       afterEach(() => {

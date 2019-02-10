@@ -64,16 +64,18 @@ describe('SwitcherProvider', () => {
   });
 });
 
+const SwitchedTo = ({ children }) => <div>{children}</div>;
+
 function renderNested() {
   return mount(
     <SwitcherProvider>
       <div>
         <Switcher>
           <Switcher path="/">
-            <div path={['/', '/other']}>Home</div>
-            <div path="/second">Second</div>
+            <SwitchedTo path={['/', '/other']}>Home</SwitchedTo>
+            <SwitchedTo path="/second">Second</SwitchedTo>
           </Switcher>
-          <div path="/hello">Hello</div>
+          <SwitchedTo path="/hello">Hello</SwitchedTo>
         </Switcher>
       </div>
     </SwitcherProvider>
@@ -85,11 +87,11 @@ function renderComponent() {
     <SwitcherProvider>
       <div>
         <Switcher>
-          <div path="/">Home</div>
+          <SwitchedTo path="/">Home</SwitchedTo>
         </Switcher>
         <Switcher>
-          <div path={['/', '/other']}>Home</div>
-          <div path="/second">Second</div>
+          <SwitchedTo path={['/', '/other']}>Home</SwitchedTo>
+          <SwitchedTo path="/second">Second</SwitchedTo>
         </Switcher>
       </div>
     </SwitcherProvider>
@@ -102,11 +104,11 @@ function renderComponentWithManyChildren() {
       <div>Another Child</div>
       <div>
         <Switcher>
-          <div path="/">Home</div>
+          <SwitchedTo path="/">Home</SwitchedTo>
         </Switcher>
         <Switcher>
-          <div path={['/', '/other']}>Home</div>
-          <div path="/second">Second</div>
+          <SwitchedTo path={['/', '/other']}>Home</SwitchedTo>
+          <SwitchedTo path="/second">Second</SwitchedTo>
         </Switcher>
       </div>
     </SwitcherProvider>
