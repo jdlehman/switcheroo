@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import PropTypes from 'prop-types';
-import sinon from 'sinon';
 import Switcher from '../src';
 import * as helpers from '../src/helpers';
 
@@ -15,11 +14,11 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('sets visibleSwitch state', () => {
-        sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         const visibleSwitch = switcher.state('visibleSwitch');
@@ -28,7 +27,7 @@ describe('Switcher', () => {
       });
 
       it('sets activePath state', () => {
-        sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         const activePath = switcher.state('activePath');
@@ -40,7 +39,7 @@ describe('Switcher', () => {
       let switcher;
       let handleChange;
       beforeEach(() => {
-        handleChange = sinon.spy();
+        handleChange = jest.fn();
         switcher = renderComponent(
           [
             <div key="/" path="/">
@@ -57,25 +56,25 @@ describe('Switcher', () => {
       it('calls onChange after path change', () => {
         switcher.instance().handleRouteChange();
         switcher.update();
-        sinon.assert.called(handleChange);
+        expect(handleChange).toHaveBeenCalledTimes(1);
       });
 
       it('onChange handles paths with dynamic segments', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/hello/more/123a-b', params: {} });
+        helpers.currentPath = jest.fn(() => ({
+          path: '/hello/more/123a-b',
+          params: {}
+        }));
         switcher.instance().handleRouteChange();
         switcher.update();
-        helpers.currentPath.restore();
-        sinon.assert.calledWith(
-          handleChange,
+        expect(handleChange).toHaveBeenCalledWith(
           true,
           '/hello/more/123a-b',
           {
             dynamic: 'hello',
             data: '123a-b'
           },
-          '/:dynamic/more/:data'
+          '/:dynamic/more/:data',
+          {}
         );
       });
     });
@@ -89,20 +88,21 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('renders nothing if no match', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/nomatch', params: {} });
+        helpers.currentPath = jest.fn(() => ({
+          path: '/nomatch',
+          params: {}
+        }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('');
       });
 
       it('renders matching component', () => {
-        sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('Home');
@@ -116,29 +116,28 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('renders correct element', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/other', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/other', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('Home');
       });
 
       it('renders correct element', () => {
-        sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('Home');
       });
 
       it('renders correct elements', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/otherThing', params: {} });
+        helpers.currentPath = jest.fn(() => ({
+          path: '/otherThing',
+          params: {}
+        }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('');
@@ -159,29 +158,25 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('renders default handler when no match', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/nomatch', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/nomatch', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('Default Handler');
       });
 
       it('default handle can match /', () => {
-        sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('Default Handler');
       });
 
       it('renders matching component', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/home', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/home', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('Home');
@@ -197,13 +192,11 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('renders just wrapper when no match', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/nomatch', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/nomatch', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('');
@@ -211,7 +204,7 @@ describe('Switcher', () => {
       });
 
       it('renders matched component in wrapper', () => {
-        sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+        helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.text()).toEqual('Home');
@@ -231,13 +224,14 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('renders matched component and sets dynamic segments as props', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/user/123-abc/information/21', params: {} });
+        helpers.currentPath = jest.fn(() => ({
+          path: '/user/123-abc/information/21',
+          params: {}
+        }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.find('MyComp').length).toEqual(1);
@@ -268,13 +262,14 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('renders matched component and sets dynamic segments as props', () => {
-        sinon
-          .stub(helpers, 'currentPath')
-          .returns({ path: '/user/234-cde/information/421', params: {} });
+        helpers.currentPath = jest.fn(() => ({
+          path: '/user/234-cde/information/421',
+          params: {}
+        }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.find('MyComp').length).toEqual(1);
@@ -291,10 +286,10 @@ describe('Switcher', () => {
 
     describe('with custom render', () => {
       it('calls the custom render function with the component and values', () => {
-        sinon.stub(helpers, 'currentPath').returns({
+        helpers.currentPath = jest.fn(() => ({
           path: '/user/234-cde/information/421',
           params: { tab: 'green' }
-        });
+        }));
         function mapper({ id, page }) {
           const matches = id.match(/(.+)-(.+)/);
           return {
@@ -320,7 +315,7 @@ describe('Switcher', () => {
           page: PropTypes.number,
           params: PropTypes.object
         };
-        const render = sinon.stub().returnsArg(0);
+        const render = jest.fn(arg => arg);
         renderComponent(
           [
             <MyComp key="dynamic" path="/user/:id/information/:page" />,
@@ -330,13 +325,13 @@ describe('Switcher', () => {
           ],
           { renderSwitch: render, mapDynamicSegments: mapper }
         );
-        sinon.assert.calledOnce(render);
-        expect(render.args[0][1]).toEqual({ id: '234-cde', page: '421' });
-        expect(render.args[0][2]).toEqual('/user/:id/information/:page');
-        expect(render.args[0][3]).toEqual({ tab: 'green' });
+        expect(render).toHaveBeenCalledTimes(1);
+        expect(render.mock.calls[0][1]).toEqual({ id: '234-cde', page: '421' });
+        expect(render.mock.calls[0][2]).toEqual('/user/:id/information/:page');
+        expect(render.mock.calls[0][3]).toEqual({ tab: 'green' });
       });
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
     });
 
@@ -355,14 +350,14 @@ describe('Switcher', () => {
       });
 
       afterEach(() => {
-        helpers.currentPath.restore();
+        jest.restoreAllMocks();
       });
 
       it('renders matched component and sets dynamic segments as props', () => {
-        sinon.stub(helpers, 'currentPath').returns({
+        helpers.currentPath = jest.fn(() => ({
           path: '/user/234-cde/information/421',
           params: { tab: 'blue' }
-        });
+        }));
         switcher.instance().handleRouteChange();
         switcher.update();
         expect(switcher.find('MyComp').length).toEqual(1);

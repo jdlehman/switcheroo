@@ -1,34 +1,32 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import sinon from 'sinon';
 import Switcher, { SwitcherProvider } from '../src';
 import * as helpers from '../src/helpers';
 
 describe('SwitcherProvider', () => {
+  afterEach(() => jest.restoreAllMocks());
   it('renders correctly', () => {
-    sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+    helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
+
     const component = renderComponent();
     expect(component.text()).toEqual('HomeHome');
-    helpers.currentPath.restore();
 
-    sinon.stub(helpers, 'currentPath').returns({ path: '/second', params: {} });
+    helpers.currentPath = jest.fn(() => ({ path: '/second', params: {} }));
     // trigger hash change manually
     component.instance().handleHashChangeListeners();
     component.update();
     expect(component.text()).toEqual('Second');
-    helpers.currentPath.restore();
   });
 
   it('wraps a span around multiple children', () => {
-    sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+    helpers.currentPath = jest.fn().mockReturnValue({ path: '/', params: {} });
     const component = renderComponentWithManyChildren();
     expect(component.find('.switcher-provider').length).toEqual(1);
     expect(component.text()).toEqual('Another ChildHomeHome');
-    helpers.currentPath.restore();
   });
 
   it('removes event listeners when a child Switcher is unmounted', () => {
-    sinon.stub(helpers, 'currentPath').returns({ path: '/', params: {} });
+    helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
     const component = renderNested();
     const innerSwitcher = component.find('Switcher').last();
     const listenerId = innerSwitcher.instance()._id;
@@ -46,9 +44,8 @@ describe('SwitcherProvider', () => {
         .map(({ id }) => id)
         .indexOf(listenerId)
     ).not.toEqual(-1);
-    helpers.currentPath.restore();
 
-    sinon.stub(helpers, 'currentPath').returns({ path: '/hello', params: {} });
+    helpers.currentPath = jest.fn(() => ({ path: '/hello', params: {} }));
     // trigger hash change manually
     component.instance().handleHashChangeListeners();
     component.update();
@@ -64,7 +61,6 @@ describe('SwitcherProvider', () => {
         .map(({ id }) => id)
         .indexOf(listenerId)
     ).toEqual(-1);
-    helpers.currentPath.restore();
   });
 });
 
