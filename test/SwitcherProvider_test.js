@@ -13,7 +13,7 @@ describe('SwitcherProvider', () => {
 
     sinon.stub(helpers, 'currentPath').returns({ path: '/second', params: {} });
     // trigger hash change manually
-    component.instance().handleHashChangeListeners();
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
     component.update();
     expect(component.text()).toEqual('Second');
     helpers.currentPath.restore();
