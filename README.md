@@ -1,7 +1,6 @@
 [![npm version](https://badge.fury.io/js/switcheroo.svg)](http://badge.fury.io/js/switcheroo)
 [![Build Status](https://secure.travis-ci.org/jdlehman/switcheroo.svg?branch=master)](http://travis-ci.org/jdlehman/switcheroo)
 [![Dependency Status](https://david-dm.org/jdlehman/switcheroo.svg)](https://david-dm.org/jdlehman/switcheroo)
-[![Greenkeeper badge](https://badges.greenkeeper.io/jdlehman/switcheroo.svg)](https://greenkeeper.io/)
 
 # switcheroo
 
