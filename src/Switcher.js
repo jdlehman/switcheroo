@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   getSwitch,
@@ -8,135 +8,35 @@ import {
   generateGuid
 } from './helpers';
 
-export default class Switcher extends Component {
-  static displayName = 'Switcher';
+const Switcher = (props, { switcherProvider }) => {
+  const {
+    mapDynamicSegments,
+    renderSwitch,
+    basePath,
+    pushState,
+    hashChange,
+    location,
+    load,
+    wrapper: Wrapper,
+    ...passed
+  } = props;
+  const { path, params: currParams } = currentPath(location);
 
-  static propTypes = {
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node
-    ]),
-    pushState: PropTypes.bool,
-    hashChange: PropTypes.bool,
-    load: PropTypes.bool,
-    onChange: PropTypes.func,
-    wrapper: PropTypes.any,
-    location: PropTypes.string,
-    basePath: PropTypes.string,
-    preventUpdate: PropTypes.func,
-    mapDynamicSegments: PropTypes.func,
-    renderSwitch: PropTypes.func
-  };
+  const [visibleSwitch, setVisibleSwitch] = useState(getSwitch(path, props));
+  const [activePath, setActivePath] = useState(
+    getActivePath(path, basePath, visibleSwitch)
+  );
+  const [dynamicValues, setDynamicValues] = useState(
+    getDynamicSegments(path, basePath, visibleSwitch)
+  );
 
-  static contextTypes = {
-    switcherProvider: PropTypes.shape({
-      loadListeners: PropTypes.array.isRequired,
-      popStateListeners: PropTypes.array.isRequired,
-      hashChangeListeners: PropTypes.array.isRequired
-    })
-  };
+  const [params, setParams] = useState(currParams);
 
-  static defaultProps = {
-    pushState: false,
-    hashChange: true,
-    load: true,
-    location: 'hash',
-    basePath: '',
-    preventUpdate: () => false,
-    mapDynamicSegments: values => values
-  };
+  const usingProvider = Boolean(switcherProvider);
 
-  constructor(props) {
-    super(props);
+  const _id = useRef(usingProvider && generateGuid());
 
-    const { path, params } = currentPath(props.location);
-    const visibleSwitch = getSwitch(path, props);
-    const activePath = getActivePath(path, props.basePath, visibleSwitch);
-    const dynamicValues = getDynamicSegments(
-      path,
-      props.basePath,
-      visibleSwitch
-    );
-    this.state = {
-      visibleSwitch,
-      dynamicValues,
-      activePath,
-      params
-    };
-  }
-
-  componentDidMount() {
-    const usingProvider = this.context.switcherProvider;
-    if (usingProvider) {
-      this._id = generateGuid();
-    }
-
-    if (this.props.load) {
-      usingProvider
-        ? this.context.switcherProvider.loadListeners.push({
-            id: this._id,
-            fn: this.handleRouteChange
-          })
-        : window.addEventListener('load', this.handleRouteChange);
-    }
-    if (this.props.pushState) {
-      usingProvider
-        ? this.context.switcherProvider.popStateListeners.push({
-            id: this._id,
-            fn: this.handleRouteChange
-          })
-        : window.addEventListener('popstate', this.handleRouteChange);
-    }
-    if (this.props.hashChange) {
-      usingProvider
-        ? this.context.switcherProvider.hashChangeListeners.push({
-            id: this._id,
-            fn: this.handleRouteChange
-          })
-        : window.addEventListener('hashchange', this.handleRouteChange);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.handleSwitchChange(nextProps);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return !nextProps.preventUpdate();
-  }
-
-  componentWillUnmount() {
-    const usingProvider = this.context.switcherProvider;
-    if (this.props.load) {
-      if (usingProvider) {
-        this.context.switcherProvider.loadListeners = this.context.switcherProvider.loadListeners.filter(
-          ({ id }) => id !== this._id
-        );
-      } else {
-        window.removeEventListener('load', this.handleRouteChange);
-      }
-    }
-    if (this.props.pushState) {
-      if (usingProvider) {
-        this.context.switcherProvider.popStateListeners = this.context.switcherProvider.popStateListeners.filter(
-          ({ id }) => id !== this._id
-        );
-      } else {
-        window.removeEventListener('popstate', this.handleRouteChange);
-      }
-    }
-    if (this.props.hashChange) {
-      if (usingProvider) {
-        this.context.switcherProvider.hashChangeListeners = this.context.switcherProvider.hashChangeListeners.filter(
-          ({ id }) => id !== this._id
-        );
-      } else {
-        window.removeEventListener('hashchange', this.handleRouteChange);
-      }
-    }
-  }
-
-  handleSwitchChange = props => {
+  const handleSwitchChange = props => {
     const { path, params } = currentPath(props.location);
     const visibleSwitch = getSwitch(path, props);
     const activePath = getActivePath(path, props.basePath, visibleSwitch);
@@ -149,44 +49,131 @@ export default class Switcher extends Component {
     if (typeof props.onChange === 'function') {
       props.onChange(!!visibleSwitch, path, dynamicValues, activePath, params);
     }
-
-    this.setState({ visibleSwitch, dynamicValues, activePath, params });
+    setVisibleSwitch(visibleSwitch);
+    setDynamicValues(dynamicValues);
+    setActivePath(activePath);
+    setParams(params);
   };
 
-  handleRouteChange = ev => {
-    this.handleSwitchChange(this.props);
-  };
-
-  render() {
-    const { props } = this.state.visibleSwitch || {};
-    const visibleSwitch =
-      this.state.visibleSwitch &&
-      React.cloneElement(this.state.visibleSwitch, {
-        ...props,
-        ...this.props.mapDynamicSegments(this.state.dynamicValues),
-        activePath: this.state.activePath,
-        params: this.state.params
-      });
-
-    if (this.props.renderSwitch) {
-      return this.props.renderSwitch(
-        visibleSwitch,
-        this.state.dynamicValues,
-        this.state.activePath,
-        this.state.params
-      );
+  useEffect(() => {
+    const handleRouteChange = ev => handleSwitchChange(props);
+    if (load) {
+      usingProvider
+        ? switcherProvider.loadListeners.push({
+            id: _id.current,
+            fn: handleRouteChange
+          })
+        : window.addEventListener('load', handleRouteChange);
     }
-
-    if (this.props.wrapper) {
-      const passedProps = { ...this.props };
-      Object.keys(Switcher.propTypes).forEach(k => delete passedProps[k]);
-      return React.createElement(
-        this.props.wrapper,
-        passedProps,
-        visibleSwitch
-      );
-    } else {
-      return visibleSwitch;
+    if (pushState) {
+      usingProvider
+        ? switcherProvider.popStateListeners.push({
+            id: _id.current,
+            fn: handleRouteChange
+          })
+        : window.addEventListener('popstate', handleRouteChange);
     }
+    if (hashChange) {
+      usingProvider
+        ? switcherProvider.hashChangeListeners.push({
+            id: _id.current,
+            fn: handleRouteChange
+          })
+        : window.addEventListener('hashchange', handleRouteChange);
+    }
+    return () => {
+      if (load) {
+        if (usingProvider) {
+          switcherProvider.loadListeners = switcherProvider.loadListeners.filter(
+            ({ id }) => id !== _id.current
+          );
+        } else {
+          window.removeEventListener('load', handleRouteChange);
+        }
+      }
+      if (pushState) {
+        if (usingProvider) {
+          switcherProvider.popStateListeners = switcherProvider.popStateListeners.filter(
+            ({ id }) => id !== _id.current
+          );
+        } else {
+          window.removeEventListener('popstate', handleRouteChange);
+        }
+      }
+      if (hashChange) {
+        if (usingProvider) {
+          switcherProvider.hashChangeListeners = switcherProvider.hashChangeListeners.filter(
+            ({ id }) => id !== _id.current
+          );
+        } else {
+          window.removeEventListener('hashchange', handleRouteChange);
+        }
+      }
+    };
+  }, []);
+
+  const { props: switchProps } = visibleSwitch || {};
+  const visibleSwitchWithProps =
+    visibleSwitch &&
+    React.cloneElement(visibleSwitch, {
+      ...switchProps,
+      ...mapDynamicSegments(dynamicValues),
+      activePath: activePath,
+      params: params
+    });
+
+  if (renderSwitch) {
+    return renderSwitch(
+      visibleSwitchWithProps,
+      dynamicValues,
+      activePath,
+      params
+    );
   }
-}
+
+  if (Wrapper) {
+    Object.keys(Switcher.propTypes).forEach(k => delete passed[k]);
+    return <Wrapper {...passed}>{visibleSwitchWithProps}</Wrapper>;
+  } else {
+    return visibleSwitchWithProps;
+  }
+};
+
+Switcher.contextTypes = {
+  switcherProvider: PropTypes.shape({
+    loadListeners: PropTypes.array.isRequired,
+    popStateListeners: PropTypes.array.isRequired,
+    hashChangeListeners: PropTypes.array.isRequired
+  })
+};
+
+Switcher.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]),
+  pushState: PropTypes.bool,
+  hashChange: PropTypes.bool,
+  load: PropTypes.bool,
+  onChange: PropTypes.func,
+  wrapper: PropTypes.any,
+  location: PropTypes.string,
+  basePath: PropTypes.string,
+  preventUpdate: PropTypes.func,
+  mapDynamicSegments: PropTypes.func,
+  renderSwitch: PropTypes.func
+};
+
+Switcher.defaultProps = {
+  pushState: false,
+  hashChange: true,
+  load: true,
+  location: 'hash',
+  basePath: '',
+  preventUpdate: () => false,
+  mapDynamicSegments: values => values
+};
+
+Switcher.displayName = 'Switcher';
+
+export default Switcher;

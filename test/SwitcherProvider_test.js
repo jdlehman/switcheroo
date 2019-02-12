@@ -1,73 +1,119 @@
-import React from 'react';
-import { mount } from 'enzyme';
+import React, { useEffect, useReducer } from 'react';
+import { act } from 'react-dom/test-utils';
+import PropTypes from 'prop-types';
+import {
+  render,
+  fireEvent,
+  waitForDomChange,
+  wait
+} from 'react-testing-library';
 import Switcher, { SwitcherProvider } from '../src';
 import * as helpers from '../src/helpers';
 
 describe('SwitcherProvider', () => {
   afterEach(() => jest.restoreAllMocks());
-  it('renders correctly', () => {
+  test('renders correctly', () => {
     helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
 
     const component = renderComponent();
-    expect(component.text()).toEqual('HomeHome');
+    expect(component.container).toHaveTextContent('HomeHome');
 
     helpers.currentPath = jest.fn(() => ({ path: '/second', params: {} }));
-    // trigger hash change manually
-    component.instance().handleHashChangeListeners();
-    component.update();
-    expect(component.text()).toEqual('Second');
+
+    fireEvent(window, new HashChangeEvent('hashchange'));
+
+    expect(component.container).toHaveTextContent('Second');
   });
 
-  it('wraps a span around multiple children', () => {
+  test('wraps a span around multiple children', () => {
     helpers.currentPath = jest.fn().mockReturnValue({ path: '/', params: {} });
     const component = renderComponentWithManyChildren();
-    expect(component.find('.switcher-provider').length).toEqual(1);
-    expect(component.text()).toEqual('Another ChildHomeHome');
+    expect(component.container).toHaveTextContent('Another ChildHomeHome');
   });
 
-  it('removes event listeners when a child Switcher is unmounted', () => {
+  test('removes event listeners when a child Switcher is unmounted', async () => {
+    helpers.generateGuid = jest
+      .fn()
+      .mockReturnValueOnce('top')
+      .mockReturnValueOnce('bottom');
     helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
-    const component = renderNested();
-    const innerSwitcher = component.find('Switcher').last();
-    const listenerId = innerSwitcher.instance()._id;
-    const instance = component.instance();
 
-    expect(instance.switcherProvider.loadListeners.length).toEqual(2);
-    expect(instance.switcherProvider.hashChangeListeners.length).toEqual(2);
-    expect(
-      instance.switcherProvider.loadListeners
-        .map(({ id }) => id)
-        .indexOf(listenerId)
-    ).not.toEqual(-1);
-    expect(
-      instance.switcherProvider.hashChangeListeners
-        .map(({ id }) => id)
-        .indexOf(listenerId)
-    ).not.toEqual(-1);
+    const component = renderNested();
+
+    await wait(() => {
+      const loadListeners = Array.from(
+        component.container.querySelectorAll('.loadListeners em')
+      ).map(el => el.textContent);
+      expect(loadListeners).toEqual(['bottom', 'top']);
+
+      const hashChangeListeners = Array.from(
+        component.container.querySelectorAll('.hashChangeListeners em')
+      ).map(el => el.textContent);
+      expect(hashChangeListeners).toEqual(['bottom', 'top']);
+    });
 
     helpers.currentPath = jest.fn(() => ({ path: '/hello', params: {} }));
     // trigger hash change manually
-    component.instance().handleHashChangeListeners();
-    component.update();
-    expect(instance.switcherProvider.loadListeners.length).toEqual(1);
-    expect(instance.switcherProvider.hashChangeListeners.length).toEqual(1);
-    expect(
-      instance.switcherProvider.loadListeners
-        .map(({ id }) => id)
-        .indexOf(listenerId)
-    ).toEqual(-1);
-    expect(
-      instance.switcherProvider.hashChangeListeners
-        .map(({ id }) => id)
-        .indexOf(listenerId)
-    ).toEqual(-1);
+    fireEvent(window, new HashChangeEvent('hashchange'));
+    await wait(() => {
+      const loadListeners = Array.from(
+        component.container.querySelectorAll('.loadListeners em')
+      ).map(el => el.textContent);
+      expect(loadListeners).toEqual(['top']);
+
+      const hashChangeListeners = Array.from(
+        component.container.querySelectorAll('.hashChangeListeners em')
+      ).map(el => el.textContent);
+      expect(hashChangeListeners).toEqual(['top']);
+    });
   });
 });
 
 const SwitchedTo = ({ children }) => <div>{children}</div>;
 
+const ContextReporter = (
+  _,
+  { switcherProvider: { loadListeners, hashChangeListeners } }
+) => {
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  //refresh bc old context SUX
+  useEffect(() => {
+    setTimeout(forceUpdate);
+  }, []);
+
+  useEffect(() => {
+    const doIt = () => {
+      // because we can't rely on order of rendering here, we'll have to wait
+      // oh yeah and old context SUX
+      setTimeout(forceUpdate);
+    };
+    window.addEventListener('hashchange', doIt);
+    return () => {
+      window.removeEventListener('hashchange', doIt);
+    };
+  }, []);
+  return (
+    <article>
+      <p className="loadListeners">
+        {loadListeners.map(({ id }) => (
+          <em key={id}>{id}</em>
+        ))}
+      </p>
+      <p className="hashChangeListeners">
+        {hashChangeListeners.map(({ id }) => (
+          <em key={id}>{id}</em>
+        ))}
+      </p>
+    </article>
+  );
+};
+
+ContextReporter.contextTypes = {
+  switcherProvider: PropTypes.object
+};
+
 function renderNested() {
-  return mount(
+  return render(
     <SwitcherProvider>
       <div>
         <Switcher>
@@ -77,13 +123,14 @@ function renderNested() {
           </Switcher>
           <SwitchedTo path="/hello">Hello</SwitchedTo>
         </Switcher>
+        <ContextReporter />
       </div>
     </SwitcherProvider>
   );
 }
 
 function renderComponent() {
-  return mount(
+  return render(
     <SwitcherProvider>
       <div>
         <Switcher>
@@ -99,7 +146,7 @@ function renderComponent() {
 }
 
 function renderComponentWithManyChildren() {
-  return mount(
+  return render(
     <SwitcherProvider>
       <div>Another Child</div>
       <div>

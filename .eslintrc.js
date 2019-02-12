@@ -1,5 +1,5 @@
 module.exports = {
-  plugins: ['prettier'],
+  plugins: ['prettier', 'react-hooks'],
 
   env: {
     browser: true,
@@ -20,6 +20,7 @@ module.exports = {
   },
 
   rules: {
-    'prettier/prettier': ['error', { singleQuote: true }]
+    'prettier/prettier': ['error', { singleQuote: true }],
+    'react-hooks/rules-of-hooks': 'error'
   }
 };
