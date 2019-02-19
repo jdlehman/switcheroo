@@ -35,7 +35,7 @@ const Switcher = (props, { switcherProvider }) => {
 
   const usingProvider = Boolean(switcherProvider);
 
-  const _id = useRef(usingProvider && generateGuid());
+  const [_id] = useReducer(_ => _, () => usingProvider && generateGuid());
 
   const handleSwitchChange = props => {
     const { path, params } = currentPath(props.location);
@@ -61,7 +61,7 @@ const Switcher = (props, { switcherProvider }) => {
     if (load) {
       usingProvider
         ? switcherProvider.loadListeners.push({
-            id: _id.current,
+            id: _id,
             fn: handleRouteChange
           })
         : window.addEventListener('load', handleRouteChange);
@@ -69,7 +69,7 @@ const Switcher = (props, { switcherProvider }) => {
     if (pushState) {
       usingProvider
         ? switcherProvider.popStateListeners.push({
-            id: _id.current,
+            id: _id,
             fn: handleRouteChange
           })
         : window.addEventListener('popstate', handleRouteChange);
@@ -77,7 +77,7 @@ const Switcher = (props, { switcherProvider }) => {
     if (hashChange) {
       usingProvider
         ? switcherProvider.hashChangeListeners.push({
-            id: _id.current,
+            id: _id,
             fn: handleRouteChange
           })
         : window.addEventListener('hashchange', handleRouteChange);
@@ -86,7 +86,7 @@ const Switcher = (props, { switcherProvider }) => {
       if (load) {
         if (usingProvider) {
           switcherProvider.loadListeners = switcherProvider.loadListeners.filter(
-            ({ id }) => id !== _id.current
+            ({ id }) => id !== _id
           );
         } else {
           window.removeEventListener('load', handleRouteChange);
@@ -95,7 +95,7 @@ const Switcher = (props, { switcherProvider }) => {
       if (pushState) {
         if (usingProvider) {
           switcherProvider.popStateListeners = switcherProvider.popStateListeners.filter(
-            ({ id }) => id !== _id.current
+            ({ id }) => id !== _id
           );
         } else {
           window.removeEventListener('popstate', handleRouteChange);
@@ -104,14 +104,14 @@ const Switcher = (props, { switcherProvider }) => {
       if (hashChange) {
         if (usingProvider) {
           switcherProvider.hashChangeListeners = switcherProvider.hashChangeListeners.filter(
-            ({ id }) => id !== _id.current
+            ({ id }) => id !== _id
           );
         } else {
           window.removeEventListener('hashchange', handleRouteChange);
         }
       }
     };
-  }, []);
+  }, [load, pushState, hashChange]);
 
   const { props: switchProps } = visibleSwitch || {};
 
