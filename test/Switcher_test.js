@@ -58,7 +58,6 @@ describe('Switcher', () => {
       });
 
       test('calls onChange after path change', () => {
-        expect.assertions(1);
         fireEvent(window, new HashChangeEvent('hashchange'));
         expect(handleChange).toHaveBeenCalledTimes(1);
       });
@@ -371,10 +370,52 @@ describe('Switcher', () => {
       });
     });
   });
+
+  describe('prevent update prop', () => {
+    test('can prevent changes', () => {
+      let preventUpdate = () => false;
+      const { getByText, rerender } = renderComponent(
+        <ToBeSwitched path="/preventUpdate">
+          <em>Hi</em>
+        </ToBeSwitched>,
+        { preventUpdate }
+      );
+      helpers.currentPath = jest.fn(() => ({
+        path: '/preventUpdate',
+        params: {}
+      }));
+      fireEvent(window, new HashChangeEvent('hashchange'));
+      expect(getByText('Hi')).toBeInTheDocument();
+      rerender(
+        <ToBeSwitched path="/preventUpdate">
+          <em>Hi</em>
+        </ToBeSwitched>,
+        { preventUpdate: () => true }
+      );
+      helpers.currentPath = jest.fn(() => ({
+        path: '/someOtherPath',
+        params: {}
+      }));
+      fireEvent(window, new HashChangeEvent('hashchange'));
+      expect(getByText('Hi')).toBeInTheDocument();
+    });
+  });
+  describe('getting new props', () => {
+    test('updates when the location mechanism has changed');
+    test('updates when the basePath has changed');
+  });
 });
 
 function renderComponent(children = [], props = {}) {
-  return render(<Switcher {...props}>{children}</Switcher>);
+  const { rerender, ...rendered } = render(
+    <Switcher {...props}>{children}</Switcher>
+  );
+  return {
+    ...rendered,
+    rerender: (children = [], props = {}) => {
+      return rerender(<Switcher {...props}>{children}</Switcher>);
+    }
+  };
 }
 
 function mapper({ id, page }) {
