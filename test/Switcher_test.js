@@ -401,8 +401,8 @@ describe('Switcher', () => {
     });
   });
   describe('getting new props', () => {
-    test('updates when the location mechanism has changed');
-    test('updates when the basePath has changed');
+    test.todo('updates when the location mechanism has changed');
+    test.todo('updates when the basePath has changed');
   });
 });
 
