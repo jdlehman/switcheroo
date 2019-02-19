@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import {
   getSwitch,
@@ -18,6 +18,7 @@ const Switcher = (props, { switcherProvider }) => {
     location,
     load,
     wrapper: Wrapper,
+    preventUpdate,
     ...passed
   } = props;
   const { path, params: currParams } = currentPath(location);
@@ -113,6 +114,9 @@ const Switcher = (props, { switcherProvider }) => {
   }, []);
 
   const { props: switchProps } = visibleSwitch || {};
+
+  const lastChild = useRef(null);
+
   const visibleSwitchWithProps =
     visibleSwitch &&
     React.cloneElement(visibleSwitch, {
@@ -122,19 +126,28 @@ const Switcher = (props, { switcherProvider }) => {
       params: params
     });
 
+  if (preventUpdate()) {
+    return lastChild.current;
+  }
+
   if (renderSwitch) {
-    return renderSwitch(
+    const nextChild = renderSwitch(
       visibleSwitchWithProps,
       dynamicValues,
       activePath,
       params
     );
+    lastChild.current = nextChild;
+    return nextChild;
   }
 
   if (Wrapper) {
     Object.keys(Switcher.propTypes).forEach(k => delete passed[k]);
-    return <Wrapper {...passed}>{visibleSwitchWithProps}</Wrapper>;
+    const nextChild = <Wrapper {...passed}>{visibleSwitchWithProps}</Wrapper>;
+    lastChild.current = nextChild;
+    return nextChild;
   } else {
+    lastChild.current = visibleSwitchWithProps;
     return visibleSwitchWithProps;
   }
 };
