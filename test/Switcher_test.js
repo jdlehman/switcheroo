@@ -403,6 +403,23 @@ describe('Switcher', () => {
   describe('getting new props', () => {
     test.todo('updates when the location mechanism has changed');
     test.todo('updates when the basePath has changed');
+    test('calls the handler with correct props', () => {
+      const onChange1 = jest.fn();
+      const onChange2 = jest.fn();
+      const { rerender } = renderComponent(
+        <ToBeSwitched path="/">Home</ToBeSwitched>,
+        {
+          onChange: onChange1
+        }
+      );
+
+      rerender(<ToBeSwitched path="/">Home</ToBeSwitched>, {
+        onChange: onChange2
+      });
+      fireEvent(window, new HashChangeEvent('hashchange'));
+      expect(onChange1).not.toHaveBeenCalled();
+      expect(onChange2).toHaveBeenCalled();
+    });
   });
 });
 
