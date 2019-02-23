@@ -9,6 +9,7 @@ import {
 } from 'react-testing-library';
 import Switcher, { SwitcherProvider } from '../src';
 import * as helpers from '../src/helpers';
+import { ContextReporter } from './utils';
 
 describe('SwitcherProvider', () => {
   afterEach(() => jest.restoreAllMocks());
@@ -34,8 +35,8 @@ describe('SwitcherProvider', () => {
   test('removes event listeners when a child Switcher is unmounted', async () => {
     helpers.generateGuid = jest
       .fn()
-      .mockReturnValueOnce('top')
-      .mockReturnValueOnce('bottom');
+      .mockReturnValueOnce('bottom')
+      .mockReturnValueOnce('top');
     helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
 
     const component = renderNested();

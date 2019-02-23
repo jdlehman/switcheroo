@@ -33,10 +33,6 @@ const Switcher = (props, { switcherProvider }) => {
 
   const [params, setParams] = useState(currParams);
 
-  const usingProvider = Boolean(switcherProvider);
-
-  const _id = useRef(usingProvider && generateGuid());
-
   const handleSwitchChange = props => {
     const { path, params } = currentPath(props.location);
     const visibleSwitch = getSwitch(path, props);
@@ -56,62 +52,55 @@ const Switcher = (props, { switcherProvider }) => {
     setParams(params);
   };
 
+  const handleRouteChange = useRef(_ => handleSwitchChange(props));
+
   useEffect(() => {
-    const handleRouteChange = ev => handleSwitchChange(props);
-    if (load) {
-      usingProvider
-        ? switcherProvider.loadListeners.push({
-            id: _id.current,
-            fn: handleRouteChange
-          })
-        : window.addEventListener('load', handleRouteChange);
+    const usingProvider = Boolean(switcherProvider);
+    if (!usingProvider) {
+      load && window.addEventListener('load', handleRouteChange.current);
+      pushState &&
+        window.addEventListener('popstate', handleRouteChange.current);
+      hashChange &&
+        window.addEventListener('hashchange', handleRouteChange.current);
+
+      return () => {
+        window.removeEventListener('load', handleRouteChange.current);
+        window.removeEventListener('popstate', handleRouteChange.current);
+        window.removeEventListener('hashchange', handleRouteChange.current);
+      };
     }
-    if (pushState) {
-      usingProvider
-        ? switcherProvider.popStateListeners.push({
-            id: _id.current,
-            fn: handleRouteChange
-          })
-        : window.addEventListener('popstate', handleRouteChange);
-    }
-    if (hashChange) {
-      usingProvider
-        ? switcherProvider.hashChangeListeners.push({
-            id: _id.current,
-            fn: handleRouteChange
-          })
-        : window.addEventListener('hashchange', handleRouteChange);
-    }
+
+    const id = generateGuid();
+    load &&
+      switcherProvider.loadListeners.push({
+        id,
+        fn: handleRouteChange.current
+      });
+    pushState &&
+      switcherProvider.popStateListeners.push({
+        id,
+        fn: handleRouteChange.current
+      });
+    hashChange &&
+      switcherProvider.hashChangeListeners.push({
+        id,
+        fn: handleRouteChange.current
+      });
     return () => {
-      if (load) {
-        if (usingProvider) {
-          switcherProvider.loadListeners = switcherProvider.loadListeners.filter(
-            ({ id }) => id !== _id.current
-          );
-        } else {
-          window.removeEventListener('load', handleRouteChange);
-        }
-      }
-      if (pushState) {
-        if (usingProvider) {
-          switcherProvider.popStateListeners = switcherProvider.popStateListeners.filter(
-            ({ id }) => id !== _id.current
-          );
-        } else {
-          window.removeEventListener('popstate', handleRouteChange);
-        }
-      }
-      if (hashChange) {
-        if (usingProvider) {
-          switcherProvider.hashChangeListeners = switcherProvider.hashChangeListeners.filter(
-            ({ id }) => id !== _id.current
-          );
-        } else {
-          window.removeEventListener('hashchange', handleRouteChange);
-        }
-      }
+      load &&
+        (switcherProvider.loadListeners = switcherProvider.loadListeners.filter(
+          listener => listener.id !== id
+        ));
+      pushState &&
+        (switcherProvider.popStateListeners = switcherProvider.popStateListeners.filter(
+          listener => listener.id !== id
+        ));
+      hashChange &&
+        (switcherProvider.hashChangeListeners = switcherProvider.hashChangeListeners.filter(
+          listener => listener.id !== id
+        ));
     };
-  }, []);
+  }, [load, pushState, hashChange, switcherProvider]);
 
   const { props: switchProps } = visibleSwitch || {};
 
