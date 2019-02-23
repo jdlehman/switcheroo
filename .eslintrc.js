@@ -21,6 +21,7 @@ module.exports = {
 
   rules: {
     'prettier/prettier': ['error', { singleQuote: true }],
-    'react-hooks/rules-of-hooks': 'error'
+    'react-hooks/rules-of-hooks': 'error',
+    "react-hooks/exhaustive-deps": 'error'
   }
 };
