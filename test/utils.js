@@ -1,28 +1,23 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { act } from 'react-dom/test-utils';
+import SwitcherContext from '../src/context';
 
-export const ContextReporter = (
-  _,
-  { switcherProvider: { loadListeners, hashChangeListeners } }
-) => {
+export const ContextReporter = () => {
   const [, forceUpdate] = useReducer(x => x + 1, 0);
-  // refresh bc old context SUX
+  const { loadListeners, hashChangeListeners } = useContext(SwitcherContext);
+
   useEffect(() => {
     setTimeout(forceUpdate);
-  }, [forceUpdate]);
-
-  useEffect(() => {
-    const doIt = () => {
+    const update = () => {
       // because we can't rely on order of rendering here, we'll have to wait
-      // oh yeah and old context SUX
       setTimeout(forceUpdate);
     };
-    window.addEventListener('hashchange', doIt);
+    window.addEventListener('hashchange', update);
     return () => {
-      window.removeEventListener('hashchange', doIt);
+      window.removeEventListener('hashchange', update);
     };
   }, [forceUpdate]);
+
   return (
     <article>
       <p className="loadListeners">
@@ -37,8 +32,4 @@ export const ContextReporter = (
       </p>
     </article>
   );
-};
-
-ContextReporter.contextTypes = {
-  switcherProvider: PropTypes.object
 };

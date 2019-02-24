@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect, useReducer } from 'react';
+import React, { useContext, useRef, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import SwitcherContext from './context';
 import {
   getSwitch,
   currentPath,
@@ -27,7 +28,7 @@ function useForce() {
   return forceUpdate;
 }
 
-function Switcher(props, { switcherProvider }) {
+function Switcher(props) {
   const {
     mapDynamicSegments,
     renderSwitch,
@@ -40,6 +41,8 @@ function Switcher(props, { switcherProvider }) {
     preventUpdate,
     ...passed
   } = props;
+
+  const switcherProvider = useContext(SwitcherContext);
 
   const {
     visibleSwitch,
@@ -160,14 +163,6 @@ function Switcher(props, { switcherProvider }) {
     return visibleSwitchWithProps;
   }
 }
-
-Switcher.contextTypes = {
-  switcherProvider: PropTypes.shape({
-    loadListeners: PropTypes.array.isRequired,
-    popStateListeners: PropTypes.array.isRequired,
-    hashChangeListeners: PropTypes.array.isRequired
-  })
-};
 
 Switcher.propTypes = {
   children: PropTypes.oneOfType([

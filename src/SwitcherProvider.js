@@ -1,60 +1,58 @@
-import React, { Children, Component } from 'react';
+import React, { Children, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import SwitcherContext from './context';
 
-export default class SwitcherProvider extends Component {
-  static displayName = 'SwitcherProvider';
-
-  static propTypes = {
-    children: PropTypes.node
-  };
-
-  static childContextTypes = {
-    switcherProvider: PropTypes.shape({
-      loadListeners: PropTypes.array.isRequired,
-      popStateListeners: PropTypes.array.isRequired,
-      hashChangeListeners: PropTypes.array.isRequired
-    })
-  };
-
-  getChildContext() {
-    return { switcherProvider: this.switcherProvider };
-  }
-
-  componentDidMount() {
-    window.addEventListener('load', this.handleLoadListeners);
-    window.addEventListener('popstate', this.handlePopStateListeners);
-    window.addEventListener('hashchange', this.handleHashChangeListeners);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('load', this.handleLoadListeners);
-    window.removeEventListener('popstate', this.handlePopStateListeners);
-    window.removeEventListener('hashchange', this.handleHashChangeListeners);
-  }
-
-  switcherProvider = {
+export default function SwitcherProvider(props) {
+  const switcherProvider = useRef({
     loadListeners: [],
     popStateListeners: [],
     hashChangeListeners: []
+  });
+
+  const handleLoadListeners = useRef();
+  handleLoadListeners.current = e => {
+    switcherProvider.current.loadListeners.forEach(({ fn }) => fn(e));
   };
 
-  handleLoadListeners = e => {
-    this.switcherProvider.loadListeners.forEach(({ fn }) => fn(e));
+  const handlePopStateListeners = useRef();
+  handlePopStateListeners.current = e => {
+    switcherProvider.current.popStateListeners.forEach(({ fn }) => fn(e));
   };
 
-  handlePopStateListeners = e => {
-    this.switcherProvider.popStateListeners.forEach(({ fn }) => fn(e));
+  const handleHashChangeListeners = useRef();
+  handleHashChangeListeners.current = e => {
+    switcherProvider.current.hashChangeListeners.forEach(({ fn }) => fn(e));
   };
 
-  handleHashChangeListeners = e => {
-    this.switcherProvider.hashChangeListeners.forEach(({ fn }) => fn(e));
-  };
+  useEffect(() => {
+    const handleLoad = e => handleLoadListeners.current(e);
+    const handlePopState = e => handlePopStateListeners.current(e);
+    const handleHashChange = e => handleHashChangeListeners.current(e);
+    window.addEventListener('load', handleLoad);
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('load', handleLoad);
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handleHashChanged);
+    };
+  }, []);
 
-  render() {
-    if (Children.count(this.props.children) > 1) {
-      return <span className="switcher-provider">{this.props.children}</span>;
-    } else {
-      return this.props.children;
-    }
-  }
+  return (
+    <SwitcherContext.Provider value={switcherProvider.current}>
+      {(() => {
+        if (Children.count(props.children) > 1) {
+          return <span className="switcher-provider">{props.children}</span>;
+        } else {
+          return props.children;
+        }
+      })()}
+    </SwitcherContext.Provider>
+  );
 }
+
+SwitcherProvider.displayName = 'SwitcherProvider';
+
+SwitcherProvider.propTypes = {
+  children: PropTypes.node
+};
