@@ -102,22 +102,22 @@ const Switcher = (props, { switcherProvider }) => {
     };
   }, [load, pushState, hashChange, switcherProvider]);
 
-  const { props: switchProps } = visibleSwitch || {};
-
   const lastChild = useRef(null);
+
+  if (preventUpdate()) {
+    return lastChild.current;
+  }
+
+  const { props: switchProps } = visibleSwitch || {};
 
   const visibleSwitchWithProps =
     visibleSwitch &&
     React.cloneElement(visibleSwitch, {
       ...switchProps,
       ...mapDynamicSegments(dynamicValues),
-      activePath: activePath,
-      params: params
+      activePath,
+      params
     });
-
-  if (preventUpdate()) {
-    return lastChild.current;
-  }
 
   if (renderSwitch) {
     const nextChild = renderSwitch(
