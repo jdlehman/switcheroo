@@ -32,10 +32,10 @@ describe('SwitcherProvider', () => {
       .mockReturnValueOnce('bottom')
       .mockReturnValueOnce('top');
     helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
+
     const component = renderNested();
-    act(() => {
-      jest.runAllTimers();
-    });
+    act(jest.runAllTimers);
+
     const getListeners = type => {
       return Array.from(
         component.container.querySelectorAll(`.${type}Listeners em`)
