@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import Switcher from '../src';
 import * as helpers from '../src/helpers';
 
+const actualCurrentPath = helpers.currentPath;
+
 afterEach(cleanup);
+afterEach(() => {
+  helpers.currentPath = actualCurrentPath;
+});
 
 describe('Switcher', () => {
   const ToBeSwitched = ({ children, ...others }) => (
@@ -25,10 +30,6 @@ describe('Switcher', () => {
         switcher = renderComponent(<ToBeSwitched path="/">Home</ToBeSwitched>); // });
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
       test('renders visibleSwitch with activePath', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
         fireEvent(window, new HashChangeEvent('hashchange'));
@@ -40,11 +41,10 @@ describe('Switcher', () => {
     });
 
     describe('with onChange function defined', () => {
-      let switcher;
       let handleChange;
       beforeEach(() => {
         handleChange = jest.fn();
-        switcher = renderComponent(
+        renderComponent(
           [
             <ToBeSwitched key="/" path="/">
               Home
@@ -89,10 +89,6 @@ describe('Switcher', () => {
         switcher = renderComponent(<ToBeSwitched path="/">Home</ToBeSwitched>);
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
       test('renders nothing if no match', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/nomatch',
@@ -116,10 +112,6 @@ describe('Switcher', () => {
         switcher = renderComponent(
           <ToBeSwitched path={['/', '/other']}>Home</ToBeSwitched>
         );
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks();
       });
 
       test('renders correct element', () => {
@@ -157,10 +149,6 @@ describe('Switcher', () => {
         ]);
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
       test('renders default handler when no match', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/nomatch', params: {} }));
         fireEvent(window, new HashChangeEvent('hashchange'));
@@ -188,10 +176,6 @@ describe('Switcher', () => {
         });
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
       test('renders just wrapper when no match', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/nomatch', params: {} }));
         fireEvent(window, new HashChangeEvent('hashchange'));
@@ -217,10 +201,6 @@ describe('Switcher', () => {
             Static Content
           </ToBeSwitched>
         ]);
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks();
       });
 
       test('renders matched component and sets dynamic segments as props', () => {
@@ -257,10 +237,6 @@ describe('Switcher', () => {
           ],
           { mapDynamicSegments: mapper }
         );
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks();
       });
 
       test('renders matched component and sets dynamic segments as props', () => {
@@ -328,9 +304,6 @@ describe('Switcher', () => {
         expect(render.mock.calls[0][2]).toEqual('/user/:id/information/:page');
         expect(render.mock.calls[0][3]).toEqual({ tab: 'green' });
       });
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
     });
 
     describe('with a wrapper', () => {
@@ -345,10 +318,6 @@ describe('Switcher', () => {
           ],
           { wrapper: 'div', mapDynamicSegments: mapper }
         );
-      });
-
-      afterEach(() => {
-        jest.restoreAllMocks();
       });
 
       test('renders matched component and sets dynamic segments as props', () => {
@@ -400,9 +369,8 @@ describe('Switcher', () => {
       expect(getByText('Hi')).toBeInTheDocument();
     });
   });
+
   describe('getting new props', () => {
-    test.todo('updates when the location mechanism has changed');
-    test.todo('updates when the basePath has changed');
     test('rerenders children', () => {
       const { getByText, rerender } = renderComponent(
         <ToBeSwitched path="/">Home</ToBeSwitched>
