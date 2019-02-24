@@ -1,70 +1,73 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { render, cleanup, fireEvent } from 'react-testing-library';
 import PropTypes from 'prop-types';
 import Switcher from '../src';
 import * as helpers from '../src/helpers';
 
+const actualCurrentPath = helpers.currentPath;
+
+afterEach(cleanup);
+afterEach(() => {
+  helpers.currentPath = actualCurrentPath;
+});
+
 describe('Switcher', () => {
+  const ToBeSwitched = ({ children, ...others }) => (
+    <div>
+      <span data-testid="children">{children}</span>
+      {Object.entries(others).map(([k, v]) => (
+        <span key={k} data-testid={k}>
+          {typeof v === 'object' ? JSON.stringify(v) : v}
+        </span>
+      ))}
+    </div>
+  );
   describe('#handleRouteChange', () => {
     describe('default', () => {
       let switcher;
+
       beforeEach(() => {
-        switcher = renderComponent(<div path="/">Home</div>);
+        switcher = renderComponent(<ToBeSwitched path="/">Home</ToBeSwitched>); // });
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('sets visibleSwitch state', () => {
+      test('renders visibleSwitch with activePath', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        const visibleSwitch = switcher.state('visibleSwitch');
-        expect(visibleSwitch.props.children).toEqual('Home');
-        expect(visibleSwitch.type).toEqual('div');
-      });
+        fireEvent(window, new HashChangeEvent('hashchange'));
 
-      it('sets activePath state', () => {
-        helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        const activePath = switcher.state('activePath');
-        expect(activePath).toEqual('/');
+        const { queryByTestId } = switcher;
+        expect(queryByTestId('children').textContent).toBe('Home');
+        expect(queryByTestId('activePath').textContent).toBe('/');
       });
     });
 
     describe('with onChange function defined', () => {
-      let switcher;
       let handleChange;
       beforeEach(() => {
         handleChange = jest.fn();
-        switcher = renderComponent(
+        renderComponent(
           [
-            <div key="/" path="/">
+            <ToBeSwitched key="/" path="/">
               Home
-            </div>,
-            <div key="dynamic" path="/:dynamic/more/:data">
+            </ToBeSwitched>,
+            <ToBeSwitched key="dynamic" path="/:dynamic/more/:data">
               Dynamic
-            </div>
+            </ToBeSwitched>
           ],
           { onChange: handleChange }
         );
       });
 
-      it('calls onChange after path change', () => {
-        switcher.instance().handleRouteChange();
-        switcher.update();
+      test('calls onChange after path change', () => {
+        fireEvent(window, new HashChangeEvent('hashchange'));
         expect(handleChange).toHaveBeenCalledTimes(1);
       });
 
-      it('onChange handles paths with dynamic segments', () => {
+      test('onChange handles paths with dynamic segments', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/hello/more/123a-b',
           params: {}
         }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
+        fireEvent(window, new HashChangeEvent('hashchange'));
         expect(handleChange).toHaveBeenCalledWith(
           true,
           '/hello/more/123a-b',
@@ -83,63 +86,53 @@ describe('Switcher', () => {
     describe('default', () => {
       let switcher;
       beforeEach(() => {
-        switcher = renderComponent(<div path="/">Home</div>);
+        switcher = renderComponent(<ToBeSwitched path="/">Home</ToBeSwitched>);
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('renders nothing if no match', () => {
+      test('renders nothing if no match', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/nomatch',
           params: {}
         }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('');
+
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toEqual('');
       });
 
-      it('renders matching component', () => {
+      test('renders matching component', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('Home');
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toMatch(/Home/);
       });
     });
 
     describe('with multiple paths', () => {
       let switcher;
       beforeEach(() => {
-        switcher = renderComponent(<div path={['/', '/other']}>Home</div>);
+        switcher = renderComponent(
+          <ToBeSwitched path={['/', '/other']}>Home</ToBeSwitched>
+        );
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('renders correct element', () => {
+      test('renders correct element', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/other', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('Home');
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toMatch(/Home/);
       });
 
-      it('renders correct element', () => {
+      test('renders correct element', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('Home');
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toMatch(/Home/);
       });
 
-      it('renders correct elements', () => {
+      test('renders correct elements', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/otherThing',
           params: {}
         }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('');
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toBe('');
       });
     });
 
@@ -147,67 +140,55 @@ describe('Switcher', () => {
       let switcher;
       beforeEach(() => {
         switcher = renderComponent([
-          <div key="home" path="/home">
+          <ToBeSwitched key="home" path="/home">
             Home
-          </div>,
-          <div key="default" path="/.*">
+          </ToBeSwitched>,
+          <ToBeSwitched key="default" path="/.*">
             Default Handler
-          </div>
+          </ToBeSwitched>
         ]);
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('renders default handler when no match', () => {
+      test('renders default handler when no match', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/nomatch', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('Default Handler');
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toMatch(/Default Handler/);
       });
 
-      it('default handle can match /', () => {
+      test('default handle can match /', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('Default Handler');
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toMatch(/Default Handler/);
       });
 
-      it('renders matching component', () => {
+      test('renders matching component', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/home', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('Home');
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toMatch(/Home/);
       });
     });
 
     describe('with wrapper', () => {
       let switcher;
       beforeEach(() => {
-        switcher = renderComponent(<div path="/">Home</div>, {
-          wrapper: 'span'
+        switcher = renderComponent(<ToBeSwitched path="/">Home</ToBeSwitched>, {
+          wrapper: 'legend'
         });
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('renders just wrapper when no match', () => {
+      test('renders just wrapper when no match', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/nomatch', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('');
-        expect(switcher.find('span').length).toEqual(1);
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.textContent).toEqual('');
+        expect(switcher.container.querySelector('legend')).toBeEmpty();
       });
 
-      it('renders matched component in wrapper', () => {
+      test('renders matched component in wrapper', () => {
         helpers.currentPath = jest.fn(() => ({ path: '/', params: {} }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.text()).toEqual('Home');
-        expect(switcher.find('span').length).toEqual(1);
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.querySelector('legend')).toHaveTextContent(
+          'Home'
+        );
       });
     });
 
@@ -216,31 +197,29 @@ describe('Switcher', () => {
       beforeEach(() => {
         switcher = renderComponent([
           <MyComp key="dynamic" path="/user/:id/information/:userNum" />,
-          <span key="static" path="/user/id/information/page">
+          <ToBeSwitched key="static" path="/user/id/information/page">
             Static Content
-          </span>
+          </ToBeSwitched>
         ]);
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('renders matched component and sets dynamic segments as props', () => {
+      test('renders matched component and sets dynamic segments as props', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/user/123-abc/information/21',
           params: {}
         }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.find('MyComp').length).toEqual(1);
-        expect(switcher.props()).toEqual({
-          id: '123-abc',
-          path: '/user/:id/information/:userNum',
-          userNum: '21',
-          activePath: '/user/:id/information/:userNum',
-          params: {}
-        });
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(switcher.container.querySelector('span')).toMatchInlineSnapshot(`
+<span>
+  {
+  "path": "/user/:id/information/:userNum",
+  "id": "123-abc",
+  "userNum": "21",
+  "activePath": "/user/:id/information/:userNum",
+  "params": {}
+}
+</span>
+`);
       });
     });
   });
@@ -260,19 +239,15 @@ describe('Switcher', () => {
         );
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('renders matched component and sets dynamic segments as props', () => {
+      test('renders matched component and sets dynamic segments as props', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/user/234-cde/information/421',
           params: {}
         }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.find('MyComp').length).toEqual(1);
-        expect(switcher.props()).toEqual({
+        fireEvent(window, new HashChangeEvent('hashchange'));
+        expect(
+          JSON.parse(switcher.container.querySelector('span').textContent)
+        ).toEqual({
           userNum: '234',
           userLetters: 'cde',
           path: '/user/:id/information/:page',
@@ -284,7 +259,7 @@ describe('Switcher', () => {
     });
 
     describe('with custom render', () => {
-      it('calls the custom render function with the component and values', () => {
+      test('calls the custom render function with the component and values', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/user/234-cde/information/421',
           params: { tab: 'green' }
@@ -329,9 +304,6 @@ describe('Switcher', () => {
         expect(render.mock.calls[0][2]).toEqual('/user/:id/information/:page');
         expect(render.mock.calls[0][3]).toEqual({ tab: 'green' });
       });
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
     });
 
     describe('with a wrapper', () => {
@@ -348,23 +320,14 @@ describe('Switcher', () => {
         );
       });
 
-      afterEach(() => {
-        jest.restoreAllMocks();
-      });
-
-      it('renders matched component and sets dynamic segments as props', () => {
+      test('renders matched component and sets dynamic segments as props', () => {
         helpers.currentPath = jest.fn(() => ({
           path: '/user/234-cde/information/421',
           params: { tab: 'blue' }
         }));
-        switcher.instance().handleRouteChange();
-        switcher.update();
-        expect(switcher.find('MyComp').length).toEqual(1);
+        fireEvent(window, new HashChangeEvent('hashchange'));
         expect(
-          switcher
-            .children()
-            .first()
-            .props()
+          JSON.parse(switcher.container.querySelector('span').textContent)
         ).toEqual({
           userNum: '234',
           userLetters: 'cde',
@@ -376,10 +339,76 @@ describe('Switcher', () => {
       });
     });
   });
+
+  describe('prevent update prop', () => {
+    test('can prevent changes', () => {
+      let preventUpdate = () => false;
+      const { getByText, rerender } = renderComponent(
+        <ToBeSwitched path="/preventUpdate">
+          <em>Hi</em>
+        </ToBeSwitched>,
+        { preventUpdate }
+      );
+      helpers.currentPath = jest.fn(() => ({
+        path: '/preventUpdate',
+        params: {}
+      }));
+      fireEvent(window, new HashChangeEvent('hashchange'));
+      expect(getByText('Hi')).toBeInTheDocument();
+      rerender(
+        <ToBeSwitched path="/preventUpdate">
+          <em>Hi</em>
+        </ToBeSwitched>,
+        { preventUpdate: () => true }
+      );
+      helpers.currentPath = jest.fn(() => ({
+        path: '/someOtherPath',
+        params: {}
+      }));
+      fireEvent(window, new HashChangeEvent('hashchange'));
+      expect(getByText('Hi')).toBeInTheDocument();
+    });
+  });
+
+  describe('getting new props', () => {
+    test('rerenders children', () => {
+      const { getByText, rerender } = renderComponent(
+        <ToBeSwitched path="/">Home</ToBeSwitched>
+      );
+
+      rerender(<ToBeSwitched path="/">Away</ToBeSwitched>);
+      expect(getByText('Away')).toBeInTheDocument();
+    });
+    test('calls the handler with correct props', () => {
+      const onChange1 = jest.fn();
+      const onChange2 = jest.fn();
+      const { rerender } = renderComponent(
+        <ToBeSwitched path="/">Home</ToBeSwitched>,
+        {
+          onChange: onChange1
+        }
+      );
+
+      rerender(<ToBeSwitched path="/">Home</ToBeSwitched>, {
+        onChange: onChange2
+      });
+      fireEvent(window, new HashChangeEvent('hashchange'));
+      expect(onChange1).not.toHaveBeenCalled();
+      expect(onChange2).toHaveBeenCalled();
+    });
+  });
 });
 
 function renderComponent(children = [], props = {}) {
-  return shallow(<Switcher {...props}>{children}</Switcher>);
+  const { rerender, ...rendered } = render(
+    <Switcher {...props}>{children}</Switcher>
+  );
+  return {
+    ...rendered,
+    rerender: (children = [], props = {}) => {
+      return rerender(<Switcher {...props}>{children}</Switcher>);
+    }
+  };
 }
 
 function mapper({ id, page }) {
@@ -391,8 +420,8 @@ function mapper({ id, page }) {
   };
 }
 
-function MyComp({ userNum, userLetters, page, activePath }) {
-  return <span>{userNum + userLetters + page + activePath}</span>;
+function MyComp(props) {
+  return <span>{JSON.stringify(props, null, 2)}</span>;
 }
 MyComp.displayName = 'MyComp';
 MyComp.propTypes = {
