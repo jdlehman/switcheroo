@@ -8,7 +8,26 @@ import {
   generateGuid
 } from './helpers';
 
-const Switcher = (props, { switcherProvider }) => {
+function getSwitchAndValues(props) {
+  const { path, params } = currentPath(props.location);
+  const visibleSwitch = getSwitch(path, props);
+  const activePath = getActivePath(path, props.basePath, visibleSwitch);
+  const dynamicValues = getDynamicSegments(path, props.basePath, visibleSwitch);
+  return {
+    visibleSwitch,
+    dynamicValues,
+    activePath,
+    params,
+    path
+  };
+}
+
+function useForce() {
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  return forceUpdate;
+}
+
+function Switcher(props, { switcherProvider }) {
   const {
     mapDynamicSegments,
     renderSwitch,
@@ -21,35 +40,36 @@ const Switcher = (props, { switcherProvider }) => {
     preventUpdate,
     ...passed
   } = props;
-  const { path, params: currParams } = currentPath(location);
 
-  const [visibleSwitch, setVisibleSwitch] = useState(getSwitch(path, props));
-  const [activePath, setActivePath] = useState(
-    getActivePath(path, basePath, visibleSwitch)
-  );
-  const [dynamicValues, setDynamicValues] = useState(
-    getDynamicSegments(path, basePath, visibleSwitch)
-  );
+  const {
+    visibleSwitch,
+    dynamicValues,
+    activePath,
+    params
+  } = getSwitchAndValues(props);
 
-  const [params, setParams] = useState(currParams);
+  const hashChangeOccurred = useForce();
 
   const handleSwitchChange = props => {
-    const { path, params } = currentPath(props.location);
-    const visibleSwitch = getSwitch(path, props);
-    const activePath = getActivePath(path, props.basePath, visibleSwitch);
-    const dynamicValues = getDynamicSegments(
-      path,
-      props.basePath,
-      visibleSwitch
-    );
+    const {
+      visibleSwitch,
+      dynamicValues,
+      activePath,
+      params,
+      path
+    } = getSwitchAndValues(props);
 
     if (typeof props.onChange === 'function') {
-      props.onChange(!!visibleSwitch, path, dynamicValues, activePath, params);
+      props.onChange(
+        Boolean(visibleSwitch),
+        path,
+        dynamicValues,
+        activePath,
+        params
+      );
     }
-    setVisibleSwitch(visibleSwitch);
-    setDynamicValues(dynamicValues);
-    setActivePath(activePath);
-    setParams(params);
+
+    hashChangeOccurred();
   };
 
   const handleRouteChange = useRef();
@@ -139,7 +159,7 @@ const Switcher = (props, { switcherProvider }) => {
     lastChild.current = visibleSwitchWithProps;
     return visibleSwitchWithProps;
   }
-};
+}
 
 Switcher.contextTypes = {
   switcherProvider: PropTypes.shape({
