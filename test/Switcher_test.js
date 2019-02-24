@@ -403,6 +403,14 @@ describe('Switcher', () => {
   describe('getting new props', () => {
     test.todo('updates when the location mechanism has changed');
     test.todo('updates when the basePath has changed');
+    test('rerenders children', () => {
+      const { getByText, rerender } = renderComponent(
+        <ToBeSwitched path="/">Home</ToBeSwitched>
+      );
+
+      rerender(<ToBeSwitched path="/">Away</ToBeSwitched>);
+      expect(getByText('Away')).toBeInTheDocument();
+    });
     test('calls the handler with correct props', () => {
       const onChange1 = jest.fn();
       const onChange2 = jest.fn();
