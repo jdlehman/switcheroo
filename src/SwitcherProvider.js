@@ -9,28 +9,16 @@ export default function SwitcherProvider(props) {
     hashChangeListeners: []
   });
 
-  const handleLoadListeners = useRef();
-  handleLoadListeners.current = e => {
-    switcherProvider.current.loadListeners.forEach(({ fn }) => fn(e));
-  };
-
-  const handlePopStateListeners = useRef();
-  handlePopStateListeners.current = e => {
-    switcherProvider.current.popStateListeners.forEach(({ fn }) => fn(e));
-  };
-
-  const handleHashChangeListeners = useRef();
-  handleHashChangeListeners.current = e => {
-    switcherProvider.current.hashChangeListeners.forEach(({ fn }) => fn(e));
-  };
-
   useEffect(() => {
-    const handleLoad = e => handleLoadListeners.current(e);
-    const handlePopState = e => handlePopStateListeners.current(e);
-    const handleHashChange = e => handleHashChangeListeners.current(e);
-    window.addEventListener('load', handleLoad);
-    window.addEventListener('popstate', handlePopState);
-    window.addEventListener('hashchange', handleHashChange);
+    const handleLoadListeners = e =>
+      switcherProvider.current.loadListeners.forEach(({ fn }) => fn(e));
+    const handlePopStateListeners = e =>
+      switcherProvider.current.popStateListeners.forEach(({ fn }) => fn(e));
+    const handleHashChangeListeners = e =>
+      switcherProvider.current.hashChangeListeners.forEach(({ fn }) => fn(e));
+    window.addEventListener('load', handleLoadListeners);
+    window.addEventListener('popstate', handlePopStateListeners);
+    window.addEventListener('hashchange', handleHashChangeListeners);
     return () => {
       window.removeEventListener('load', handleLoad);
       window.removeEventListener('popstate', handlePopState);
