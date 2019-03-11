@@ -22,14 +22,8 @@
     "prepare": "yarn run clean && yarn run build"
   },
   "lint-staged": {
-    "src/**/*.js": [
-      "prettier --write",
-      "git add"
-    ],
-    "test/**/*.js": [
-      "prettier --write",
-      "git add"
-    ]
+    "src/**/*.js": ["prettier --write", "git add"],
+    "test/**/*.js": ["prettier --write", "git add"]
   },
   "repository": {
     "type": "git",
@@ -38,15 +32,8 @@
   "bugs": {
     "url": "https://github.com/jdlehman/switcheroo/issues"
   },
-  "keywords": [
-    "react",
-    "react-component",
-    "routing",
-    "javascript"
-  ],
-  "files": [
-    "dist"
-  ],
+  "keywords": ["react", "react-component", "routing", "javascript"],
+  "files": ["dist"],
   "author": "Jonathan Lehman <jonathan.lehman91@gmail.com>",
   "license": "MIT",
   "devDependencies": {
@@ -84,7 +71,7 @@
     "uglify-js": "^3.0.4"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
+    "react": "^16.8.0"
   },
   "dependencies": {
     "prop-types": "^15.5.10"
