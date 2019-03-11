@@ -1,6 +1,6 @@
 {
   "name": "switcheroo",
-  "version": "3.3.0",
+  "version": "4.0.0-alpha.1",
   "description": "React component that switches between components based on route",
   "main": "dist/switcheroo.umd.min.js",
   "jsnext:main": "dist/switcheroo.es-modules.js",
