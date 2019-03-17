@@ -45,27 +45,17 @@ export default function SwitcherProvider(props) {
     }
   }, []);
 
-  const addListener = useCallback(
-    (type, fn) => {
-      getListenerList(type).push(fn);
-    },
-    [getListenerList]
-  );
-
-  const removeListener = useCallback(
-    (type, fn) => {
-      const listeners = getListenerList(type);
-      listeners.splice(listeners.indexOf(fn), 1);
-    },
-    [getListenerList]
-  );
-
   const providedMethods = useMemo(() => {
     return {
-      addListener,
-      removeListener
+      addListener: (type, fn) => {
+        getListenerList(type).push(fn);
+      },
+      removeListener: (type, fn) => {
+        const listeners = getListenerList(type);
+        listeners.splice(listeners.indexOf(fn), 1);
+      }
     };
-  }, [addListener, removeListener]);
+  }, [getListenerList]);
 
   return (
     <SwitcherContext.Provider value={providedMethods}>
