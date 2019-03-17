@@ -59,13 +59,7 @@ export default function SwitcherProvider(props) {
 
   return (
     <SwitcherContext.Provider value={providedMethods}>
-      {(() => {
-        if (Children.count(props.children) > 1) {
-          return <span className="switcher-provider">{props.children}</span>;
-        } else {
-          return props.children;
-        }
-      })()}
+      {props.children}
     </SwitcherContext.Provider>
   );
 }
