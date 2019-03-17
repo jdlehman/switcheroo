@@ -1,27 +1,18 @@
-import React, {
-  Children,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo
-} from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import SwitcherContext from './context';
 
 export default function SwitcherProvider(props) {
-  const switcherProvider = useRef({
-    loadListeners: [],
-    popStateListeners: [],
-    hashChangeListeners: []
-  });
+  const loadListeners = useRef([]);
+  const popStateListeners = useRef([]);
+  const hashChangeListeners = useRef([]);
 
   useEffect(() => {
-    const handleLoadListeners = e =>
-      switcherProvider.current.loadListeners.forEach(fn => fn(e));
+    const handleLoadListeners = e => loadListeners.current.forEach(fn => fn(e));
     const handlePopStateListeners = e =>
-      switcherProvider.current.popStateListeners.forEach(fn => fn(e));
+      popStateListeners.current.forEach(fn => fn(e));
     const handleHashChangeListeners = e =>
-      switcherProvider.current.hashChangeListeners.forEach(fn => fn(e));
+      hashChangeListeners.current.forEach(fn => fn(e));
     window.addEventListener('load', handleLoadListeners);
     window.addEventListener('popstate', handlePopStateListeners);
     window.addEventListener('hashchange', handleHashChangeListeners);
@@ -32,20 +23,19 @@ export default function SwitcherProvider(props) {
     };
   }, []);
 
-  const getListenerList = useCallback(type => {
-    switch (type) {
-      case 'load':
-        return switcherProvider.current.loadListeners;
-      case 'popstate':
-        return switcherProvider.current.popStateListeners;
-      case 'hashchange':
-        return switcherProvider.current.hashChangeListeners;
-      default:
-        throw new Error('womp womp');
-    }
-  }, []);
-
   const providedMethods = useMemo(() => {
+    const getListenerList = type => {
+      switch (type) {
+        case 'load':
+          return loadListeners.current;
+        case 'popstate':
+          return popStateListeners.current;
+        case 'hashchange':
+          return hashChangeListeners.current;
+        default:
+          throw new Error('womp womp');
+      }
+    };
     return {
       addListener: (type, fn) => {
         getListenerList(type).push(fn);
@@ -55,7 +45,7 @@ export default function SwitcherProvider(props) {
         listeners.splice(listeners.indexOf(fn), 1);
       }
     };
-  }, [getListenerList]);
+  }, []);
 
   return (
     <SwitcherContext.Provider value={providedMethods}>
