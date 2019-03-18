@@ -8,8 +8,7 @@ import {
   replaceDynamicSegments,
   getDynamicSegmentNames,
   getDynamicSegments,
-  getActivePath,
-  generateGuid
+  getActivePath
 } from '../src/helpers';
 
 describe('helpers', () => {
@@ -338,12 +337,6 @@ describe('helpers', () => {
         currentSwitch
       );
       expect(activePath).toEqual('/abc/something/:id');
-    });
-  });
-
-  describe('generateGuid', () => {
-    it('generates a unique guid', () => {
-      expect(generateGuid()).not.toEqual(generateGuid());
     });
   });
 });

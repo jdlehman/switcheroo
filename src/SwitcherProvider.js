@@ -1,21 +1,18 @@
-import React, { Children, useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import SwitcherContext from './context';
 
 export default function SwitcherProvider(props) {
-  const switcherProvider = useRef({
-    loadListeners: [],
-    popStateListeners: [],
-    hashChangeListeners: []
-  });
+  const loadListeners = useRef([]);
+  const popStateListeners = useRef([]);
+  const hashChangeListeners = useRef([]);
 
   useEffect(() => {
-    const handleLoadListeners = e =>
-      switcherProvider.current.loadListeners.forEach(({ fn }) => fn(e));
+    const handleLoadListeners = e => loadListeners.current.forEach(fn => fn(e));
     const handlePopStateListeners = e =>
-      switcherProvider.current.popStateListeners.forEach(({ fn }) => fn(e));
+      popStateListeners.current.forEach(fn => fn(e));
     const handleHashChangeListeners = e =>
-      switcherProvider.current.hashChangeListeners.forEach(({ fn }) => fn(e));
+      hashChangeListeners.current.forEach(fn => fn(e));
     window.addEventListener('load', handleLoadListeners);
     window.addEventListener('popstate', handlePopStateListeners);
     window.addEventListener('hashchange', handleHashChangeListeners);
@@ -26,15 +23,35 @@ export default function SwitcherProvider(props) {
     };
   }, []);
 
+  const providedMethods = useMemo(() => {
+    const getListenerList = type => {
+      switch (type) {
+        case 'load':
+          return loadListeners.current;
+        case 'popstate':
+          return popStateListeners.current;
+        case 'hashchange':
+          return hashChangeListeners.current;
+        default:
+          throw new Error(
+            `"${type}" is not a valid listener type. listener types are load|popstate|hashchange.`
+          );
+      }
+    };
+    return {
+      addListener: (type, fn) => {
+        getListenerList(type).push(fn);
+      },
+      removeListener: (type, fn) => {
+        const listeners = getListenerList(type);
+        listeners.splice(listeners.indexOf(fn), 1);
+      }
+    };
+  }, []);
+
   return (
-    <SwitcherContext.Provider value={switcherProvider.current}>
-      {(() => {
-        if (Children.count(props.children) > 1) {
-          return <span className="switcher-provider">{props.children}</span>;
-        } else {
-          return props.children;
-        }
-      })()}
+    <SwitcherContext.Provider value={providedMethods}>
+      {props.children}
     </SwitcherContext.Provider>
   );
 }

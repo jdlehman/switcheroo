@@ -51,7 +51,7 @@ function Switcher(props) {
     params
   } = getSwitchAndValues(props);
 
-  const hashChangeOccurred = useForce();
+  const changeOccurred = useForce();
 
   const handleSwitchChange = props => {
     const {
@@ -72,7 +72,7 @@ function Switcher(props) {
       );
     }
 
-    hashChangeOccurred();
+    changeOccurred();
   };
 
   const handleRouteChange = useRef();
@@ -81,47 +81,26 @@ function Switcher(props) {
   useEffect(() => {
     const handler = () => handleRouteChange.current();
     const usingProvider = Boolean(switcherProvider);
-    if (!usingProvider) {
-      load && window.addEventListener('load', handler);
-      pushState && window.addEventListener('popstate', handler);
-      hashChange && window.addEventListener('hashchange', handler);
+    if (usingProvider) {
+      const { addListener, removeListener } = switcherProvider;
+      load && addListener('load', handler);
+      pushState && addListener('popstate', handler);
+      hashChange && addListener('hashchange', handler);
 
       return () => {
-        window.removeEventListener('load', handler);
-        window.removeEventListener('popstate', handler);
-        window.removeEventListener('hashchange', handler);
+        load && removeListener('load', handler);
+        pushState && removeListener('popstate', handler);
+        hashChange && removeListener('hashchange', handler);
       };
     }
+    load && window.addEventListener('load', handler);
+    pushState && window.addEventListener('popstate', handler);
+    hashChange && window.addEventListener('hashchange', handler);
 
-    const id = generateGuid();
-    load &&
-      switcherProvider.loadListeners.push({
-        id,
-        fn: handler
-      });
-    pushState &&
-      switcherProvider.popStateListeners.push({
-        id,
-        fn: handler
-      });
-    hashChange &&
-      switcherProvider.hashChangeListeners.push({
-        id,
-        fn: handler
-      });
     return () => {
-      load &&
-        (switcherProvider.loadListeners = switcherProvider.loadListeners.filter(
-          listener => listener.id !== id
-        ));
-      pushState &&
-        (switcherProvider.popStateListeners = switcherProvider.popStateListeners.filter(
-          listener => listener.id !== id
-        ));
-      hashChange &&
-        (switcherProvider.hashChangeListeners = switcherProvider.hashChangeListeners.filter(
-          listener => listener.id !== id
-        ));
+      window.removeEventListener('load', handler);
+      window.removeEventListener('popstate', handler);
+      window.removeEventListener('hashchange', handler);
     };
   }, [load, pushState, hashChange, switcherProvider]);
 
