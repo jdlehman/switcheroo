@@ -33,7 +33,9 @@ export default function SwitcherProvider(props) {
         case 'hashchange':
           return hashChangeListeners.current;
         default:
-          throw new Error('womp womp');
+          throw new Error(
+            `"${type}" is not a valid listener type. listener types are load|popstate|hashchange.`
+          );
       }
     };
     return {
